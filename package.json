@@ -1,0 +1,46 @@
+{
+  "name": "lolcamp",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "nodemon server.js & nodemon apiServer.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewnding/LoLCamp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrewnding/LoLCamp/issues"
+  },
+  "homepage": "https://github.com/andrewnding/LoLCamp#readme",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "connect-mongo": "^1.3.2",
+    "express": "^4.15.3",
+    "http-proxy": "^1.16.2",
+    "mongoose": "^4.11.0",
+    "morgan": "^1.8.2",
+    "react": "^15.6.1",
+    "react-autosuggest": "^9.3.1",
+    "react-bootstrap": "^0.31.0",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.5",
+    "react-router-bootstrap": "^0.24.2",
+    "react-router-dom": "^4.1.1",
+    "redux": "^3.7.1",
+    "redux-thunk": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.5.2",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "nodemon": "^1.11.0",
+    "redux-logger": "^3.0.6",
+    "webpack": "^3.0.0"
+  }
+}
