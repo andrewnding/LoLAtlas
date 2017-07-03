@@ -1,5 +1,6 @@
 var path = require('path');
 const webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports  = {
   entry: './src/client.jsx',
@@ -9,7 +10,7 @@ module.exports  = {
   },
   watch: true,
   module: {
-    loaders: [
+    rules: [
       {
         test:/\.jsx$/,
         exclude:/node_modules/,
@@ -17,17 +18,20 @@ module.exports  = {
         query: {
           presets: ['react', 'env', 'stage-3']
         }
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'sass-loader']
+        })
       }
     ]
   },
+  plugins: [
+    new ExtractTextPlugin({ filename: 'dist/styles/main.css', allChunks: true })
+  ],
   resolve: {
     extensions: ['.js', '.jsx']
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        'RIOT_API_KEY': '"51d93823-1cb4-4507-a651-a77759d2144e"'
-      }
-    })
-  ]
+  }
 }

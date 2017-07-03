@@ -1,6 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import Autosuggest from 'react-autosuggest'
-import axios from 'axios'
+import * as actions from '../actions/currentGameActions'
+
+import { getCurrentGameInfo } from '../actions/currentGameActions'
 
 const usernames = ["Pahnis", "SirBuzzKill"]
 
@@ -38,6 +41,17 @@ class SearchBarAutosuggest extends React.Component {
     })
   }
 
+  onKeyPress(event) {
+    if (event.key === 'Enter') {
+      if (!(/^[\w.\ ]+$/.test(this.state.value))) {
+        console.log('Please enter a valid summoner name')
+      } else {
+        console.log(`searching for player ${this.state.value}`)
+        this.props.getCurrentGameInfo('NA', this.state.value)
+      }
+    }
+  }
+
   // Autosuggest will call this function every time you need to update suggestions.
   // You already implemented this logic above, so just use it.
   onSuggestionsFetchRequested({ value }) {
@@ -53,34 +67,32 @@ class SearchBarAutosuggest extends React.Component {
     })
   }
 
-  onSuggestionSelected() {
-    console.log(this.state.value)
-    console.log(process.env)
-    
-  }
-
   render() {
-    const { value, suggestions } = this.state
-
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
       placeholder: 'Type a summoner name',
-      value,
-      onChange: this.onChange.bind(this)
+      value: this.state.value,
+      onChange: this.onChange.bind(this),
+      onKeyPress: this.onKeyPress.bind(this)
     }
 
     return (
       <Autosuggest
-        suggestions={suggestions}
+        suggestions={this.state.suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
         getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
         inputProps={inputProps}
-        onSuggestionSelected={this.onSuggestionSelected.bind(this)}
       />
     )
   }
 }
 
-export default SearchBarAutosuggest
+const mapStateToProps = (state) => {
+  return {
+
+  }
+}
+
+export default connect(mapStateToProps, actions)(SearchBarAutosuggest)
