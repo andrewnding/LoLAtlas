@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 
 import SearchBarAutosuggest from './SearchBarAutosuggest'
 
-const MainSearchBar = () => {
+const MainSearchBar = ({ history }) => {
   return (
     <div>
-      <SearchBarAutosuggest />
+      <SearchBarAutosuggest
+        history={history}
+      />
     </div>
   )
 }

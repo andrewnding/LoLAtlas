@@ -17,7 +17,7 @@ var dataNotFoundResponse = {
 }
 
 app.get('/accountId', (req, res) => {
-  axios.get(`https://${regionalEndpoints[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data.id)
     })
@@ -32,7 +32,7 @@ app.get('/accountId', (req, res) => {
 })
 
 app.get('/currentGameInfo', (req, res) => {
-  axios.get(`https://${regionalEndpoints[req.query.serviceRegion]}/lol/spectator/v3/active-games/by-summoner/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/spectator/v3/active-games/by-summoner/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data)
     })

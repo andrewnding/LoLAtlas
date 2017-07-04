@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 const CurrentGamePage = () => {
   return (
-    <div></div>
+    <div>Current Game Page</div>
   )
 }
 

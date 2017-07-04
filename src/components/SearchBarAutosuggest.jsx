@@ -27,8 +27,8 @@ const renderSuggestion = suggestion => (
 )
 
 class SearchBarAutosuggest extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       value: '',
       suggestions: []
@@ -57,11 +57,21 @@ class SearchBarAutosuggest extends React.Component {
   }
 
   handleSubmit(e) {
+    e.preventDefault()
     if (!(/^[\w.\ ]+$/.test(this.state.value))) {
       console.log('Please enter a valid summoner name')
     } else {
       console.log(`searching for player ${this.state.value}`)
       this.props.getCurrentGameInfo('NA', this.state.value)
+        .then(response => {
+          if (response.status === 200) {
+            this.props.history.push(`/${response.data.platformId}/search`)  
+          }
+          console.log(response)
+        }).catch(error => {
+          console.log(error)
+        })
+
     }
     e.preventDefault()
   }
