@@ -1,24 +1,41 @@
 import axios from 'axios'
+import * as actions from '../constants/actionTypes'
 
-export const getCurrentGameInfo = (serviceRegion, summonerName) => {
+const receivedRealmVersion = (payload) => {
+  return {
+    type: actions.RECEIVED_REALM_VERSION,
+    payload
+  }
+}
+
+const receivedChampionImages = (payload, championIds) => {
+  return {
+    type: actions.RECEIVED_CHAMPION_IMAGES,
+    payload,
+    championIds
+  }
+}
+
+export const getRealmVersion = (serviceRegion) => {
   return (dispatch) => {
-    return axios.get(`/api/accountId?serviceRegion=${serviceRegion}&summonerName=${summonerName}`)
-      .then((response) => {
-        return axios.get(`/api/currentGameInfo?serviceRegion=${serviceRegion}&summonerId=${response.data}`)
-          .then((response) => {
-            return response
-          }).catch((err) => {
-            if (err.response.data.error === "DATA_NOT_FOUND") {
-              return err.response
-              // Do data not found stuff here
-            }
-          })
+    return axios.get(`/api/realmVersion?serviceRegion=${serviceRegion}`)
+      .then(response => {
+        dispatch(receivedRealmVersion(response.data.dd))
+        return response
+      }).catch(err => {
+        return err.response
       })
-      .catch((err) => {
-        if (err.response.data.error === "PLAYER_NOT_FOUND") {
-          return err.response
-          // Do player not found stuff here
-        }
+  }
+}
+
+export const getChampionImages = (serviceRegion, championIds) => {
+  return (dispatch) => {
+    return axios.get(`/api/championImages?serviceRegion=${serviceRegion}`)
+      .then(response => {
+        dispatch(receivedChampionImages(response.data.data, championIds))
+        return response
+      }).catch(err => {
+        return err.response
       })
   }
 }

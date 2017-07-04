@@ -31,7 +31,9 @@ const platforms = {
   PBE1:  'pbe1.api.riotgames.com',
 }
 
-module.exports = {
+var regionalEndpoints = {
   regions, 
   platforms
 };
+
+module.exports = regionalEndpoints

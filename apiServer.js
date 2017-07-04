@@ -20,8 +20,7 @@ app.get('/accountId', (req, res) => {
   axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data.id)
-    })
-    .catch(error => {
+    }).catch(error => {
       if (_.isEqual(error.response.data.status, summonerNotFoundResponse)) {
           res.status(404).send({ error: 'PLAYER_NOT_FOUND' })
           return
@@ -31,18 +30,35 @@ app.get('/accountId', (req, res) => {
     })
 })
 
-app.get('/currentGameInfo', (req, res) => {
+app.get('/currentGame', (req, res) => {
   axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/spectator/v3/active-games/by-summoner/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data)
-    })
-    .catch(error => {
+    }).catch(error => {
       if (_.isEqual(error.response.data.status, dataNotFoundResponse)) {
         res.status(404).send({ error: 'DATA_NOT_FOUND' })
         return
       }
       res.status(error.response.data.status.status_code)
       console.log(error)
+    })
+})
+
+app.get('/realmVersion', (req, res) => {
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/realms`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      res.json(response.data)
+    }).catch(error => {
+      res.status(404).send({ error: 'INVALID_REGIONAL_ENDPOINT' })
+    })
+})
+
+app.get('/championImages', (req, res) => {
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/champions?locale=en_US&tags=image&dataById=true`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      res.json(response.data)
+    }).catch(error => {
+      res.status(404).send({ error: 'CHAMPION_NOT_FOUND' })
     })
 })
 

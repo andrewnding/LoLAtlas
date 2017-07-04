@@ -1,9 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Autosuggest from 'react-autosuggest'
-import * as actions from '../actions/currentGameActions'
-
-import { getCurrentGameInfo } from '../actions/currentGameActions'
+import * as actions from '../actions/searchActions'
+var regionalEndpoints = require('../constants/regionalEndpoints')
 
 const usernames = ["Pahnis", "SirBuzzKill"]
 
@@ -30,14 +29,15 @@ class SearchBarAutosuggest extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: '',
-      suggestions: []
+      name: '',
+      suggestions: [],
+      region: 'NA'
     }
   }
 
   onChange(event, { newValue }) {
     this.setState({
-      value: newValue
+      name: newValue
     })
   }
 
@@ -58,29 +58,34 @@ class SearchBarAutosuggest extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    if (!(/^[\w.\ ]+$/.test(this.state.value))) {
+    if (!(/^[\w.\ ]+$/.test(this.state.name))) {
       console.log('Please enter a valid summoner name')
     } else {
-      console.log(`searching for player ${this.state.value}`)
-      this.props.getCurrentGameInfo('NA', this.state.value)
-        .then(response => {
-          if (response.status === 200) {
-            this.props.history.push(`/${response.data.platformId}/search`)  
-          }
-          console.log(response)
-        }).catch(error => {
-          console.log(error)
-        })
-
+      console.log(`searching for player ${this.state.name}`)
+      this.props.history.push(`/${this.state.region}/search?name=${this.state.name}`)  
     }
     e.preventDefault()
+  }
+
+  renderSelectOptions() {
+    return (
+      Object.keys(regionalEndpoints.regions).sort().map((region, i) => {
+        return <option key={i} value={region}>{region}</option>
+      })
+    )
+  }
+
+  handleOnChangeRegion(e) {
+    this.setState({
+      region: e.target.value
+    })
   }
 
   render() {
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
       placeholder: 'Type a summoner name',
-      value: this.state.value,
+      value: this.state.name,
       onChange: this.onChange.bind(this)
     }
 
@@ -94,6 +99,12 @@ class SearchBarAutosuggest extends React.Component {
           renderSuggestion={renderSuggestion}
           inputProps={inputProps}
         />
+        <select 
+          value={this.state.region} 
+          onChange={this.handleOnChangeRegion.bind(this)}
+        >
+          { this.renderSelectOptions() }
+        </select>
       </form>
     )
   }

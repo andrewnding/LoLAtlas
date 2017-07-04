@@ -1,12 +1,28 @@
+import * as actions from '../constants/actionTypes'
+
 const initialState = {
-  summonerName: '',
-  region: ''
+  error: {},
+  isFetching: false
 }
 
 const searchReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "HELLO_WORLD":
-      return 'Hello World'
+    case actions.FETCHING_CURRENT_GAME:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case actions.RECEIVED_CURRENT_GAME:
+      return {
+        ...state,
+        isFetching: false
+      }
+    case actions.ERROR_FETCHING_CURRENT_GAME:
+      return {
+        ...state,
+        error: action.payload,
+        isFetching: false
+      }
     default:
       return state
   }
