@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
-import helloWorldReducer from './helloWorldReducer'
 import searchReducer from './searchReducer'
+import currentGameReducer from './currentGameReducer'
 
 const reducer = combineReducers({
-  helloWorldReducer,
-  searchReducer
+  searchReducer,
+  currentGameReducer
 })
 
 export default reducer
