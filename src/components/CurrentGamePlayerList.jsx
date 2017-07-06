@@ -33,7 +33,7 @@ class CurrentGamePlayerList extends React.Component {
     return (
       <div>
         Player List
-        <div className="row">
+        <div className="row team-row">
           {this.renderTeam100()}
         </div>
         <div className="row">

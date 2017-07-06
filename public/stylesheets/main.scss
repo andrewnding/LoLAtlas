@@ -1,8 +1,55 @@
-.player-item-title {
-  background-color: #eee;  
+$blue-team-color: #a9e6ff;
+$purple-team-color: #c1aeda;
+$win-green: #29ce29;
+$lose-red: #f13737;
+$undecided-gray: #4c4c4c;
+
+.team-row {
+  margin-bottom: 30px;
+}
+
+.player-item-container {
+  border: 1px solid black;
+
+  .blue-team-background {
+    background-color: $blue-team-color;
+  }
+
+  .purple-team-background {
+    background-color: $purple-team-color;
+  }
 }
 
 .medium-icon {
-  width: 40px;
-  margin-right: 5px;
+  width: 20%;
+  margin-right: 5%;
+}
+
+.tier-data {
+  display: inline-block;
+  width: 73%;
+  margin-right: 2%;
+}
+
+.series-icon {
+  margin: 0 2px;
+}
+
+.fa-check {
+  @extend .series-icon;
+  color: $win-green;
+}
+
+.fa-times {
+  @extend .series-icon;
+  color: $lose-red;
+}
+
+.fa-minus {
+  @extend .series-icon;
+  color: $undecided-gray;
+}
+
+.float-right {
+  float: right;
 }
