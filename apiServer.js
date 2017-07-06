@@ -62,6 +62,27 @@ app.get('/championImages', (req, res) => {
     })
 })
 
+app.get('/rankedLeague', (req, res) => {
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/league/v3/leagues/by-summoner/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      var rankedSoloData = response.data.filter(data => {
+        return data.queue === 'RANKED_SOLO_5x5'
+      })
+      if (rankedSoloData.length === 0) {
+        res.json(rankedSoloData)  
+      } else {
+        var playerEntry = rankedSoloData[0].entries.filter(entry => {
+          return entry.playerOrTeamId === req.query.summonerId 
+        })
+        var rankedSoloDataSinglePlayer = Object.assign({}, rankedSoloData[0], {entries: playerEntry})
+        res.json(rankedSoloDataSinglePlayer)
+      }
+    }).catch(error => {
+      console.log(error.response.headers)
+      res.status(error.response.data.status.status_code).send({ error: 'PLAYER_NOT_FOUND '})
+    })
+})
+
 app.listen(3001, (err) => {
   if (err) {
     return console.log(err)

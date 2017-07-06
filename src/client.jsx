@@ -9,6 +9,7 @@ import Footer from './components/Footer'
 import MainSearchBar from './components/MainSearchBar'
 import CurrentGamePage from './components/CurrentGamePage'
 import PageNotFound from './components/PageNotFound'
+require("!style-loader!css-loader!sass-loader!../public/stylesheets/main.scss");
 
 const App = () => {
   return (

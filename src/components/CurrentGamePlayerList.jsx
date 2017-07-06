@@ -7,15 +7,6 @@ class CurrentGamePlayerList extends React.Component {
     super(props)
   }
 
-  renderPlayers() {
-    let players = this.props.currentGame.gameInfo.participants
-    return players.map((player, i) => (
-      <div className="col-md-1" key={i}>
-        <CurrentGamePlayerItem playerData={player} />      
-      </div>
-    ))
-  }
-
   renderTeam100() {
     let players = this.props.currentGame.gameInfo.participants.filter(player => (
       player.teamId === 100
