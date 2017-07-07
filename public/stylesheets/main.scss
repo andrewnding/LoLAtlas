@@ -1,7 +1,7 @@
 $blue-team-color: #a9e6ff;
 $purple-team-color: #c1aeda;
-$win-green: #29ce29;
-$lose-red: #f13737;
+$win-green: #25b325;
+$lose-red: #d62c2c;
 $undecided-gray: #4c4c4c;
 
 .team-row {
@@ -35,18 +35,15 @@ $undecided-gray: #4c4c4c;
   margin: 0 2px;
 }
 
-.fa-check {
-  @extend .series-icon;
-  color: $win-green;
+.color-green {
+  color: $win-green;  
 }
 
-.fa-times {
-  @extend .series-icon;
+.color-red {
   color: $lose-red;
 }
 
-.fa-minus {
-  @extend .series-icon;
+.color-gray {
   color: $undecided-gray;
 }
 

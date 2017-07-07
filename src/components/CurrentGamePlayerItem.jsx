@@ -19,7 +19,7 @@ class CurrentGamePlayerItem extends React.Component {
 
   rankedBadgeSrc() {
     let rankedData = this.props.playerData.rankedData
-    let rank = rankedData.entries[0].rank
+    let rank = rankedData.rank
 
     if (!this.tier) {
       // Error
@@ -56,19 +56,19 @@ class CurrentGamePlayerItem extends React.Component {
     }
 
     let tier = this.tier.charAt(0).toUpperCase() + this.tier.slice(1).toLowerCase()
-    let rank = rankedData.entries[0].rank
-    let leaguePoints = rankedData.entries[0].leaguePoints
+    let rank = rankedData.rank
+    let leaguePoints = rankedData.leaguePoints
     let miniSeries
     let miniSeriesIcons
-    if (rankedData.entries[0].miniSeries) {
-      miniSeries = rankedData.entries[0].miniSeries.progress.split('')
+    if (rankedData.miniSeries) {
+      miniSeries = rankedData.miniSeries.progress.split('')
       miniSeriesIcons = miniSeries.map((series, i) => {
         if (series === 'W') {
-          return <span key={i}><i className="fa fa-check series-icon" aria-hidden="true"></i></span>
+          return <span key={i}><i className="fa fa-check series-icon color-green" aria-hidden="true"></i></span>
         } else if (series === 'L') {
-          return <span key={i}><i className="fa fa-times series-icon" aria-hidden="true"></i></span>
+          return <span key={i}><i className="fa fa-times series-icon color-red" aria-hidden="true"></i></span>
         } else {
-          return <span key={i}><i className="fa fa-minus series-icon" aria-hidden="true"></i></span>
+          return <span key={i}><i className="fa fa-minus series-icon color-gray" aria-hidden="true"></i></span>
         }
       })
     } else {
@@ -95,7 +95,20 @@ class CurrentGamePlayerItem extends React.Component {
     )
   }
 
+  renderWinPercent() {
+    let rankedData = this.props.playerData.rankedData
+    let winPercent = ((rankedData.wins / (rankedData.wins + rankedData.losses)) * 100).toFixed(0)
+    if (winPercent > 53) {
+      return <span className='color-green'>{winPercent}%</span>
+    } else if (winPercent < 47) {
+      return <span className='color-red'>{winPercent}%</span>
+    } else {
+      return <span>{winPercent}%</span>
+    }
+  }
+
   render() {
+    let rankedData = this.props.playerData.rankedData
     return (
       <div className='player-item-container'>
         <div className={`player-item-title ${this.teamColor()}`}>
@@ -105,8 +118,16 @@ class CurrentGamePlayerItem extends React.Component {
           />
           <span>{this.props.playerData.summonerName}</span>
         </div>
-        <div className="player-item-stats">
+        <div className='player-item-stats'>
           {this.renderLeagueInfo()}
+        </div>
+        <div>
+          <span>
+            Win / Loss: {rankedData.wins} / {rankedData.losses}
+            <div>
+            {this.renderWinPercent()}
+            </div>
+          </span>
         </div>
       </div>
     )
