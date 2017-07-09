@@ -49,7 +49,7 @@ class CurrentGamePlayerItem extends React.Component {
     }
   }
 
-  renderLeagueInfo() {
+  renderRankInfo() {
     let rankedData = this.props.playerData.rankedData
     if (!rankedData) {
       return <span></span>
@@ -75,21 +75,21 @@ class CurrentGamePlayerItem extends React.Component {
       miniSeriesIcons = <span></span>
     }
     return (
-      <div>
+      <div className='space-between vertical-align'>
         <img
           src={this.rankedBadgeSrc()}
           className="medium-icon"
         />
-        <span className='tier-data'>
-          <span>{tier} {rank}</span>
-          <span className='float-right'>
-            <div>
-              {leaguePoints} LP
-            </div>
-            <div>
-              {miniSeriesIcons}
-            </div>
-          </span>
+        <span>
+          {tier} {rank}
+        </span>
+        <span>
+          <div>
+            {leaguePoints} LP
+          </div>
+          <div>
+            {miniSeriesIcons}
+          </div>
         </span>
       </div>
     )
@@ -119,7 +119,7 @@ class CurrentGamePlayerItem extends React.Component {
           <span>{this.props.playerData.summonerName}</span>
         </div>
         <div className='player-item-stats'>
-          {this.renderLeagueInfo()}
+          {this.renderRankInfo()}
         </div>
         <div>
           <span>

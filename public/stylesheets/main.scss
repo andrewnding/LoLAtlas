@@ -20,15 +20,18 @@ $undecided-gray: #4c4c4c;
   }
 }
 
-.medium-icon {
-  width: 20%;
-  margin-right: 5%;
+.vertical-align {
+  display: flex;
+  align-items: center;
 }
 
-.tier-data {
-  display: inline-block;
-  width: 73%;
-  margin-right: 2%;
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.medium-icon {
+  width: 20%;
 }
 
 .series-icon {
