@@ -16,7 +16,7 @@ var dataNotFoundResponse = {
   status_code: 404
 }
 
-app.get('/accountId', (req, res) => {
+app.get('/summonerId', (req, res) => {
   axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data.id)
@@ -49,6 +49,7 @@ app.get('/realmVersion', (req, res) => {
     .then(response => {
       res.json(response.data)
     }).catch(error => {
+      console.log(error)
       res.status(404).send({ error: 'INVALID_REGIONAL_ENDPOINT' })
     })
 })
@@ -58,6 +59,7 @@ app.get('/championImages', (req, res) => {
     .then(response => {
       res.json(response.data)
     }).catch(error => {
+      console.log(error)
       res.status(404).send({ error: 'CHAMPION_NOT_FOUND' })
     })
 })
@@ -74,8 +76,29 @@ app.get('/rankedLeague', (req, res) => {
         res.status(404).send({ error: 'NO_RANKED_SOLO_5x5' })
       }
     }).catch(error => {
-      console.log(error.response.headers)
+      console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'PLAYER_NOT_FOUND '})
+    })
+})
+
+app.get('/accountId', (req, res) => {
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      res.json(response.data.accountId)
+    }).catch(error => {
+      console.log(error)
+      res.status(404).send({ error: 'ACCOUNT_NOT_FOUND' })
+    })
+})
+
+app.get('/recentRankedMatches', (req, res) => {
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matchlists/by-account/${req.query.accountId}?queue=420&season=8`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      res.json(response.data.matches.slice(0, 5))
+    }).catch(error => {
+      console.log(error)
+      console.log(req.query.accountId)
+      res.status(404).send({ error: 'MATCHES_NOT_FOUND' })
     })
 })
 

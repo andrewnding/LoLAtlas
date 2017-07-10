@@ -43,6 +43,36 @@ const currentGameReducer = (state = initialState, action) => {
           participants: participantsWithLeagues
         }
       }
+    case actions.RECEIVED_ACCOUNT_ID:
+      let participantsWithIds = state.gameInfo.participants.map(participant => {
+        if (action.summonerId === participant.summonerId) {
+          return { ...participant, accountId: action.payload } 
+        } else {
+          return participant
+        }
+      })
+      return {
+        ...state,
+        gameInfo: {
+          ...state.gameInfo,
+          participants: participantsWithIds
+        }
+      }
+    case actions.RECEIVED_RECENT_RANKED_MATCHES:
+      let participantsWithRecentRankedMatches = state.gameInfo.participants.map(participant => {
+        if (action.accountId === participant.accountId) {
+          return { ...participant, recentRankedMatches: action.payload } 
+        } else {
+          return participant
+        }
+      })
+      return {
+        ...state,
+        gameInfo: {
+          ...state.gameInfo,
+          participants: participantsWithRecentRankedMatches
+        }
+      }
     default:
       return state
   }

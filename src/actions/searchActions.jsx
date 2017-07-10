@@ -24,7 +24,7 @@ const errorFetchingCurrentGame = (error) => {
 export const getCurrentGame = (serviceRegion, summonerName) => {
   return (dispatch) => {
     dispatch(fetchingCurrentGame())
-    return axios.get(`/api/accountId?serviceRegion=${serviceRegion}&summonerName=${summonerName}`)
+    return axios.get(`/api/summonerId?serviceRegion=${serviceRegion}&summonerName=${summonerName}`)
       .then(response => {
         return axios.get(`/api/currentGame?serviceRegion=${serviceRegion}&summonerId=${response.data}`)
           .then(response => {

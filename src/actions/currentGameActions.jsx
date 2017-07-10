@@ -24,6 +24,22 @@ const receivedRankedLeague = (payload, summonerId) => {
   }
 }
 
+const receivedAccountId = (payload, summonerId) => {
+  return {
+    type: actions.RECEIVED_ACCOUNT_ID,
+    payload,
+    summonerId
+  }
+}
+
+const receivedRecentRankedMatches = (payload, accountId) => {
+  return {
+    type: actions.RECEIVED_RECENT_RANKED_MATCHES,
+    payload,
+    accountId
+  }
+}
+
 export const getRealmVersion = (serviceRegion) => {
   return (dispatch) => {
     return axios.get(`/api/realmVersion?serviceRegion=${serviceRegion}`)
@@ -53,6 +69,30 @@ export const getRankedLeague = (serviceRegion, summonerId) => {
     return axios.get(`/api/rankedLeague?serviceRegion=${serviceRegion}&summonerId=${summonerId}`)
       .then(response => {
         dispatch(receivedRankedLeague(response.data, summonerId))
+        return response
+      }).catch(err => {
+        return err.response
+      })
+  }
+}
+
+export const getAccountId = (serviceRegion, summonerId) => {
+  return (dispatch) => {
+    return axios.get(`/api/accountId?serviceRegion=${serviceRegion}&summonerId=${summonerId}`)
+      .then(response => {
+        dispatch(receivedAccountId(response.data, summonerId))
+        return response
+      }).catch(err => {
+        return err.response
+      })
+  }
+}
+
+export const getRecentRankedMatches = (serviceRegion, accountId) => {
+  return (dispatch) => {
+    return axios.get(`/api/recentRankedMatches?serviceRegion=${serviceRegion}&accountId=${accountId}`)
+      .then(response => {
+        dispatch(receivedRecentRankedMatches(response.data, accountId))
         return response
       }).catch(err => {
         return err.response

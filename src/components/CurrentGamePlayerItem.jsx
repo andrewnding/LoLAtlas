@@ -14,7 +14,8 @@ class CurrentGamePlayerItem extends React.Component {
         // Bronze through Challenger
         this.tier = rankedData.tier
       }
-    }    
+    }
+    console.log(this.props.playerData)
   }
 
   rankedBadgeSrc() {

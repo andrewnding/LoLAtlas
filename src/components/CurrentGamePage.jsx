@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentGame } from '../actions/searchActions'
-import { getRealmVersion, getChampionImages, getRankedLeague } from '../actions/currentGameActions'
+import { getRealmVersion, getChampionImages, getRankedLeague, getAccountId, getRecentRankedMatches } from '../actions/currentGameActions'
 import sleep from '../utils/sleep'
 
 import CurrentGamePlayerList from './CurrentGamePlayerList'
@@ -33,16 +33,32 @@ class CurrentGamePage extends React.Component {
             }).catch(error => {
               console.log(error)
             })
+            // Delay to avoid rate limiting
+            sleep(100)
           
           this.props.currentGame.gameInfo.participants.map(participant => {
             this.props.dispatch(getRankedLeague(this.props.match.params.region, participant.summonerId))
               .then(response => {
-                this.setState({ numberOfChampionsLoaded: this.state.numberOfChampionsLoaded + 1 })
+                
               }).catch(error => {
 
               })
-            // Delay to avoid rate limiting
-            sleep(50)
+              // Delay to avoid rate limiting
+              sleep(100)
+
+            this.props.dispatch(getAccountId(this.props.match.params.region, participant.summonerId))
+              .then(response => {
+                this.props.dispatch(getRecentRankedMatches(this.props.match.params.region, response.data))
+                  .then(response => {
+                    this.setState({ numberOfChampionsLoaded: this.state.numberOfChampionsLoaded + 1 })
+                  }).catch(error => {
+
+                  })
+              }).catch(error => {
+
+              })
+              // Delay to avoid rate limiting
+              sleep(100)
           })
         }
       }).catch(error => {
@@ -72,6 +88,7 @@ class CurrentGamePage extends React.Component {
   }
 
   render() {
+    console.log(this.props.currentGame.gameInfo.participants)
     return (
       <div className="container-fluid">
         Current Game Page
