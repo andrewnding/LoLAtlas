@@ -15,7 +15,6 @@ class CurrentGamePlayerItem extends React.Component {
         this.tier = rankedData.tier
       }
     }
-    console.log(this.props.playerData)
   }
 
   rankedBadgeSrc() {
@@ -108,6 +107,20 @@ class CurrentGamePlayerItem extends React.Component {
     }
   }
 
+  renderRecentRankedMatches() {
+    if (!this.props.playerData.recentRankedMatches) {
+      return
+    }
+    const recentRankedMatches = this.props.playerData.recentRankedMatches.map((match, i) => {
+      return (
+        <div key={i}>
+          <span>gameId: {match.gameDetails.gameId}</span>
+        </div>
+      )
+    })
+    return recentRankedMatches
+  }
+
   render() {
     let rankedData = this.props.playerData.rankedData
     return (
@@ -129,6 +142,10 @@ class CurrentGamePlayerItem extends React.Component {
             {this.renderWinPercent()}
             </div>
           </span>
+        </div>
+        <div>
+          <span>Recent Ranked Matches</span>
+          {this.renderRecentRankedMatches()}
         </div>
       </div>
     )

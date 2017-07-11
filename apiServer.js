@@ -50,7 +50,7 @@ app.get('/realmVersion', (req, res) => {
       res.json(response.data)
     }).catch(error => {
       console.log(error)
-      res.status(404).send({ error: 'INVALID_REGIONAL_ENDPOINT' })
+      res.status(error.response.data.status.status_code).send({ error: 'INVALID_REGIONAL_ENDPOINT' })
     })
 })
 
@@ -60,7 +60,7 @@ app.get('/championImages', (req, res) => {
       res.json(response.data)
     }).catch(error => {
       console.log(error)
-      res.status(404).send({ error: 'CHAMPION_NOT_FOUND' })
+      res.status(error.response.data.status.status_code).send({ error: 'CHAMPION_NOT_FOUND' })
     })
 })
 
@@ -87,7 +87,7 @@ app.get('/accountId', (req, res) => {
       res.json(response.data.accountId)
     }).catch(error => {
       console.log(error)
-      res.status(404).send({ error: 'ACCOUNT_NOT_FOUND' })
+      res.status(error.response.data.status.status_code).send({ error: 'ACCOUNT_NOT_FOUND' })
     })
 })
 
@@ -97,8 +97,17 @@ app.get('/recentRankedMatches', (req, res) => {
       res.json(response.data.matches.slice(0, 5))
     }).catch(error => {
       console.log(error)
-      console.log(req.query.accountId)
-      res.status(404).send({ error: 'MATCHES_NOT_FOUND' })
+      res.status(error.response.data.status.status_code).send({ error: 'MATCHES_NOT_FOUND' })
+    })
+})
+
+app.get('/recentRankedMatchesDetails', (req, res) => {
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matches/${req.query.gameId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      res.json(response.data)
+    }).catch(error => {
+      console.log(error)
+      res.status(error.response.data.status.status_code).send({ error: 'MATCH_NOT_FOUND' })
     })
 })
 

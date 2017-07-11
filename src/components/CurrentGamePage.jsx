@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentGame } from '../actions/searchActions'
-import { getRealmVersion, getChampionImages, getRankedLeague, getAccountId, getRecentRankedMatches } from '../actions/currentGameActions'
+import { getRealmVersion, getChampionImages, getRankedLeague, getAccountId, getRecentRankedMatches, getRecentRankedMatchesDetails } from '../actions/currentGameActions'
 import sleep from '../utils/sleep'
 
 import CurrentGamePlayerList from './CurrentGamePlayerList'
@@ -12,7 +12,8 @@ class CurrentGamePage extends React.Component {
     this.state = {
       receivedChampionImages: false,
       receivedRealmVersion: false,
-      numberOfChampionsLoaded: 0
+      numberOfChampionsLoaded: 0,
+      numberOfMatchesLoaded: 0
     }
 
     this.loadCurrentGameData()
@@ -34,22 +35,32 @@ class CurrentGamePage extends React.Component {
               console.log(error)
             })
             // Delay to avoid rate limiting
-            sleep(100)
+            sleep(200)
           
           this.props.currentGame.gameInfo.participants.map(participant => {
             this.props.dispatch(getRankedLeague(this.props.match.params.region, participant.summonerId))
               .then(response => {
                 
               }).catch(error => {
-
+                console.log(error)
               })
               // Delay to avoid rate limiting
-              sleep(100)
+              sleep(200)
 
             this.props.dispatch(getAccountId(this.props.match.params.region, participant.summonerId))
               .then(response => {
                 this.props.dispatch(getRecentRankedMatches(this.props.match.params.region, response.data))
                   .then(response => {
+                    response.data.map((match) => {
+                      this.props.dispatch(getRecentRankedMatchesDetails(this.props.match.params.region, participant.summonerId, match.gameId))
+                        .then(response => {
+                          this.setState({ numberOfMatchesLoaded: this.state.numberOfMatchesLoaded + 1 })
+                        }).catch(error => {
+                          console.log(error)
+                        })
+                      // Delay to avoid rate limiting
+                      sleep(200)
+                    })
                     this.setState({ numberOfChampionsLoaded: this.state.numberOfChampionsLoaded + 1 })
                   }).catch(error => {
 
@@ -58,7 +69,7 @@ class CurrentGamePage extends React.Component {
 
               })
               // Delay to avoid rate limiting
-              sleep(100)
+              sleep(200)
           })
         }
       }).catch(error => {
@@ -76,7 +87,7 @@ class CurrentGamePage extends React.Component {
   }
 
   doneFetchingData() {
-    return this.state.receivedChampionImages && this.state.receivedRealmVersion && (this.state.numberOfChampionsLoaded === 10)
+    return this.state.receivedChampionImages && this.state.receivedRealmVersion && (this.state.numberOfChampionsLoaded === 10) && (this.state.numberOfMatchesLoaded === 50)
   }
 
   renderPlayerList() {
@@ -88,7 +99,6 @@ class CurrentGamePage extends React.Component {
   }
 
   render() {
-    console.log(this.props.currentGame.gameInfo.participants)
     return (
       <div className="container-fluid">
         Current Game Page

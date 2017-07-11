@@ -2,7 +2,8 @@ import * as actions from '../constants/actionTypes'
 
 const initialState = {
   gameInfo: {},
-  realmVersion: ''
+  realmVersion: '',
+  recentRankedMatches: []
 }
 
 const currentGameReducer = (state = initialState, action) => {
@@ -71,6 +72,28 @@ const currentGameReducer = (state = initialState, action) => {
         gameInfo: {
           ...state.gameInfo,
           participants: participantsWithRecentRankedMatches
+        }
+      }
+    case actions.RECEIVED_RECENT_RANKED_MATCHES_DETAILS:
+      let participantsWithRecentRankedMatchesDetails = state.gameInfo.participants.map(participant => {
+        if (action.summonerId === participant.summonerId) {
+          let matches = participant.recentRankedMatches.map(match => {
+            if (action.gameId === match.gameId) {
+              return { ...match, gameDetails: action.payload }
+            } else {
+              return match
+            }
+          })
+          return { ...participant, recentRankedMatches: matches }
+        } else {
+          return participant
+        }
+      })
+      return {
+        ...state,
+        gameInfo: {
+          ...state.gameInfo,
+          participants: participantsWithRecentRankedMatchesDetails
         }
       }
     default:

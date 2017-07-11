@@ -40,6 +40,15 @@ const receivedRecentRankedMatches = (payload, accountId) => {
   }
 }
 
+const receivedRecentRankedMatchesDetails = (payload, summonerId, gameId) => {
+  return {
+    type: actions.RECEIVED_RECENT_RANKED_MATCHES_DETAILS,
+    payload,
+    summonerId,
+    gameId
+  }
+}
+
 export const getRealmVersion = (serviceRegion) => {
   return (dispatch) => {
     return axios.get(`/api/realmVersion?serviceRegion=${serviceRegion}`)
@@ -65,6 +74,7 @@ export const getChampionImages = (serviceRegion) => {
 }
 
 export const getRankedLeague = (serviceRegion, summonerId) => {
+  console.log('GETTING RANKED LEAGUE')
   return (dispatch) => {
     return axios.get(`/api/rankedLeague?serviceRegion=${serviceRegion}&summonerId=${summonerId}`)
       .then(response => {
@@ -77,6 +87,7 @@ export const getRankedLeague = (serviceRegion, summonerId) => {
 }
 
 export const getAccountId = (serviceRegion, summonerId) => {
+  console.log('GETTING ACCOUNT ID')
   return (dispatch) => {
     return axios.get(`/api/accountId?serviceRegion=${serviceRegion}&summonerId=${summonerId}`)
       .then(response => {
@@ -89,10 +100,24 @@ export const getAccountId = (serviceRegion, summonerId) => {
 }
 
 export const getRecentRankedMatches = (serviceRegion, accountId) => {
+  console.log('GETTING RANKED MATCHES')
   return (dispatch) => {
     return axios.get(`/api/recentRankedMatches?serviceRegion=${serviceRegion}&accountId=${accountId}`)
       .then(response => {
         dispatch(receivedRecentRankedMatches(response.data, accountId))
+        return response
+      }).catch(err => {
+        return err.response
+      })
+  }
+}
+
+export const getRecentRankedMatchesDetails = (serviceRegion, summonerId, gameId) => {
+  console.log('GETTING RANKED MATCH DETAILS')
+  return (dispatch) => {
+    return axios.get(`/api/recentRankedMatchesDetails?serviceRegion=${serviceRegion}&gameId=${gameId}`)
+      .then(response => {
+        dispatch(receivedRecentRankedMatchesDetails(response.data, summonerId, gameId))
         return response
       }).catch(err => {
         return err.response
