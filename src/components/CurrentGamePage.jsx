@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentGame } from '../actions/searchActions'
 import { getRealmVersion, getChampionImages, getRankedLeague, getAccountId, getRecentRankedMatches, getRecentRankedMatchesDetails } from '../actions/currentGameActions'
-import sleep from '../utils/sleep'
 
 import CurrentGamePlayerList from './CurrentGamePlayerList'
 
@@ -34,8 +33,6 @@ class CurrentGamePage extends React.Component {
             }).catch(error => {
               console.log(error)
             })
-            // Delay to avoid rate limiting
-            sleep(200)
           
           this.props.currentGame.gameInfo.participants.map(participant => {
             this.props.dispatch(getRankedLeague(this.props.match.params.region, participant.summonerId))
@@ -44,8 +41,6 @@ class CurrentGamePage extends React.Component {
               }).catch(error => {
                 console.log(error)
               })
-              // Delay to avoid rate limiting
-              sleep(200)
 
             this.props.dispatch(getAccountId(this.props.match.params.region, participant.summonerId))
               .then(response => {
@@ -58,8 +53,6 @@ class CurrentGamePage extends React.Component {
                         }).catch(error => {
                           console.log(error)
                         })
-                      // Delay to avoid rate limiting
-                      sleep(200)
                     })
                     this.setState({ numberOfChampionsLoaded: this.state.numberOfChampionsLoaded + 1 })
                   }).catch(error => {
@@ -68,8 +61,6 @@ class CurrentGamePage extends React.Component {
               }).catch(error => {
 
               })
-              // Delay to avoid rate limiting
-              sleep(200)
           })
         }
       }).catch(error => {

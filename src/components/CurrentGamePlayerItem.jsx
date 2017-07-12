@@ -122,6 +122,7 @@ class CurrentGamePlayerItem extends React.Component {
   }
 
   render() {
+    console.log(this.props.playerData)
     let rankedData = this.props.playerData.rankedData
     return (
       <div className='player-item-container'>

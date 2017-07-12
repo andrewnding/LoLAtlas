@@ -5,6 +5,8 @@ var axios = require('axios');
 var _ = require('lodash');
 var regionalEndpoints = require('./src/constants/regionalEndpoints');
 var app = express();
+var Bottleneck = require('bottleneck');
+var limiter = new Bottleneck(10, 100);
 
 var summonerNotFoundResponse = {
   message: 'Data not found - summoner not found',
@@ -16,8 +18,8 @@ var dataNotFoundResponse = {
   status_code: 404
 }
 
-app.get('/summonerId', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+function getSummonerId(req, res) {
+  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data.id)
     }).catch(error => {
@@ -28,10 +30,14 @@ app.get('/summonerId', (req, res) => {
       res.status(error.response.data.status.status_code)
       console.log(error)
     })
+}
+
+app.get('/summonerId', (req, res) => {
+  limiter.schedule(getSummonerId, req, res)
 })
 
-app.get('/currentGame', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/spectator/v3/active-games/by-summoner/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+function getCurrentGame(req, res) {
+  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/spectator/v3/active-games/by-summoner/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data)
     }).catch(error => {
@@ -42,16 +48,24 @@ app.get('/currentGame', (req, res) => {
       res.status(error.response.data.status.status_code)
       console.log(error)
     })
+}
+
+app.get('/currentGame', (req, res) => {
+  limiter.schedule(getCurrentGame, req, res)
 })
 
-app.get('/realmVersion', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/realms`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+function getRealmVersion(req, res) {
+  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/realms`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data)
     }).catch(error => {
       console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'INVALID_REGIONAL_ENDPOINT' })
     })
+}
+
+app.get('/realmVersion', (req, res) => {
+  limiter.schedule(getRealmVersion, req, res)
 })
 
 app.get('/championImages', (req, res) => {
@@ -64,8 +78,8 @@ app.get('/championImages', (req, res) => {
     })
 })
 
-app.get('/rankedLeague', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/league/v3/positions/by-summoner/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+function getRankedLeague(req, res) {
+  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/league/v3/positions/by-summoner/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       var rankedSoloData = response.data.filter(data => {
         return data.queueType === 'RANKED_SOLO_5x5'
@@ -79,36 +93,52 @@ app.get('/rankedLeague', (req, res) => {
       console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'PLAYER_NOT_FOUND '})
     })
+}
+
+app.get('/rankedLeague', (req, res) => {
+  limiter.schedule(getRankedLeague, req, res)
 })
 
-app.get('/accountId', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+function getAccountId(req, res) {
+  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data.accountId)
     }).catch(error => {
       console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'ACCOUNT_NOT_FOUND' })
     })
+}
+
+app.get('/accountId', (req, res) => {
+  limiter.schedule(getAccountId, req, res)
 })
 
-app.get('/recentRankedMatches', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matchlists/by-account/${req.query.accountId}?queue=420&season=8`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+function getRecentRankedMatches(req, res) {
+  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matchlists/by-account/${req.query.accountId}?queue=420&season=9`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data.matches.slice(0, 5))
     }).catch(error => {
       console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'MATCHES_NOT_FOUND' })
     })
+}
+
+app.get('/recentRankedMatches', (req, res) => {
+  limiter.schedule(getRecentRankedMatches, req, res)
 })
 
-app.get('/recentRankedMatchesDetails', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matches/${req.query.gameId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+function getRecentRankedMatchesDetails(req, res) {
+  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matches/${req.query.gameId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data)
     }).catch(error => {
       console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'MATCH_NOT_FOUND' })
     })
+}
+
+app.get('/recentRankedMatchesDetails', (req, res) => {
+  limiter.schedule(getRecentRankedMatchesDetails, req, res)
 })
 
 app.listen(3001, (err) => {

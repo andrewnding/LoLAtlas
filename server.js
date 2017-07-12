@@ -5,7 +5,7 @@ var logger = require('morgan');
 var httpProxy = require('http-proxy');
 
 var app = express();
-app.use(logger('dev'));
+// app.use(logger('dev'));
 
 app.use(express.static('public'));
 
