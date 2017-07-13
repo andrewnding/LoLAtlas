@@ -6,7 +6,7 @@ var _ = require('lodash');
 var regionalEndpoints = require('./src/constants/regionalEndpoints');
 var app = express();
 var Bottleneck = require('bottleneck');
-var limiter = new Bottleneck(10, 100);
+var limiter = new Bottleneck(20, 60);
 
 var summonerNotFoundResponse = {
   message: 'Data not found - summoner not found',

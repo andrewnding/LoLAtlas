@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import RankedMatchesList from './RankedMatchesList'
+
 class CurrentGamePlayerItem extends React.Component {
   constructor(props) {
     super(props)
@@ -114,7 +116,8 @@ class CurrentGamePlayerItem extends React.Component {
     const recentRankedMatches = this.props.playerData.recentRankedMatches.map((match, i) => {
       return (
         <div key={i}>
-          <span>gameId: {match.gameDetails.gameId}</span>
+          
+          <span>{match.gameDetails.gameId}</span>
         </div>
       )
     })
@@ -122,7 +125,6 @@ class CurrentGamePlayerItem extends React.Component {
   }
 
   render() {
-    console.log(this.props.playerData)
     let rankedData = this.props.playerData.rankedData
     return (
       <div className='player-item-container'>
@@ -140,13 +142,16 @@ class CurrentGamePlayerItem extends React.Component {
           <span>
             Win / Loss: {rankedData.wins} / {rankedData.losses}
             <div>
-            {this.renderWinPercent()}
+              {this.renderWinPercent()}
             </div>
           </span>
         </div>
         <div>
           <span>Recent Ranked Matches</span>
-          {this.renderRecentRankedMatches()}
+          <RankedMatchesList
+            matches={this.props.playerData.recentRankedMatches}
+            playerData={this.props.playerData}
+          />
         </div>
       </div>
     )
