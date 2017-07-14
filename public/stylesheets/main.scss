@@ -2,7 +2,10 @@ $blue-team-color: #a9e6ff;
 $purple-team-color: #c1aeda;
 $win-green: #25b325;
 $lose-red: #d62c2c;
+$victory-green: #abecab;
+$defeat-red: #fdb6b6;
 $undecided-gray: #4c4c4c;
+$light-gray: #888888;
 
 .team-row {
   margin-bottom: 30px;
@@ -18,6 +21,10 @@ $undecided-gray: #4c4c4c;
   .purple-team-background {
     background-color: $purple-team-color;
   }
+}
+
+.ranked-match-item {
+  height: 50px;
 }
 
 .vertical-align {
@@ -52,4 +59,14 @@ $undecided-gray: #4c4c4c;
 
 .float-right {
   float: right;
+}
+
+.victory-background {
+  border-top: 1px solid $light-gray;
+  background-color: $victory-green;
+}
+
+.defeat-background {
+  border-top: 1px solid $light-gray;
+  background-color: $defeat-red;
 }
