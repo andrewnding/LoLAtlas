@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import classNames from 'classnames'
 import secondsToTime from '../utils/secondsToTime'
 
@@ -45,31 +46,55 @@ class RankedMatchesItem extends React.Component {
     return this.props.staticData.championImages[this.props.match.champion].image.full
   }
 
+  renderGameEndTime() {
+    return (
+      <span>
+        {moment(this.props.match.gameDetails.gameCreation).fromNow()}
+      </span>
+    )
+  }
+
   renderGameDuration() {
     const duration = secondsToTime(this.props.match.gameDetails.gameDuration)
 
-    return [
-      <span key={0}>{duration.hours}h </span>,
-      <span key={1}>{duration.minutes}m </span>,
-      <span key={2}>{duration.seconds}s</span>
-    ]
+    if (duration.hours > 0) {
+      return (
+        <span>
+          {[
+            <span key={0}>{duration.hours}h </span>,
+            <span key={1}>{duration.minutes}m </span>,
+            <span key={2}>{duration.seconds}s</span>
+          ]}
+        </span>
+      )
+    }
+    return (
+        <span>
+          {[
+            <span key={1}>{duration.minutes}m </span>,
+            <span key={2}>{duration.seconds}s</span>
+          ]}
+        </span>
+      )
   }
 
   render() {
     const myClassNames = classNames({
-      'ranked-match-item': true,
       'victory-background': this.result === 'Victory',
       'defeat-background': this.result === 'Defeat',
       'remake-background': this.result === 'Remake'
     })
     return (
       <div className={myClassNames}>
-        {this.renderGameDuration()}
+        <div className="space-between item-header-text">
+          <span>{this.result}</span>
+          {this.renderGameEndTime()}
+          {this.renderGameDuration()}
+        </div>
         <img
           src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/champion/${this.championImage()}`}
-          className="medium-icon"
+          className="medium-icon circular-icon"
         />
-        <span>{this.result}</span>
       </div>
     )
   }
