@@ -13,7 +13,7 @@ class CurrentGamePlayerList extends React.Component {
     ))
     return players.map((player, i) => (
       <div className="col-md-2" key={i}>
-        <CurrentGamePlayerItem playerData={player} />      
+        <CurrentGamePlayerItem player={player} />      
       </div>
     ))
   }
@@ -24,7 +24,7 @@ class CurrentGamePlayerList extends React.Component {
     ))
     return players.map((player, i) => (
       <div className="col-md-2" key={i}>
-        <CurrentGamePlayerItem playerData={player} />      
+        <CurrentGamePlayerItem player={player} />      
       </div>
     ))
   }

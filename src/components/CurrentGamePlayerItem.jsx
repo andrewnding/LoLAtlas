@@ -7,7 +7,7 @@ class CurrentGamePlayerItem extends React.Component {
   constructor(props) {
     super(props)
 
-    let rankedData = this.props.playerData.rankedData
+    let rankedData = this.props.player.rankedData
     if (rankedData) {
       if (rankedData.length === 0) {
         // Unranked
@@ -20,7 +20,7 @@ class CurrentGamePlayerItem extends React.Component {
   }
 
   rankedBadgeSrc() {
-    let rankedData = this.props.playerData.rankedData
+    let rankedData = this.props.player.rankedData
     let rank = rankedData.rank
 
     if (!this.tier) {
@@ -42,17 +42,17 @@ class CurrentGamePlayerItem extends React.Component {
   }
 
   teamColor() {
-    if (this.props.playerData.teamId === 100) {
+    if (this.props.player.teamId === 100) {
       return 'blue-team-background'
     }
 
-    if (this.props.playerData.teamId === 200) {
+    if (this.props.player.teamId === 200) {
       return 'purple-team-background'
     }
   }
 
   renderRankInfo() {
-    let rankedData = this.props.playerData.rankedData
+    let rankedData = this.props.player.rankedData
     if (!rankedData) {
       return <span></span>
     }
@@ -98,7 +98,7 @@ class CurrentGamePlayerItem extends React.Component {
   }
 
   renderWinPercent() {
-    let rankedData = this.props.playerData.rankedData
+    let rankedData = this.props.player.rankedData
     let winPercent = ((rankedData.wins / (rankedData.wins + rankedData.losses)) * 100).toFixed(0)
     if (winPercent > 53) {
       return <span className='color-green'>{winPercent}%</span>
@@ -110,10 +110,10 @@ class CurrentGamePlayerItem extends React.Component {
   }
 
   renderRecentRankedMatches() {
-    if (!this.props.playerData.recentRankedMatches) {
+    if (!this.props.player.recentRankedMatches) {
       return
     }
-    const recentRankedMatches = this.props.playerData.recentRankedMatches.map((match, i) => {
+    const recentRankedMatches = this.props.player.recentRankedMatches.map((match, i) => {
       return (
         <div key={i}>
           
@@ -124,16 +124,20 @@ class CurrentGamePlayerItem extends React.Component {
     return recentRankedMatches
   }
 
+  championImage() {
+    return this.props.staticData.championImages[this.props.player.championId].image.full
+  }
+
   render() {
-    let rankedData = this.props.playerData.rankedData
+    let rankedData = this.props.player.rankedData
     return (
       <div className='player-item-container'>
         <div className={`player-item-title ${this.teamColor()}`}>
           <img
-            src={`http://ddragon.leagueoflegends.com/cdn/${this.props.currentGame.realmVersion}/img/champion/${this.props.playerData.championImage}`}
+            src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/champion/${this.championImage()}`}
             className="medium-icon"
           />
-          <span>{this.props.playerData.summonerName}</span>
+          <span>{this.props.player.summonerName}</span>
         </div>
         <div className='player-item-stats'>
           {this.renderRankInfo()}
@@ -149,8 +153,8 @@ class CurrentGamePlayerItem extends React.Component {
         <div>
           <span>Recent Ranked Matches</span>
           <RankedMatchesList
-            matches={this.props.playerData.recentRankedMatches}
-            playerData={this.props.playerData}
+            matches={this.props.player.recentRankedMatches}
+            player={this.props.player}
           />
         </div>
       </div>
@@ -160,7 +164,8 @@ class CurrentGamePlayerItem extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentGame: state.currentGameReducer
+    currentGame: state.currentGameReducer,
+    staticData: state.staticDataReducer
   }
 }
 

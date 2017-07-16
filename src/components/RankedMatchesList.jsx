@@ -8,14 +8,16 @@ export default class RankedMatchesList extends React.Component {
 
   renderRankedMatchesItems() {
     return (
-      this.props.matches.map((match, i) => (
-        <div key={i}>
-          <RankedMatchesItem
-            match={match}
-            playerData={this.props.playerData}
-          />
-        </div>
-      ))
+      this.props.matches.map((match, i) => {
+        return (
+          <div key={i}>
+            <RankedMatchesItem
+              match={match}
+              player={this.props.player}
+            />
+          </div>
+        )
+      })
     )
   }
 

@@ -6,6 +6,7 @@ $victory-green: #abecab;
 $defeat-red: #fdb6b6;
 $undecided-gray: #4c4c4c;
 $light-gray: #888888;
+$remake-gray: #bbbbbb;
 
 .team-row {
   margin-bottom: 30px;
@@ -38,7 +39,7 @@ $light-gray: #888888;
 }
 
 .medium-icon {
-  width: 20%;
+  width: 40px;
 }
 
 .series-icon {
@@ -69,4 +70,9 @@ $light-gray: #888888;
 .defeat-background {
   border-top: 1px solid $light-gray;
   background-color: $defeat-red;
+}
+
+.remake-background {
+  border-top: 1px solid $light-gray;
+  background-color: $remake-gray;
 }

@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentGame } from '../actions/searchActions'
-import { getRealmVersion, getChampionImages, getRankedLeague, getAccountId, getRecentRankedMatches, getRecentRankedMatchesDetails } from '../actions/currentGameActions'
+import { getRankedLeague, getAccountId, getRecentRankedMatches, getRecentRankedMatchesDetails } from '../actions/currentGameActions'
+import { getRealmVersion, getChampionImages } from '../actions/staticDataActions'
 
 import CurrentGamePlayerList from './CurrentGamePlayerList'
 

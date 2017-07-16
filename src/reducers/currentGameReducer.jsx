@@ -2,7 +2,6 @@ import * as actions from '../constants/actionTypes'
 
 const initialState = {
   gameInfo: {},
-  realmVersion: '',
   recentRankedMatches: []
 }
 
@@ -12,22 +11,6 @@ const currentGameReducer = (state = initialState, action) => {
       return {
         ...state,
         gameInfo: action.payload
-      }
-    case actions.RECEIVED_REALM_VERSION:
-      return {
-        ...state,
-        realmVersion: action.payload
-      }
-    case actions.RECEIVED_CHAMPION_IMAGES:
-      let participantsWithImages = state.gameInfo.participants.map(participant => {
-        return { ...participant, championImage: action.payload[participant.championId].image.full }
-      })
-      return {
-        ...state,
-        gameInfo: {
-          ...state.gameInfo,
-          participants: participantsWithImages
-        }
       }
     case actions.RECEIVED_RANKED_LEAGUE:
       let participantsWithLeagues = state.gameInfo.participants.map(participant => {

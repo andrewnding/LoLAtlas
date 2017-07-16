@@ -7,36 +7,69 @@ class RankedMatchesItem extends React.Component {
   constructor(props) {
     super(props)
 
-    if (this.winOrLose(this.props.match.gameDetails.teams) === 'Victory') {
-      this.win = true
-    } else {
-      this.win = false
-    }
+    this.participantId = this.getParticipantId()
+    this.teamId = this.getTeamId()
+    this.result = this.winOrLose()
   }
 
-  winOrLose(teams) {
-    const playerTeamData = teams.filter(team => {
-      return team.teamId === this.props.playerData.teamId
+  getParticipantId() {
+    const currentParticipantIdentity = this.props.match.gameDetails.participantIdentities.filter(identity => {
+      return identity.player.summonerName === this.props.player.summonerName
     })
+    return currentParticipantIdentity ? currentParticipantIdentity[0].participantId : null
+  }
+
+  getTeamId() {
+    const currentParticipant = this.props.match.gameDetails.participants.filter(participant => {
+      return participant.participantId === this.participantId
+    })
+    return currentParticipant ? currentParticipant[0].teamId : null
+  }
+
+  winOrLose() {
+    if (this.props.match.gameDetails.gameDuration < 300) {
+      return 'Remake'
+    }
+
+    const playerTeamData = this.props.match.gameDetails.teams.filter(team => {
+      return team.teamId === this.teamId
+    })
+
     if (playerTeamData[0].win === 'Win') {
       return 'Victory'
     }
     return 'Defeat'
   }
 
+  championImage() {
+    return this.props.staticData.championImages[this.props.match.champion].image.full
+  }
+
+  renderGameDuration() {
+    const duration = secondsToTime(this.props.match.gameDetails.gameDuration)
+
+    return [
+      <span key={0}>{duration.hours}h </span>,
+      <span key={1}>{duration.minutes}m </span>,
+      <span key={2}>{duration.seconds}s</span>
+    ]
+  }
+
   render() {
     const myClassNames = classNames({
       'ranked-match-item': true,
-      'victory-background': this.win,
-      'defeat-background': !this.win
+      'victory-background': this.result === 'Victory',
+      'defeat-background': this.result === 'Defeat',
+      'remake-background': this.result === 'Remake'
     })
     return (
       <div className={myClassNames}>
+        {this.renderGameDuration()}
         <img
-          src={`http://ddragon.leagueoflegends.com/cdn/${this.props.currentGame.realmVersion}/img/champion/${this.props.playerData.championImage}`}
+          src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/champion/${this.championImage()}`}
           className="medium-icon"
         />
-        <span>{this.win ? 'Victory' : 'Defeat'}</span>
+        <span>{this.result}</span>
       </div>
     )
   }
@@ -44,7 +77,8 @@ class RankedMatchesItem extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentGame: state.currentGameReducer
+    currentGame: state.currentGameReducer,
+    staticData: state.staticDataReducer
   }
 }
 

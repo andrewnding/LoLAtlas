@@ -54,18 +54,14 @@ app.get('/currentGame', (req, res) => {
   limiter.schedule(getCurrentGame, req, res)
 })
 
-function getRealmVersion(req, res) {
-  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/realms`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+app.get('/realmVersion', (req, res) => {
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/realms`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data)
     }).catch(error => {
       console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'INVALID_REGIONAL_ENDPOINT' })
     })
-}
-
-app.get('/realmVersion', (req, res) => {
-  limiter.schedule(getRealmVersion, req, res)
 })
 
 app.get('/championImages', (req, res) => {
