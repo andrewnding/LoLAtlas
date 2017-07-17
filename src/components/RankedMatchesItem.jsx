@@ -78,6 +78,18 @@ class RankedMatchesItem extends React.Component {
       )
   }
 
+  renderKda() {
+    const currentParticipant = this.props.match.gameDetails.participants.filter(participant => {
+      return participant.participantId === this.participantId
+    })
+
+    if (currentParticipant.length === 0) {
+      return <span></span>
+    }
+    const participantStats = currentParticipant[0].stats
+    return <span>{participantStats.kills}/{participantStats.deaths}/{participantStats.assists}</span>
+  }
+
   render() {
     const myClassNames = classNames({
       'victory-background': this.result === 'Victory',
@@ -95,6 +107,9 @@ class RankedMatchesItem extends React.Component {
           src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/champion/${this.championImage()}`}
           className="medium-icon circular-icon"
         />
+        <span>
+          {this.renderKda()}
+        </span>
       </div>
     )
   }
