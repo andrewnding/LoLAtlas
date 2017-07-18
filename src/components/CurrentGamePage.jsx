@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentGame } from '../actions/searchActions'
-import { getRankedLeague, getAccountId, getRecentRankedMatches, getRecentRankedMatchesDetails } from '../actions/currentGameActions'
-import { getRealmVersion, getChampionImages } from '../actions/staticDataActions'
+import { getRankedLeague, getAccountId, getRecentRankedMatches, getRecentRankedMatchesDetails, getChampionMastery } from '../actions/currentGameActions'
+import { getRealmVersion, getChampionImages, getChampionData } from '../actions/staticDataActions'
 
 import CurrentGamePlayerList from './CurrentGamePlayerList'
 
@@ -11,9 +11,11 @@ class CurrentGamePage extends React.Component {
     super(props)
     this.state = {
       receivedChampionImages: false,
+      receivedChampionData: false,
       receivedRealmVersion: false,
-      numberOfChampionsLoaded: 0,
-      numberOfMatchesLoaded: 0
+      numberOfSummonersLoaded: 0,
+      numberOfMatchesLoaded: 0,
+      numberOfChampionMasteriesLoaded: 0
     }
 
     this.loadCurrentGameData()
@@ -30,6 +32,15 @@ class CurrentGamePage extends React.Component {
             .then(response => {
               if (response.status === 200) {
                 this.setState({ receivedChampionImages: true })
+              }
+            }).catch(error => {
+              console.log(error)
+            })
+
+          this.props.dispatch(getChampionData(this.props.match.params.region))
+            .then(response => {
+              if (response.status === 200) {
+                this.setState({ receivedChampionData: true })
               }
             }).catch(error => {
               console.log(error)
@@ -55,10 +66,17 @@ class CurrentGamePage extends React.Component {
                           console.log(error)
                         })
                     })
-                    this.setState({ numberOfChampionsLoaded: this.state.numberOfChampionsLoaded + 1 })
+                    this.setState({ numberOfSummonersLoaded: this.state.numberOfSummonersLoaded + 1 })
                   }).catch(error => {
 
                   })
+              }).catch(error => {
+
+              })
+            
+            this.props.dispatch(getChampionMastery(this.props.match.params.region, participant.summonerId, participant.championId))
+              .then(response => {
+                this.setState({ numberOfChampionMasteriesLoaded: this.state.numberOfChampionMasteriesLoaded + 1 })
               }).catch(error => {
 
               })
@@ -79,7 +97,7 @@ class CurrentGamePage extends React.Component {
   }
 
   doneFetchingData() {
-    return this.state.receivedChampionImages && this.state.receivedRealmVersion && (this.state.numberOfChampionsLoaded === 10) && (this.state.numberOfMatchesLoaded === 50)
+    return this.state.receivedChampionImages && this.state.receivedRealmVersion && (this.state.numberOfSummonersLoaded === 10) && (this.state.numberOfMatchesLoaded === 50) && (this.state.numberOfChampionMasteriesLoaded === 10) && this.state.receivedChampionData
   }
 
   renderPlayerList() {
@@ -103,7 +121,8 @@ class CurrentGamePage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     search: state.searchReducer,
-    currentGame: state.currentGameReducer
+    currentGame: state.currentGameReducer,
+    staticData: state.staticDataReducer
   }
 }
 

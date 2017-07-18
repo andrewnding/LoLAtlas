@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import moment from 'moment'
 
 import RankedMatchesList from './RankedMatchesList'
 
@@ -149,6 +150,14 @@ class CurrentGamePlayerItem extends React.Component {
               {this.renderWinPercent()}
             </div>
           </span>
+        </div>
+        <div>
+          <span>Champion Mastery</span>
+          <div>
+            <div>Champion Level: {this.props.player.currentChampionMastery.championLevel}</div>
+            <div>Champion Points: {this.props.player.currentChampionMastery.championPoints}</div>
+            <div>Last Time Played: {moment(this.props.player.currentChampionMastery.lastPlayTime).fromNow()}</div>
+          </div>
         </div>
         <div>
           <span>Recent Ranked Matches</span>

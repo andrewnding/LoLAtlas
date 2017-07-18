@@ -42,7 +42,7 @@ function getCurrentGame(req, res) {
       res.json(response.data)
     }).catch(error => {
       if (_.isEqual(error.response.data.status, dataNotFoundResponse)) {
-        res.status(404).send({ error: 'DATA_NOT_FOUND' })
+        res.status(404).send({ error: 'GAME_NOT_FOUND' })
         return
       }
       res.status(error.response.data.status.status_code)
@@ -60,7 +60,7 @@ app.get('/realmVersion', (req, res) => {
       res.json(response.data)
     }).catch(error => {
       console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'INVALID_REGIONAL_ENDPOINT' })
+      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_REALM_VERSION' })
     })
 })
 
@@ -70,7 +70,17 @@ app.get('/championImages', (req, res) => {
       res.json(response.data)
     }).catch(error => {
       console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'CHAMPION_NOT_FOUND' })
+      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_IMAGES' })
+    })
+})
+
+app.get('/championData', (req, res) => {
+  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/champions?locale=en_US&dataById=false`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      res.json(response.data)
+    }).catch(error => {
+      console.log(error)
+      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_DATA' })
     })
 })
 
@@ -87,7 +97,7 @@ function getRankedLeague(req, res) {
       }
     }).catch(error => {
       console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'PLAYER_NOT_FOUND '})
+      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_RANKED_LEAGUE '})
     })
 }
 
@@ -101,7 +111,7 @@ function getAccountId(req, res) {
       res.json(response.data.accountId)
     }).catch(error => {
       console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'ACCOUNT_NOT_FOUND' })
+      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_ACCOUNT_ID' })
     })
 }
 
@@ -115,7 +125,7 @@ function getRecentRankedMatches(req, res) {
       res.json(response.data.matches.slice(0, 5))
     }).catch(error => {
       console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'MATCHES_NOT_FOUND' })
+      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_RECENT_RANKED_MATCHES' })
     })
 }
 
@@ -129,12 +139,26 @@ function getRecentRankedMatchesDetails(req, res) {
       res.json(response.data)
     }).catch(error => {
       console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'MATCH_NOT_FOUND' })
+      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_RECENT_RANKED_MATCHES_DETAILS' })
     })
 }
 
 app.get('/recentRankedMatchesDetails', (req, res) => {
   limiter.schedule(getRecentRankedMatchesDetails, req, res)
+})
+
+function getChampionMastery(req, res) {
+  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/champion-mastery/v3/champion-masteries/by-summoner/${req.query.summonerId}/by-champion/${req.query.championId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      res.json(response.data)
+    }).catch(error => {
+      console.log(error)
+      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_MASTERY' })
+    })
+}
+
+app.get('/championMastery', (req, res) => {
+  limiter.schedule(getChampionMastery, req, res)
 })
 
 app.listen(3001, (err) => {

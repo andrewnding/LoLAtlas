@@ -1,6 +1,7 @@
 import * as actions from '../constants/actionTypes'
 
 const initialState = {
+  championData: {},
   championImages: {},
   realmVersion: ''
 }
@@ -16,6 +17,11 @@ const staticDataReducer = (state = initialState, action) => {
       return {
         ...state,
         championImages: action.payload
+      }
+    case actions.RECEIVED_CHAMPION_DATA:
+      return {
+        ...state,
+        championData: action.payload
       }
     default:
       return state

@@ -15,6 +15,13 @@ const receivedChampionImages = (payload) => {
   }
 }
 
+const receivedChampionData = (payload) => {
+  return {
+    type: actions.RECEIVED_CHAMPION_DATA,
+    payload
+  }
+}
+
 export const getRealmVersion = (serviceRegion) => {
   return (dispatch) => {
     return axios.get(`/api/realmVersion?serviceRegion=${serviceRegion}`)
@@ -32,6 +39,18 @@ export const getChampionImages = (serviceRegion) => {
     return axios.get(`/api/championImages?serviceRegion=${serviceRegion}`)
       .then(response => {
         dispatch(receivedChampionImages(response.data.data))
+        return response
+      }).catch(err => {
+        return err.response
+      })
+  }
+}
+
+export const getChampionData = (serviceRegion) => {
+  return (dispatch) => {
+    return axios.get(`/api/championData?serviceRegion=${serviceRegion}`)
+      .then(response => {
+        dispatch(receivedChampionData(response.data.data))
         return response
       }).catch(err => {
         return err.response
