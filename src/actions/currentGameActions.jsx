@@ -103,6 +103,9 @@ export const getChampionMastery = (serviceRegion, summonerId, championId) => {
         dispatch(receivedChampionMastery(response.data, summonerId))
         return response
       }).catch(err => {
+        if (err.response.data.error === 'ERROR_GETTING_CHAMPION_MASTERY') {
+          dispatch(receivedChampionMastery({ championLevel: 0, championPoints: 0 }, summonerId))
+        }
         return err.response
       })
   }

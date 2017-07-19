@@ -129,6 +129,37 @@ class CurrentGamePlayerItem extends React.Component {
     return this.props.staticData.championImages[this.props.player.championId].image.full
   }
 
+  renderChampionMastery() {
+    let lastPlayed;
+    if (this.props.player.currentChampionMastery.championLevel > 0) {
+      lastPlayed = moment(this.props.player.currentChampionMastery.lastPlayTime).fromNow()
+    } else {
+      lastPlayed = 'First Time'
+    }
+    
+    return (
+      <div>
+        <span>Champion Mastery</span>
+        <div>
+            <img
+            src={this.currentChampionMasterySrc()}
+            className="medium-icon"
+          />
+          <div>Champion Level: {this.props.player.currentChampionMastery.championLevel}</div>
+          <div>Champion Points: {this.props.player.currentChampionMastery.championPoints}</div>
+          <div>Last Time Played: {lastPlayed}</div>
+        </div>
+      </div>
+    )
+  }
+
+  currentChampionMasterySrc() {
+    if (false) {
+      // Handle 404 (level 0)
+    }
+    return `/images/champion-mastery/level_${this.props.player.currentChampionMastery.championLevel}.png`
+  }
+
   render() {
     let rankedData = this.props.player.rankedData
     return (
@@ -152,12 +183,7 @@ class CurrentGamePlayerItem extends React.Component {
           </span>
         </div>
         <div>
-          <span>Champion Mastery</span>
-          <div>
-            <div>Champion Level: {this.props.player.currentChampionMastery.championLevel}</div>
-            <div>Champion Points: {this.props.player.currentChampionMastery.championPoints}</div>
-            <div>Last Time Played: {moment(this.props.player.currentChampionMastery.lastPlayTime).fromNow()}</div>
-          </div>
+          {this.renderChampionMastery()}
         </div>
         <div>
           <span>Recent Ranked Matches</span>
