@@ -93,7 +93,7 @@ function getRankedLeague(req, res) {
       if (rankedSoloData.length !== 0) {
         res.json(rankedSoloData[0])
       } else {
-        res.status(404).send({ error: 'NO_RANKED_SOLO_5x5' })
+        res.json([])
       }
     }).catch(error => {
       console.log(error)
