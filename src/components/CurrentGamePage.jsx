@@ -15,7 +15,8 @@ class CurrentGamePage extends React.Component {
       receivedRealmVersion: false,
       numberOfSummonersLoaded: 0,
       numberOfMatchesLoaded: 0,
-      numberOfChampionMasteriesLoaded: 0
+      numberOfChampionMasteriesLoaded: 0,
+      searchErrorMessage: false
     }
 
     this.loadCurrentGameData()
@@ -27,7 +28,13 @@ class CurrentGamePage extends React.Component {
 
     this.props.dispatch(getCurrentGame(this.props.match.params.region, name))
       .then(response => {
+        // If not solo/duo queue ranked match
+        if (response.data.gameQueueConfigId !== 420) {
+          this.setState({ searchErrorMessage: true })
+          return
+        }
         if (response.status === 200) {
+          this.setState({ searchErrorMessage: false })
           this.props.dispatch(getChampionImages(this.props.match.params.region))
             .then(response => {
               if (response.status === 200) {
