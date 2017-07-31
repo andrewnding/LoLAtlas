@@ -62,7 +62,7 @@ class SearchBarAutosuggest extends React.Component {
       console.log('Please enter a valid summoner name')
     } else {
       console.log(`searching for player ${this.state.name}`)
-      this.props.history.push(`/${this.state.region}/search?name=${this.state.name}`)  
+      this.props.history.push(`/${this.state.region}/search?name=${this.state.name}`)
     }
     e.preventDefault()
   }

@@ -1,0 +1,42 @@
+.player-item-container {
+  border: 1px solid black;
+
+  .blue-team-background {
+    background-color: $blue-team-color;
+  }
+
+  .purple-team-background {
+    background-color: $purple-team-color;
+  }
+
+  .victory-background {
+    border-top: 1px solid $light-gray;
+    background-color: $victory-green;
+
+    .item-header-text {
+      background-color: $victory-green-dark;
+    }
+  }
+
+  .defeat-background {
+    border-top: 1px solid $light-gray;
+    background-color: $defeat-red;
+
+    .item-header-text {
+      background-color: $defeat-red-dark;
+    }
+  }
+
+  .remake-background {
+    border-top: 1px solid $light-gray;
+    background-color: $remake-gray;
+
+    .item-header-text {
+      background-color: $remake-gray-dark;
+    }
+  }
+
+  .series-icon {
+    margin: 0 2px;
+  }
+}

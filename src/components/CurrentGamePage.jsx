@@ -5,6 +5,7 @@ import { getRankedLeague, getAccountId, getRecentRankedMatches, getRecentRankedM
 import { getRealmVersion, getChampionImages, getChampionData } from '../actions/staticDataActions'
 
 import CurrentGamePlayerList from './CurrentGamePlayerList'
+import SearchBarAutosuggest from './SearchBarAutosuggest'
 
 class CurrentGamePage extends React.Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class CurrentGamePage extends React.Component {
       numberOfSummonersLoaded: 0,
       numberOfMatchesLoaded: 0,
       numberOfChampionMasteriesLoaded: 0,
-      searchErrorMessage: false
+      searchError: ''
     }
 
     this.loadCurrentGameData()
@@ -29,12 +30,18 @@ class CurrentGamePage extends React.Component {
     this.props.dispatch(getCurrentGame(this.props.match.params.region, name))
       .then(response => {
         // If not solo/duo queue ranked match
-        if (response.data.gameQueueConfigId !== 420) {
-          this.setState({ searchErrorMessage: true })
+        if (response.data.error === 'PLAYER_NOT_FOUND') {
+          this.setState({ searchError: 'PLAYER_NOT_FOUND' })
           return
         }
+
+        if (response.data.gameQueueConfigId !== 420) {
+          this.setState({ searchError: 'NOT_RANKED_GAME' })
+          return
+        }
+
         if (response.status === 200) {
-          this.setState({ searchErrorMessage: false })
+          this.setState({ searchError: '' })
           this.props.dispatch(getChampionImages(this.props.match.params.region))
             .then(response => {
               if (response.status === 200) {
@@ -116,12 +123,32 @@ class CurrentGamePage extends React.Component {
   }
 
   render() {
-    return (
-      <div className="container-fluid">
-        Current Game Page
-        {this.renderPlayerList()}
-      </div>
-    )
+    if (this.state.searchError === 'NOT_RANKED_GAME') {
+      return (
+        <div className="container-fluid">
+          Not Solo/Duo Queue Ranked
+          <SearchBarAutosuggest
+            history={this.props.history}
+          />
+        </div>
+      )
+    } else if (this.state.searchError === 'PLAYER_NOT_FOUND') {
+      return (
+        <div className="container-fluid">
+          Player Not Found
+          <SearchBarAutosuggest
+            history={this.props.history}
+          />
+        </div>
+      )
+    } else {
+      return (
+        <div className="container-fluid">
+          Current Game Page
+          {this.renderPlayerList()}
+        </div>
+      )
+    }
   }  
 }
 
