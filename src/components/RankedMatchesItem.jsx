@@ -8,16 +8,22 @@ class RankedMatchesItem extends React.Component {
   constructor(props) {
     super(props)
 
-    this.participantId = this.getParticipantId()
-    this.teamId = this.getTeamId()
-    this.result = this.winOrLose()
+    try {
+      this.error = false
+      this.participantId = this.getParticipantId()
+      this.teamId = this.getTeamId()
+      this.result = this.winOrLose()
+    } catch (e) {
+      console.log(e)
+      this.error = true
+    }
   }
 
   getParticipantId() {
     const currentParticipantIdentity = this.props.match.gameDetails.participantIdentities.filter(identity => {
       return identity.player.summonerName === this.props.player.summonerName
     })
-    return currentParticipantIdentity ? currentParticipantIdentity[0].participantId : null
+    return currentParticipantIdentity && currentParticipantIdentity ? currentParticipantIdentity[0].participantId : null
   }
 
   getTeamId() {
@@ -91,6 +97,14 @@ class RankedMatchesItem extends React.Component {
   }
 
   render() {
+    if (this.error) {
+      return (
+        <div>
+          ERROR
+        </div>
+      )
+    }
+
     const myClassNames = classNames({
       'victory-background': this.result === 'Victory',
       'defeat-background': this.result === 'Defeat',

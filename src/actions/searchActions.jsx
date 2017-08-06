@@ -31,7 +31,7 @@ export const getCurrentGame = (serviceRegion, summonerName) => {
             dispatch(receivedCurrentGame(response.data))
             return response
           }).catch(err => {
-            if (err.response.data.error === "DATA_NOT_FOUND") {
+            if (err.response.data.error === "GAME_NOT_FOUND") {
               dispatch(errorFetchingCurrentGame(err.response))
               return err.response
               // Do data not found stuff here

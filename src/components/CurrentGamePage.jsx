@@ -22,6 +22,25 @@ class CurrentGamePage extends React.Component {
 
     this.loadCurrentGameData()
   }
+  
+  checkForErrors(response) {
+
+    if (response.data.error === 'PLAYER_NOT_FOUND') {
+      this.setState({ searchError: 'PLAYER_NOT_FOUND' })
+      return
+    }
+
+    if (response.data.error === 'GAME_NOT_FOUND') {
+      this.setState({ searchError: 'GAME_NOT_FOUND' })
+      return
+    }
+    
+    // If not solo/duo queue ranked match
+    if (response.data.gameQueueConfigId !== 420) {
+      this.setState({ searchError: 'NOT_RANKED_GAME' })
+      return
+    }
+  }
 
   loadCurrentGameData() {
     let searchParams = new URLSearchParams(this.props.location.search.substring(1));
@@ -29,16 +48,7 @@ class CurrentGamePage extends React.Component {
 
     this.props.dispatch(getCurrentGame(this.props.match.params.region, name))
       .then(response => {
-        // If not solo/duo queue ranked match
-        if (response.data.error === 'PLAYER_NOT_FOUND') {
-          this.setState({ searchError: 'PLAYER_NOT_FOUND' })
-          return
-        }
-
-        if (response.data.gameQueueConfigId !== 420) {
-          this.setState({ searchError: 'NOT_RANKED_GAME' })
-          return
-        }
+        this.checkForErrors(response)
 
         if (response.status === 200) {
           this.setState({ searchError: '' })
@@ -114,6 +124,17 @@ class CurrentGamePage extends React.Component {
     return this.state.receivedChampionImages && this.state.receivedRealmVersion && (this.state.numberOfSummonersLoaded === 10) && (this.state.numberOfMatchesLoaded === 50) && (this.state.numberOfChampionMasteriesLoaded === 10) && this.state.receivedChampionData
   }
 
+  renderErrorPage(message) {
+    return (
+        <div className="container-fluid">
+          {message}
+          <SearchBarAutosuggest
+            history={this.props.history}
+          />
+        </div>
+      )
+  }
+
   renderPlayerList() {
     if (this.doneFetchingData()) {
       return <CurrentGamePlayerList />
@@ -123,24 +144,12 @@ class CurrentGamePage extends React.Component {
   }
 
   render() {
-    if (this.state.searchError === 'NOT_RANKED_GAME') {
-      return (
-        <div className="container-fluid">
-          Not Solo/Duo Queue Ranked
-          <SearchBarAutosuggest
-            history={this.props.history}
-          />
-        </div>
-      )
-    } else if (this.state.searchError === 'PLAYER_NOT_FOUND') {
-      return (
-        <div className="container-fluid">
-          Player Not Found
-          <SearchBarAutosuggest
-            history={this.props.history}
-          />
-        </div>
-      )
+    if (this.state.searchError === 'PLAYER_NOT_FOUND') {
+      return this.renderErrorPage('Player not found')
+    } else if (this.state.searchError === 'GAME_NOT_FOUND') {
+      return this.renderErrorPage('Player is not in a game')
+    } else if (this.state.searchError === 'NOT_RANKED_GAME') {
+      return this.renderErrorPage('Not a solo/duo ranked game')
     } else {
       return (
         <div className="container-fluid">
