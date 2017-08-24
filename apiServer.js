@@ -18,6 +18,11 @@ var dataNotFoundResponse = {
   status_code: 404
 }
 
+var rankedMatchesNotFoundResponse = {
+  message: 'Not found',
+  status_code: 404
+}
+
 function getSummonerId(req, res) {
   return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
@@ -124,6 +129,11 @@ function getRecentRankedMatches(req, res) {
     .then(response => {
       res.json(response.data.matches.slice(0, 5))
     }).catch(error => {
+      if (_.isEqual(error.response.data.status, rankedMatchesNotFoundResponse)) {
+          res.status(404).send({ error: 'NO_RECENT_RANKED_MATCHES' })
+          return
+      }
+      
       console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_RECENT_RANKED_MATCHES' })
     })

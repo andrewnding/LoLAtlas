@@ -78,6 +78,9 @@ export const getRecentRankedMatches = (serviceRegion, accountId) => {
         dispatch(receivedRecentRankedMatches(response.data, accountId))
         return response
       }).catch(err => {
+        if (err.response.data.error === 'NO_RECENT_RANKED_MATCHES') {
+          dispatch(receivedRecentRankedMatches(undefined, accountId))
+        }
         return err.response
       })
   }
