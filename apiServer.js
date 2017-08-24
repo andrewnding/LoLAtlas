@@ -7,6 +7,24 @@ var regionalEndpoints = require('./src/constants/regionalEndpoints');
 var app = express();
 var Bottleneck = require('bottleneck');
 var limiter = new Bottleneck(20, 60);
+var mongoose = require('mongoose');
+
+// Database Setup
+mongoose.connect(`mongodb://admin:password@ds049651.mlab.com:49651/lolcamp`)
+
+var db = mongoose.connection
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+// Done with database setup
+
+
+var TestModel = require('./src/models/testModel');
+var testModelInstance = TestModel.create({ name: 'First model', payload: { data: [1, 2, 3] } }, function(err, instance) {
+  if (err) {
+    return err
+  }
+})
+
+
 
 var summonerNotFoundResponse = {
   message: 'Data not found - summoner not found',
