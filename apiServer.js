@@ -18,6 +18,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // Database Models
 var Realms = require('./src/models/realms');
+var ChampionImages = require('./src/models/championImages');
+var ChampionData = require('./src/models/championData');
 // Done with database models
 
 var summonerNotFoundResponse = {
@@ -71,30 +73,6 @@ app.get('/currentGame', (req, res) => {
   limiter.schedule(getCurrentGame, req, res)
 })
 
-// Realms.find({}, function(err, realms) {
-//   if (err) {
-//     console.log(err)
-//     return err
-//   }
-//   if (realms.length === 0) {
-//     Realms.create({ data: { someData: 'hi' } }, function(err, realm) {
-//       if (err) {
-//         return err
-//       }
-
-//       Realms.find({}, function(err, realms) {
-//         if (err) {
-//           console.log(err)
-//           return err
-//         }
-//         console.log('new realms:', realms)
-//       })
-//     })
-//   } else {
-//     console.log('realms already in database:', realms)
-//   }
-// })
-
 app.get('/realmVersion', (req, res) => {
   Realms.find({}, function(err, realms) {
     if (err) {
@@ -122,23 +100,55 @@ app.get('/realmVersion', (req, res) => {
 })
 
 app.get('/championImages', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/champions?locale=en_US&tags=image&dataById=true`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
-    .then(response => {
-      res.json(response.data)
-    }).catch(error => {
-      console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_IMAGES' })
-    })
+  ChampionImages.find({}, function(err, championImages) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (championImages.length === 0) {
+      axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/champions?locale=en_US&tags=image&dataById=true`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+        .then(response => {
+          ChampionImages.create({ data: response.data }, function(err, championImage) {
+            if (err) {
+              return err
+            }
+          })
+          res.json(response.data)
+        }).catch(error => {
+          console.log(error)
+          res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_IMAGES' })
+        })
+    } else {
+      res.json(championImages[0].data)
+    }
+  })
 })
 
 app.get('/championData', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/champions?locale=en_US&dataById=false`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
-    .then(response => {
-      res.json(response.data)
-    }).catch(error => {
-      console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_DATA' })
-    })
+  ChampionData.find({}, function(err, championData) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (championData.length === 0) {
+      axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/champions?locale=en_US&dataById=false`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+        .then(response => {
+          ChampionData.create({ data: response.data }, function(err, championData) {
+            if (err) {
+              return err
+            }
+          })
+          res.json(response.data)
+        }).catch(error => {
+          console.log(error)
+          res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_DATA' })
+        })
+    } else {
+      res.json(championData[0].data)
+    }
+  })
 })
 
 function getRankedLeague(req, res) {
