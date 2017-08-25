@@ -16,15 +16,9 @@ var db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Done with database setup
 
-
-var TestModel = require('./src/models/testModel');
-var testModelInstance = TestModel.create({ name: 'First model', payload: { data: [1, 2, 3] } }, function(err, instance) {
-  if (err) {
-    return err
-  }
-})
-
-
+// Database Models
+var Realms = require('./src/models/realms');
+// Done with database models
 
 var summonerNotFoundResponse = {
   message: 'Data not found - summoner not found',
@@ -77,14 +71,54 @@ app.get('/currentGame', (req, res) => {
   limiter.schedule(getCurrentGame, req, res)
 })
 
+// Realms.find({}, function(err, realms) {
+//   if (err) {
+//     console.log(err)
+//     return err
+//   }
+//   if (realms.length === 0) {
+//     Realms.create({ data: { someData: 'hi' } }, function(err, realm) {
+//       if (err) {
+//         return err
+//       }
+
+//       Realms.find({}, function(err, realms) {
+//         if (err) {
+//           console.log(err)
+//           return err
+//         }
+//         console.log('new realms:', realms)
+//       })
+//     })
+//   } else {
+//     console.log('realms already in database:', realms)
+//   }
+// })
+
 app.get('/realmVersion', (req, res) => {
-  axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/realms`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
-    .then(response => {
-      res.json(response.data)
-    }).catch(error => {
-      console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_REALM_VERSION' })
-    })
+  Realms.find({}, function(err, realms) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (realms.length === 0) {
+      axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/realms`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+        .then(response => {
+          Realms.create({ data: response.data }, function(err, realm) {
+            if (err) {
+              return err
+            }
+          })
+          res.json(response.data)
+        }).catch(error => {
+          console.log(error)
+          res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_REALM_VERSION' })
+        })
+    } else {
+      res.json(realms[0].data)
+    }
+  })
 })
 
 app.get('/championImages', (req, res) => {
