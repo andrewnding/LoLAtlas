@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Autosuggest from 'react-autosuggest'
+import XRegExp from 'xregexp'
+
 import * as actions from '../actions/searchActions'
 var regionalEndpoints = require('../constants/regionalEndpoints')
 
@@ -58,13 +60,12 @@ class SearchBarAutosuggest extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    if (!(/^[\w.\ ]+$/.test(this.state.name))) {
-      console.log('Please enter a valid summoner name')
-    } else {
+    if (XRegExp.test(this.state.name, new XRegExp('^[0-9\\p{L} _\\.]+$'))) {
       console.log(`searching for player ${this.state.name}`)
       this.props.history.push(`/${this.state.region}/search?name=${this.state.name}`)
+    } else {
+      console.log('Please enter a valid summoner name')
     }
-    e.preventDefault()
   }
 
   renderSelectOptions() {

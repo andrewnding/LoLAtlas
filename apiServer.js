@@ -2,6 +2,7 @@
 
 var express = require('express');
 var axios = require('axios');
+var encodeUrl = require('encodeurl')
 var _ = require('lodash');
 var regionalEndpoints = require('./src/constants/regionalEndpoints');
 var app = express();
@@ -10,7 +11,7 @@ var limiter = new Bottleneck(20, 60);
 var mongoose = require('mongoose');
 
 // Database Setup
-mongoose.connect(`mongodb://admin:password@ds049651.mlab.com:49651/lolcamp`)
+mongoose.connect(`mongodb://${process.env.LOL_USERNAME}:${process.env.LOL_PASSWORD}@ds049651.mlab.com:49651/lolcamp`)
 
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -38,10 +39,11 @@ var rankedMatchesNotFoundResponse = {
 }
 
 function getSummonerId(req, res) {
-  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+  return axios.get(encodeUrl(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`), {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data.id)
     }).catch(error => {
+      console.log(error)
       if (_.isEqual(error.response.data.status, summonerNotFoundResponse)) {
           res.status(404).send({ error: 'PLAYER_NOT_FOUND' })
           return
