@@ -26,9 +26,9 @@ const receivedRecentRankedMatches = (payload, accountId) => {
   }
 }
 
-const receivedRecentRankedMatchesDetails = (payload, summonerId, gameId) => {
+const receivedMatchDetails = (payload, summonerId, gameId) => {
   return {
-    type: actions.RECEIVED_RECENT_RANKED_MATCHES_DETAILS,
+    type: actions.RECEIVED_MATCH_DETAILS,
     payload,
     summonerId,
     gameId
@@ -60,9 +60,9 @@ export const getRankedLeague = (serviceRegion, summonerId) => {
 export const getAccountId = (serviceRegion, summonerId) => {
   console.log('GETTING ACCOUNT ID')
   return (dispatch) => {
-    return axios.get(`/api/accountId?serviceRegion=${serviceRegion}&summonerId=${summonerId}`)
+    return axios.get(`/api/summonerByAccountId?serviceRegion=${serviceRegion}&summonerId=${summonerId}`)
       .then(response => {
-        dispatch(receivedAccountId(response.data, summonerId))
+        dispatch(receivedAccountId(response.data.accountId, summonerId))
         return response
       }).catch(err => {
         return err.response
@@ -86,12 +86,12 @@ export const getRecentRankedMatches = (serviceRegion, accountId) => {
   }
 }
 
-export const getRecentRankedMatchesDetails = (serviceRegion, summonerId, gameId) => {
+export const getMatchDetails = (serviceRegion, summonerId, gameId) => {
   console.log('GETTING RANKED MATCH DETAILS')
   return (dispatch) => {
-    return axios.get(`/api/recentRankedMatchesDetails?serviceRegion=${serviceRegion}&gameId=${gameId}`)
+    return axios.get(`/api/matchDetails?serviceRegion=${serviceRegion}&gameId=${gameId}`)
       .then(response => {
-        dispatch(receivedRecentRankedMatchesDetails(response.data, summonerId, gameId))
+        dispatch(receivedMatchDetails(response.data, summonerId, gameId))
         return response
       }).catch(err => {
         return err.response
@@ -100,6 +100,7 @@ export const getRecentRankedMatchesDetails = (serviceRegion, summonerId, gameId)
 }
 
 export const getChampionMastery = (serviceRegion, summonerId, championId) => {
+  console.log('GETTING CHAMPION MASTERY')
   return (dispatch) => {
     return axios.get(`/api/championMastery?serviceRegion=${serviceRegion}&summonerId=${summonerId}&championId=${championId}`)
       .then(response => {

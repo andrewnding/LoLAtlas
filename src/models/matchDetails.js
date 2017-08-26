@@ -2,15 +2,14 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var SummonerSchema = new Schema({
+var MatchDetailsSchema = new Schema({
   data: {},
   createdAt: {
     type: Date,
-    expires: 60*60*24,
     default: Date.now
   }
 })
 
-var Summoner = mongoose.model('Summoner', SummonerSchema)
+var MatchDetails = mongoose.model('MatchDetails', MatchDetailsSchema)
 
-module.exports = Summoner;
+module.exports = MatchDetails;

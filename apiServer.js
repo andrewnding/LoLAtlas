@@ -22,6 +22,10 @@ var Realms = require('./src/models/realms');
 var ChampionImages = require('./src/models/championImages');
 var ChampionData = require('./src/models/championData');
 var Summoner = require('./src/models/summoner');
+var RankedLeague = require('./src/models/rankedLeague');
+var RecentRankedMatches = require('./src/models/recentRankedMatches');
+var MatchDetails = require('./src/models/matchDetails');
+var ChampionMastery = require('./src/models/championMastery');
 // Done with database models
 
 var summonerNotFoundResponse = {
@@ -39,15 +43,16 @@ var rankedMatchesNotFoundResponse = {
   status_code: 404
 }
 
-function getSummonerId(req, res) {
+function getSummonerById(req, res) {
   return axios.get(encodeUrl(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`), {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       Summoner.create({ data: response.data }, function(err, summoner) {
         if (err) {
+          console.log(err)
           return err
         }
+        res.json(response.data)
       })
-      res.json(response.data)
     }).catch(error => {
       console.log(error)
       if (_.isEqual(error.response.data.status, summonerNotFoundResponse)) {
@@ -59,18 +64,16 @@ function getSummonerId(req, res) {
     })
 }
 
-app.get('/summonerId', (req, res) => {
-  Summoner.find({ 'data.name': req.query.summonerName }, function(err, summoner) {
+app.get('/summonerById', (req, res) => {
+  Summoner.find({ "data.name": req.query.summonerName }, function(err, summoner) {
     if (err) {
       console.log(err)
       return err
     }
 
     if (summoner.length === 0) {
-      console.log('creating new summoner')
-      limiter.schedule(getSummonerId, req, res)
+      limiter.schedule(getSummonerById, req, res)
     } else {
-      console.log('fetching existing summoner')
       res.json(summoner[0].data)
     }
   })
@@ -108,8 +111,8 @@ app.get('/realmVersion', (req, res) => {
             if (err) {
               return err
             }
+            res.json(response.data)
           })
-          res.json(response.data)
         }).catch(error => {
           console.log(error)
           res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_REALM_VERSION' })
@@ -134,8 +137,8 @@ app.get('/championImages', (req, res) => {
             if (err) {
               return err
             }
+            res.json(response.data)
           })
-          res.json(response.data)
         }).catch(error => {
           console.log(error)
           res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_IMAGES' })
@@ -160,8 +163,8 @@ app.get('/championData', (req, res) => {
             if (err) {
               return err
             }
+            res.json(response.data)
           })
-          res.json(response.data)
         }).catch(error => {
           console.log(error)
           res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_DATA' })
@@ -179,6 +182,11 @@ function getRankedLeague(req, res) {
         return data.queueType === 'RANKED_SOLO_5x5'
       })
       if (rankedSoloData.length !== 0) {
+        RankedLeague.create({ data: rankedSoloData[0] }, function(err, rankedLeague) {
+          if (err) {
+            return err
+          }
+        })
         res.json(rankedSoloData[0])
       } else {
         res.json([])
@@ -190,27 +198,62 @@ function getRankedLeague(req, res) {
 }
 
 app.get('/rankedLeague', (req, res) => {
-  limiter.schedule(getRankedLeague, req, res)
+  RankedLeague.find({ "data.playerOrTeamId": req.query.summonerId }, function(err, rankedLeague) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (rankedLeague.length === 0) {
+      limiter.schedule(getRankedLeague, req, res)
+    } else {
+      res.json(rankedLeague[0].data)
+    }
+  })
 })
 
-function getAccountId(req, res) {
+function getSummonerByAccountId(req, res) {
   return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
-      res.json(response.data.accountId)
+      Summoner.create({ data: response.data }, function(err, summoner) {
+        if (err) {
+          console.log(err)
+          return err
+        }
+        res.json(response.data)
+      })
     }).catch(error => {
       console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_ACCOUNT_ID' })
     })
 }
 
-app.get('/accountId', (req, res) => {
-  limiter.schedule(getAccountId, req, res)
+app.get('/summonerByAccountId', (req, res) => {
+  Summoner.find({ "data.id": Number(req.query.summonerId) }, function(err, summoner) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (summoner.length === 0) {
+      limiter.schedule(getSummonerByAccountId, req, res)
+    } else {
+      res.json(summoner[0].data)
+    }
+  })
+  
 })
 
 function getRecentRankedMatches(req, res) {
   return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matchlists/by-account/${req.query.accountId}?queue=420&season=9`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
-      res.json(response.data.matches.slice(0, 5))
+      RecentRankedMatches.create({ accountId: Number(req.query.accountId), data: response.data.matches.slice(0, 5) }, function(err, matches) {
+        if (err) {
+          console.log(err)
+          return err
+        }
+        res.json(response.data.matches.slice(0, 5))
+      })
     }).catch(error => {
       if (_.isEqual(error.response.data.status, rankedMatchesNotFoundResponse)) {
           res.status(404).send({ error: 'NO_RECENT_RANKED_MATCHES' })
@@ -223,27 +266,61 @@ function getRecentRankedMatches(req, res) {
 }
 
 app.get('/recentRankedMatches', (req, res) => {
-  limiter.schedule(getRecentRankedMatches, req, res)
+  RecentRankedMatches.find({ accountId: Number(req.query.accountId) }, function(err, matches) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (matches.length === 0) {
+      limiter.schedule(getRecentRankedMatches, req, res)
+    } else {
+      res.json(matches[0].data)
+    }
+  })
 })
 
-function getRecentRankedMatchesDetails(req, res) {
+function getMatchDetails(req, res) {
   return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matches/${req.query.gameId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
-      res.json(response.data)
+      MatchDetails.create({ data: response.data }, function(err, match) {
+        if (err) {
+          console.log(err)
+          return err
+        }
+        res.json(response.data)
+      })
     }).catch(error => {
       console.log(error)
-      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_RECENT_RANKED_MATCHES_DETAILS' })
+      res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_MATCH_DETAILS' })
     })
 }
 
-app.get('/recentRankedMatchesDetails', (req, res) => {
-  limiter.schedule(getRecentRankedMatchesDetails, req, res)
+app.get('/matchDetails', (req, res) => {
+  MatchDetails.find({ 'data.gameId': Number(req.query.gameId) }, function(err, match) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (match.length === 0) {
+      limiter.schedule(getMatchDetails, req, res)
+    } else {
+      res.json(match[0].data)
+    }
+  })
 })
 
 function getChampionMastery(req, res) {
   return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/champion-mastery/v3/champion-masteries/by-summoner/${req.query.summonerId}/by-champion/${req.query.championId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
-      res.json(response.data)
+      ChampionMastery.create({ data: response.data }, function(err, championMastery) {
+        if (err) {
+          console.log(err)
+          return err
+        }
+        res.json(response.data)
+      })
     }).catch(error => {
       console.log(error)
       res.status(error.response.data.status.status_code).send({ error: 'ERROR_GETTING_CHAMPION_MASTERY' })
@@ -251,7 +328,18 @@ function getChampionMastery(req, res) {
 }
 
 app.get('/championMastery', (req, res) => {
-  limiter.schedule(getChampionMastery, req, res)
+  ChampionMastery.find({ "data.playerId": Number(req.query.summonerId), "data.championId": Number(req.query.championId) }, function(err, championMastery) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (championMastery.length === 0) {
+      limiter.schedule(getChampionMastery, req, res)
+    } else {
+      res.json(championMastery[0].data)
+    }
+  })
 })
 
 app.listen(3001, (err) => {

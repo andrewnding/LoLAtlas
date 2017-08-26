@@ -56,8 +56,8 @@ const currentGameReducer = (state = initialState, action) => {
           participants: participantsWithRecentRankedMatches
         }
       }
-    case actions.RECEIVED_RECENT_RANKED_MATCHES_DETAILS:
-      let participantsWithRecentRankedMatchesDetails = state.gameInfo.participants.map(participant => {
+    case actions.RECEIVED_MATCH_DETAILS:
+      let participantsWithMatchDetails = state.gameInfo.participants.map(participant => {
         if (action.summonerId === participant.summonerId) {
           let matches = participant.recentRankedMatches.map(match => {
             if (action.gameId === match.gameId) {
@@ -75,7 +75,7 @@ const currentGameReducer = (state = initialState, action) => {
         ...state,
         gameInfo: {
           ...state.gameInfo,
-          participants: participantsWithRecentRankedMatchesDetails
+          participants: participantsWithMatchDetails
         }
       }
     case actions.RECEIVED_CHAMPION_MASTERY:

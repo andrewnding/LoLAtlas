@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentGame } from '../actions/searchActions'
-import { getRankedLeague, getAccountId, getRecentRankedMatches, getRecentRankedMatchesDetails, getChampionMastery } from '../actions/currentGameActions'
+import { getRankedLeague, getAccountId, getRecentRankedMatches, getMatchDetails, getChampionMastery } from '../actions/currentGameActions'
 import { getRealmVersion, getChampionImages, getChampionData } from '../actions/staticDataActions'
 
 import CurrentGamePlayerList from './CurrentGamePlayerList'
@@ -77,14 +77,14 @@ class CurrentGamePage extends React.Component {
               }).catch(error => {
                 console.log(error)
               })
-
+            
             this.props.dispatch(getAccountId(this.props.match.params.region, participant.summonerId))
               .then(response => {
-                this.props.dispatch(getRecentRankedMatches(this.props.match.params.region, response.data))
+                this.props.dispatch(getRecentRankedMatches(this.props.match.params.region, response.data.accountId))
                   .then(response => {
                     if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
                       response.data.map((match) => {
-                        this.props.dispatch(getRecentRankedMatchesDetails(this.props.match.params.region, participant.summonerId, match.gameId))
+                        this.props.dispatch(getMatchDetails(this.props.match.params.region, participant.summonerId, match.gameId))
                           .then(response => {
                             this.setState({ numberOfMatchesLoaded: this.state.numberOfMatchesLoaded + 1 })
                           }).catch(error => {
