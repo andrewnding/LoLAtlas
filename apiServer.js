@@ -21,6 +21,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 var Realms = require('./src/models/realms');
 var ChampionImages = require('./src/models/championImages');
 var ChampionData = require('./src/models/championData');
+var Summoner = require('./src/models/summoner');
 // Done with database models
 
 var summonerNotFoundResponse = {
@@ -41,7 +42,12 @@ var rankedMatchesNotFoundResponse = {
 function getSummonerId(req, res) {
   return axios.get(encodeUrl(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`), {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
-      res.json(response.data.id)
+      Summoner.create({ data: response.data }, function(err, summoner) {
+        if (err) {
+          return err
+        }
+      })
+      res.json(response.data)
     }).catch(error => {
       console.log(error)
       if (_.isEqual(error.response.data.status, summonerNotFoundResponse)) {
@@ -54,7 +60,20 @@ function getSummonerId(req, res) {
 }
 
 app.get('/summonerId', (req, res) => {
-  limiter.schedule(getSummonerId, req, res)
+  Summoner.find({ 'data.name': req.query.summonerName }, function(err, summoner) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (summoner.length === 0) {
+      console.log('creating new summoner')
+      limiter.schedule(getSummonerId, req, res)
+    } else {
+      console.log('fetching existing summoner')
+      res.json(summoner[0].data)
+    }
+  })
 })
 
 function getCurrentGame(req, res) {

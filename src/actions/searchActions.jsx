@@ -26,7 +26,7 @@ export const getCurrentGame = (serviceRegion, summonerName) => {
     dispatch(fetchingCurrentGame())
     return axios.get(`/api/summonerId?serviceRegion=${serviceRegion}&summonerName=${summonerName}`)
       .then(response => {
-        return axios.get(`/api/currentGame?serviceRegion=${serviceRegion}&summonerId=${response.data}`)
+        return axios.get(`/api/currentGame?serviceRegion=${serviceRegion}&summonerId=${response.data.id}`)
           .then(response => {
             dispatch(receivedCurrentGame(response.data))
             return response
