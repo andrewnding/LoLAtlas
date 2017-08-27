@@ -60,7 +60,7 @@ class SearchBarAutosuggest extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    if (XRegExp.test(this.state.name, new XRegExp('^[0-9\\p{L} _\\.]+$'))) {
+    if (XRegExp.test(this.state.name, new XRegExp('^(?!.*\\bRiot\\b)[0-9\\p{L} _\\.]{3,16}$', 'i'))) {
       console.log(`searching for player ${this.state.name}`)
       this.props.history.push(`/${this.state.region}/search?name=${this.state.name}`)
     } else {
