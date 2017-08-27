@@ -2,7 +2,10 @@ import * as actions from '../constants/actionTypes'
 
 const initialState = {
   error: {},
-  isFetching: false
+  isFetching: false,
+  isFetchingSearchHistory: false,
+  summonerName: '',
+  serviceRegion: 'NA'
 }
 
 const searchReducer = (state = initialState, action) => {
@@ -22,6 +25,24 @@ const searchReducer = (state = initialState, action) => {
         ...state,
         error: action.payload,
         isFetching: false
+      }
+    case actions.FETCHING_SEARCH_HISTORY:
+      return {
+        ...state,
+        isFetchingSearchHistory: true
+      }
+    case actions.RECEIVED_SEARCH_HISTORY:
+      return {
+        ...state,
+        isFetchingSearchHistory: false,
+        summonerName: action.payload.summonerName,
+        serviceRegion: action.payload.serviceRegion
+      }
+    case actions.ERROR_FETCHING_SEARCH_HISTORY:
+      return {
+        ...state,
+        error: action.payload,
+        isFetchingSearchHistory: false
       }
     default:
       return state

@@ -21,10 +21,44 @@ const errorFetchingCurrentGame = (error) => {
   }
 }
 
+const fetchingSearchHistory = () => {
+  return {
+    type: actions.FETCHING_SEARCH_HISTORY
+  }
+}
+
+const receivedSearchHistory = (payload) => {
+  return {
+    type: actions.RECEIVED_SEARCH_HISTORY,
+    payload
+  }
+}
+
+const errorFetchingSearchHistory = (error) => {
+  return {
+    type: actions.ERROR_FETCHING_SEARCH_HISTORY,
+    error
+  }
+}
+
+export const getSearchHistory = () => {
+  return (dispatch) => {
+    dispatch(fetchingSearchHistory())
+    return axios.get('/api/searchHistory')
+      .then(response => {
+        dispatch(receivedSearchHistory(response.data))
+        return response
+      }).catch(err => {
+        dispatch(errorFetchingSearchHistory(err.response))
+        return err.response
+      })
+  }
+}
+
 export const getCurrentGame = (serviceRegion, summonerName) => {
   return (dispatch) => {
     dispatch(fetchingCurrentGame())
-    return axios.get(`/api/summonerById?serviceRegion=${serviceRegion}&summonerName=${summonerName}`)
+    return axios.get(`/api/summonerByName?serviceRegion=${serviceRegion}&summonerName=${summonerName}`)
       .then(response => {
         return axios.get(`/api/currentGame?serviceRegion=${serviceRegion}&summonerId=${response.data.id}`)
           .then(response => {

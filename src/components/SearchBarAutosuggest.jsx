@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Autosuggest from 'react-autosuggest'
 import XRegExp from 'xregexp'
 
-import * as actions from '../actions/searchActions'
+import { getSearchHistory } from '../actions/searchActions'
 var regionalEndpoints = require('../constants/regionalEndpoints')
 
 const usernames = ["Pahnis", "SirBuzzKill"]
@@ -31,10 +31,22 @@ class SearchBarAutosuggest extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      doneFetchingData: false,
       name: '',
       suggestions: [],
       region: 'NA'
     }
+  }
+
+  componentWillMount() {
+    this.props.dispatch(getSearchHistory())
+      .then(response => {
+        this.setState({
+          doneFetchingData: true,
+          name: response.data.summonerName || '',
+          region: response.data.serviceRegion || 'NA'
+        })
+      })
   }
 
   onChange(event, { newValue }) {
@@ -83,38 +95,42 @@ class SearchBarAutosuggest extends React.Component {
   }
 
   render() {
-    // Autosuggest will pass through all these props to the input.
-    const inputProps = {
-      placeholder: 'Type a summoner name',
-      value: this.state.name,
-      onChange: this.onChange.bind(this)
-    }
+    if (this.state.doneFetchingData) {
+      // Autosuggest will pass through all these props to the input.
+      const inputProps = {
+        placeholder: 'Type a summoner name',
+        value: this.state.name,
+        onChange: this.onChange.bind(this)
+      }
 
-    return (
-      <form onSubmit={this.handleSubmit.bind(this)}>
-        <Autosuggest
-          suggestions={this.state.suggestions}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
-          inputProps={inputProps}
-        />
-        <select 
-          value={this.state.region} 
-          onChange={this.handleOnChangeRegion.bind(this)}
-        >
-          { this.renderSelectOptions() }
-        </select>
-      </form>
-    )
+      return (
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <Autosuggest
+            suggestions={this.state.suggestions}
+            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
+            onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
+            getSuggestionValue={getSuggestionValue}
+            renderSuggestion={renderSuggestion}
+            inputProps={inputProps}
+          />
+          <select 
+            value={this.state.region} 
+            onChange={this.handleOnChangeRegion.bind(this)}
+          >
+            { this.renderSelectOptions() }
+          </select>
+        </form>
+      )
+    } else {
+      return null
+    }
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-
+    search: state.searchReducer
   }
 }
 
-export default connect(mapStateToProps, actions)(SearchBarAutosuggest)
+export default connect(mapStateToProps)(SearchBarAutosuggest)

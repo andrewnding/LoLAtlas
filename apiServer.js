@@ -3,6 +3,8 @@
 var express = require('express');
 var axios = require('axios');
 var encodeUrl = require('encodeurl')
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 var _ = require('lodash');
 var regionalEndpoints = require('./src/constants/regionalEndpoints');
 var app = express();
@@ -28,6 +30,17 @@ var MatchDetails = require('./src/models/matchDetails');
 var ChampionMastery = require('./src/models/championMastery');
 // Done with database models
 
+// User session setup
+app.use(session({
+  secret: process.env.LOL_SESSION_SECRET,
+  resave: true,
+  store: new MongoStore({ 
+    mongooseConnection: db,
+    ttl: 60 * 60 * 24 * 7
+  })
+}))
+// Done with user session setup
+
 var summonerNotFoundResponse = {
   message: 'Data not found - summoner not found',
   status_code: 404
@@ -43,7 +56,7 @@ var rankedMatchesNotFoundResponse = {
   status_code: 404
 }
 
-function getSummonerById(req, res) {
+function getSummonerByName(req, res) {
   return axios.get(encodeUrl(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`), {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       Summoner.create({ data: response.data }, function(err, summoner) {
@@ -64,7 +77,9 @@ function getSummonerById(req, res) {
     })
 }
 
-app.get('/summonerById', (req, res) => {
+app.get('/summonerByName', (req, res) => {
+  req.session.summonerName = req.query.summonerName
+
   Summoner.find({ "data.name": req.query.summonerName }, function(err, summoner) {
     if (err) {
       console.log(err)
@@ -72,7 +87,7 @@ app.get('/summonerById', (req, res) => {
     }
 
     if (summoner.length === 0) {
-      limiter.schedule(getSummonerById, req, res)
+      limiter.schedule(getSummonerByName, req, res)
     } else {
       res.json(summoner[0].data)
     }
@@ -80,6 +95,8 @@ app.get('/summonerById', (req, res) => {
 })
 
 function getCurrentGame(req, res) {
+  req.session.serviceRegion = req.query.serviceRegion
+
   return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/spectator/v3/active-games/by-summoner/${req.query.summonerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       res.json(response.data)
@@ -340,6 +357,19 @@ app.get('/championMastery', (req, res) => {
       res.json(championMastery[0].data)
     }
   })
+})
+
+app.get('/searchHistory', (req, res) => {
+  let searchObject = {}
+  if (typeof req.session.serviceRegion !== undefined) {
+    searchObject.serviceRegion = req.session.serviceRegion
+  }
+
+  if (typeof req.session.summonerName !== undefined) {
+    searchObject.summonerName = req.session.summonerName
+  }
+
+  res.json(searchObject)
 })
 
 app.listen(3001, (err) => {
