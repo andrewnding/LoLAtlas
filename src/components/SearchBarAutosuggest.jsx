@@ -38,7 +38,7 @@ class SearchBarAutosuggest extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.dispatch(getSearchHistory())
       .then(response => {
         this.setState({

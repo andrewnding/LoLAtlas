@@ -24,7 +24,6 @@ class CurrentGamePage extends React.Component {
   }
   
   checkForErrors(response) {
-
     if (response.data.error === 'PLAYER_NOT_FOUND') {
       this.setState({ searchError: 'PLAYER_NOT_FOUND' })
       return
@@ -49,6 +48,10 @@ class CurrentGamePage extends React.Component {
     this.props.dispatch(getCurrentGame(this.props.match.params.region, name))
       .then(response => {
         this.checkForErrors(response)
+        
+        if (this.state.searchError === 'NOT_RANKED_GAME') {
+          return
+        }
 
         if (response.status === 200) {
           this.setState({ searchError: '' })
