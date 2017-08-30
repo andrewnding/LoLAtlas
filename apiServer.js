@@ -64,6 +64,7 @@ function getSummonerByName(req, res) {
           console.log(err)
           return err
         }
+        addSummonerToSearchHistory(req)
         res.json(response.data)
       })
     }).catch(error => {
@@ -89,10 +90,25 @@ app.get('/summonerByName', (req, res) => {
     if (summoner.length === 0) {
       limiter.schedule(getSummonerByName, req, res)
     } else {
+      addSummonerToSearchHistory(req)
       res.json(summoner[0].data)
     }
   })
 })
+
+function addSummonerToSearchHistory(req) {
+  if (!req.session.searchHistory) {
+    req.session.searchHistory = [req.query.summonerName]
+    return
+  }
+
+  if (req.session.searchHistory.indexOf(req.query.summonerName) === -1) {
+    req.session.searchHistory.push(req.query.summonerName)
+    if (req.session.searchHistory.length > 5) {
+      req.session.searchHistory.shift()
+    }
+  }
+}
 
 function getCurrentGame(req, res) {
   req.session.serviceRegion = req.query.serviceRegion
@@ -367,6 +383,10 @@ app.get('/searchHistory', (req, res) => {
 
   if (typeof req.session.summonerName !== undefined) {
     searchObject.summonerName = req.session.summonerName
+  }
+
+  if (typeof req.session.searchHistory !== undefined) {
+    searchObject.searchHistory = req.session.searchHistory
   }
 
   res.json(searchObject)
