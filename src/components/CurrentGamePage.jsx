@@ -19,8 +19,16 @@ class CurrentGamePage extends React.Component {
       numberOfChampionMasteriesLoaded: 0,
       searchError: ''
     }
+  }
 
+  componentDidMount() {
     this.loadCurrentGameData()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.location.search !== this.props.location.search) {
+      this.loadCurrentGameData()
+    }
   }
   
   checkForErrors(response) {
