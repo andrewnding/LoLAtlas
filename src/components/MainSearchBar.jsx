@@ -5,7 +5,7 @@ import SearchBarAutosuggest from './SearchBarAutosuggest'
 
 const MainSearchBar = ({ history }) => {
   return (
-    <div>
+    <div className="search-bar-container">
       <SearchBarAutosuggest
         history={history}
       />

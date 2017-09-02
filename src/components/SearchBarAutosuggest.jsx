@@ -102,28 +102,39 @@ class SearchBarAutosuggest extends React.Component {
     if (this.state.doneFetchingData) {
       // Autosuggest will pass through all these props to the input.
       const inputProps = {
-        placeholder: 'Type a summoner name',
+        placeholder: 'Summoner Name',
         value: this.state.name,
-        onChange: this.onChange.bind(this)
+        onChange: this.onChange.bind(this),
+        className: 'search-input'
       }
 
       return (
-        <form onSubmit={this.handleSubmit.bind(this)}>
-          <Autosuggest
-            suggestions={this.state.suggestions}
-            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
-            onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
-            getSuggestionValue={this.getSuggestionValue.bind(this)}
-            renderSuggestion={this.renderSuggestion.bind(this)}
-            inputProps={inputProps}
-          />
-          <select 
-            value={this.state.region} 
-            onChange={this.handleOnChangeRegion.bind(this)}
-          >
-            { this.renderSelectOptions() }
-          </select>
-        </form>
+        <div> 
+          <form className="search-bar-items" onSubmit={this.handleSubmit.bind(this)}>
+            <Autosuggest
+              suggestions={this.state.suggestions}
+              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
+              onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
+              getSuggestionValue={this.getSuggestionValue.bind(this)}
+              renderSuggestion={this.renderSuggestion.bind(this)}
+              alwaysRenderSuggestions={true}
+              highlightFirstSuggestion={true}
+              inputProps={inputProps}
+            />
+            <select 
+              className="form-control region-select"
+              value={this.state.region} 
+              onChange={this.handleOnChangeRegion.bind(this)}
+            >
+              { this.renderSelectOptions() }
+            </select>
+            <input
+              type="submit"
+              value="Search"
+              className="btn btn-primary search-button"
+            />
+          </form>
+        </div>
       )
     } else {
       return null

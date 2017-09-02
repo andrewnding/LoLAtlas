@@ -141,7 +141,7 @@ class CurrentGamePage extends React.Component {
 
   renderErrorPage(message) {
     return (
-        <div className="container-fluid">
+        <div className="search-bar-container">
           {message}
           <SearchBarAutosuggest
             history={this.props.history}

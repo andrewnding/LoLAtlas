@@ -1,16 +1,6 @@
-$blue-team-color: #a9e6ff;
-$purple-team-color: #c1aeda;
-$win-green: #25b325;
-$lose-red: #d62c2c;
-$victory-green: #abecab;
-$victory-green-dark: #87d487;
-$defeat-red: #fdb6b6;
-$defeat-red-dark: #fd8f8f;
-$light-gray: #888888;
-$remake-gray: #bbbbbb;
-$remake-gray-dark: #999999;
-
+@import 'variables';
 @import 'playerItem';
+@import 'searchBar';
 
 .team-row {
   margin-bottom: 30px;
@@ -52,4 +42,12 @@ $remake-gray-dark: #999999;
 
 .float-right {
   float: right;
+}
+
+.navbar {
+  margin-bottom: 0;
+}
+
+.footer {
+  height: $footer-height;
 }
