@@ -52,7 +52,6 @@ class CurrentGamePage extends React.Component {
   loadCurrentGameData() {
     let searchParams = new URLSearchParams(this.props.location.search.substring(1));
     let name = searchParams.get('name');
-
     this.props.dispatch(getCurrentGame(this.props.match.params.region, name))
       .then(response => {
         this.checkForErrors(response)
@@ -141,7 +140,7 @@ class CurrentGamePage extends React.Component {
 
   renderErrorPage(message) {
     return (
-        <div className="search-bar-container">
+        <div>
           {message}
           <SearchBarAutosuggest
             history={this.props.history}

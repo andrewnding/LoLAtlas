@@ -104,7 +104,7 @@ function addSummonerToSearchHistory(req) {
 
   if (req.session.searchHistory.indexOf(req.query.summonerName) === -1) {
     req.session.searchHistory.push(req.query.summonerName)
-    if (req.session.searchHistory.length > 5) {
+    if (req.session.searchHistory.length > 10) {
       req.session.searchHistory.shift()
     }
   }

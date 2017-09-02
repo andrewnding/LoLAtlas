@@ -109,7 +109,7 @@ class SearchBarAutosuggest extends React.Component {
       }
 
       return (
-        <div> 
+        <div className="search-bar-container"> 
           <form className="search-bar-items" onSubmit={this.handleSubmit.bind(this)}>
             <Autosuggest
               suggestions={this.state.suggestions}
@@ -117,8 +117,6 @@ class SearchBarAutosuggest extends React.Component {
               onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
               getSuggestionValue={this.getSuggestionValue.bind(this)}
               renderSuggestion={this.renderSuggestion.bind(this)}
-              alwaysRenderSuggestions={true}
-              highlightFirstSuggestion={true}
               inputProps={inputProps}
             />
             <select 
