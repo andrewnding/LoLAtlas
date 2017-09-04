@@ -26,12 +26,14 @@ class CurrentGamePage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.location.search !== this.props.location.search) {
+    if (prevProps.location.search !== this.props.location.search || prevProps.location.pathname !== this.props.location.pathname) {
       this.loadCurrentGameData()
     }
   }
   
   checkForErrors(response) {
+    this.setState({ searchError: '' })
+
     if (response.data.error === 'PLAYER_NOT_FOUND') {
       this.setState({ searchError: 'PLAYER_NOT_FOUND' })
       return
