@@ -93,6 +93,9 @@ class CurrentGamePage extends React.Component {
                 this.props.dispatch(getRecentRankedMatches(this.props.match.params.region, response.data.accountId))
                   .then(response => {
                     if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
+                      if (response.data.length < 5) {
+                        this.setState({ numberOfMatchesLoaded: this.state.numberOfMatchesLoaded + (5 - response.data.length) })
+                      }
                       response.data.map((match) => {
                         this.props.dispatch(getMatchDetails(this.props.match.params.region, participant.summonerId, match.gameId))
                           .then(response => {
