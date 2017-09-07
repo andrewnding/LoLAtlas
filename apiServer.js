@@ -13,7 +13,7 @@ var limiter = new Bottleneck(20, 60);
 var mongoose = require('mongoose');
 
 // Database Setup
-mongoose.connect(`mongodb://${process.env.LOL_USERNAME}:${process.env.LOL_PASSWORD}@ds049651.mlab.com:49651/lolcamp`)
+mongoose.connect(`mongodb://${process.env.LOL_USERNAME}:${process.env.LOL_PASSWORD}@ds127564.mlab.com:27564/lolcamp`)
 
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -59,6 +59,7 @@ var rankedMatchesNotFoundResponse = {
 function getSummonerByName(req, res) {
   return axios.get(encodeUrl(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`), {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
+      req.session.summonerName = req.query.summonerName
       Summoner.create({ data: response.data }, function(err, summoner) {
         if (err) {
           console.log(err)
@@ -79,8 +80,6 @@ function getSummonerByName(req, res) {
 }
 
 app.get('/summonerByName', (req, res) => {
-  req.session.summonerName = req.query.summonerName
-
   Summoner.find({ "data.name": req.query.summonerName }, function(err, summoner) {
     if (err) {
       console.log(err)
@@ -90,6 +89,7 @@ app.get('/summonerByName', (req, res) => {
     if (summoner.length === 0) {
       limiter.schedule(getSummonerByName, req, res)
     } else {
+      req.session.summonerName = req.query.summonerName
       addSummonerToSearchHistory(req)
       res.json(summoner[0].data)
     }
@@ -98,16 +98,28 @@ app.get('/summonerByName', (req, res) => {
 
 function addSummonerToSearchHistory(req) {
   if (!req.session.searchHistory) {
-    req.session.searchHistory = [req.query.summonerName]
+    req.session.searchHistory = [{
+      summonerName: req.query.summonerName,
+      serviceRegion: req.query.serviceRegion
+    }]
     return
   }
 
-  if (req.session.searchHistory.indexOf(req.query.summonerName) === -1) {
-    req.session.searchHistory.push(req.query.summonerName)
+  let historyIndex = req.session.searchHistory.map(function(historyItem) { return historyItem.summonerName }).indexOf(req.query.summonerName)
+  if (historyIndex === -1 ) {
+    req.session.searchHistory.push({
+      summonerName: req.query.summonerName,
+      serviceRegion: req.query.serviceRegion
+    })
+
     if (req.session.searchHistory.length > 10) {
       req.session.searchHistory.shift()
     }
+    return
   }
+
+  let searchedItem = req.session.searchHistory.splice(historyIndex, 1)
+  req.session.searchHistory.push(searchedItem[0])
 }
 
 function getCurrentGame(req, res) {

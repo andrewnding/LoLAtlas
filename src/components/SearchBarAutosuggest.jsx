@@ -41,7 +41,9 @@ class SearchBarAutosuggest extends React.Component {
     const inputValue = value.trim().toLowerCase()
     const inputLength = inputValue.length
 
-    return inputLength === 0 ? [] : this.state.searchHistory.filter(suggestion =>
+    const searchHistoryNames = this.state.searchHistory.map((summoner) => summoner.summonerName)
+
+    return inputLength === 0 ? [] : searchHistoryNames.filter(suggestion =>
       suggestion.toLowerCase().slice(0, inputLength) === inputValue
     )
   }
