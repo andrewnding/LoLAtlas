@@ -139,15 +139,31 @@ class CurrentGamePlayerItem extends React.Component {
     
     return (
       <div>
-        <span>Champion Mastery</span>
-        <div>
+        <div className='player-item-sub-title'>Champion Mastery</div>
+        <div className='player-item-content'>
+          <div className='space-between vertical-align'>
             <img
-            src={this.currentChampionMasterySrc()}
-            className="medium-icon"
-          />
-          <div>Champion Level: {this.props.player.currentChampionMastery.championLevel}</div>
-          <div>Champion Points: {this.props.player.currentChampionMastery.championPoints}</div>
-          <div>Last Time Played: {lastPlayed}</div>
+              src={this.currentChampionMasterySrc()}
+              className="medium-icon"
+            />
+            <span className='text-align-center'>
+              <div>
+                Level
+              </div>
+              <div>
+                {this.props.player.currentChampionMastery.championLevel}  
+              </div>
+            </span>
+            <span className='text-align-center'>
+              <div>
+                Points
+              </div>
+              <div>
+                {this.props.player.currentChampionMastery.championPoints}
+              </div>
+            </span>
+          </div>
+          <div>Last Played: {lastPlayed}</div>
         </div>
       </div>
     )
@@ -172,21 +188,26 @@ class CurrentGamePlayerItem extends React.Component {
           <span>{this.props.player.summonerName}</span>
         </div>
         <div className='player-item-stats'>
-          {this.renderRankInfo()}
-        </div>
-        <div>
-          <span>
-            Win / Loss: {rankedData.wins} / {rankedData.losses}
-            <div>
-              {this.renderWinPercent()}
+          <div className='player-item-sub-title'>
+            Ranked Data
+          </div>
+          <div className='player-item-content'>
+            {this.renderRankInfo()}
+            <div className="space-between">
+              <span>
+                Win / Loss: {rankedData.wins} / {rankedData.losses}
+              </span>
+              <span>
+                {this.renderWinPercent()}
+              </span>
             </div>
-          </span>
+          </div>
         </div>
         <div>
           {this.renderChampionMastery()}
         </div>
         <div>
-          <span>Recent Ranked Matches</span>
+          <div className='player-item-sub-title'>Recent Ranked Matches</div>
           <RankedMatchesList
             matches={this.props.player.recentRankedMatches}
             player={this.props.player}
