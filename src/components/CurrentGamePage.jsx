@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentGame } from '../actions/searchActions'
 import { getRankedLeague, getAccountId, getRecentRankedMatches, getMatchDetails, getChampionMastery } from '../actions/currentGameActions'
-import { getRealmVersion, getChampionImages, getChampionData } from '../actions/staticDataActions'
+import { getRealmVersion, getChampionImages, getChampionData, getSummonerSpells } from '../actions/staticDataActions'
 
 import CurrentGamePlayerList from './CurrentGamePlayerList'
 import SearchBarAutosuggest from './SearchBarAutosuggest'
@@ -13,6 +13,7 @@ class CurrentGamePage extends React.Component {
     this.state = {
       receivedChampionImages: false,
       receivedChampionData: false,
+      receivedSummonerSpells: false,
       receivedRealmVersion: false,
       numberOfSummonersLoaded: 0,
       numberOfMatchesLoaded: 0,
@@ -81,6 +82,15 @@ class CurrentGamePage extends React.Component {
             }).catch(error => {
               console.log(error)
             })
+
+          this.props.dispatch(getSummonerSpells(this.props.match.params.region))
+            .then(response => {
+              if (response.status === 200) {
+                this.setState({ receivedSummonerSpells: true })
+              }
+            }).catch(error => {
+              console.log(error)
+            })
           
           this.props.currentGame.gameInfo.participants.map(participant => {
             this.props.dispatch(getRankedLeague(this.props.match.params.region, participant.summonerId))
@@ -140,7 +150,15 @@ class CurrentGamePage extends React.Component {
   }
 
   doneFetchingData() {
-    return this.state.receivedChampionImages && this.state.receivedRealmVersion && (this.state.numberOfSummonersLoaded === 10) && (this.state.numberOfMatchesLoaded === 50) && (this.state.numberOfChampionMasteriesLoaded === 10) && this.state.receivedChampionData
+    return (
+      this.state.receivedChampionImages && 
+      this.state.receivedRealmVersion && 
+      (this.state.numberOfSummonersLoaded === 10) && 
+      (this.state.numberOfMatchesLoaded === 50) && 
+      (this.state.numberOfChampionMasteriesLoaded === 10) && 
+      this.state.receivedChampionData &&
+      this.state.receivedSummonerSpells
+    )
   }
 
   renderErrorPage(message) {

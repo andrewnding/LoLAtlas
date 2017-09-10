@@ -176,6 +176,16 @@ class CurrentGamePlayerItem extends React.Component {
     return `/images/champion-mastery/level_${this.props.player.currentChampionMastery.championLevel}.png`
   }
 
+  summonerSpell1() {
+    const summonerSpellOne = this.props.staticData.summonerSpells[this.props.player.spell1Id.toString()]
+    return summonerSpellOne.image.full
+  }
+
+  summonerSpell2() {
+    const summonerSpellTwo = this.props.staticData.summonerSpells[this.props.player.spell2Id.toString()]
+    return summonerSpellTwo.image.full
+  }
+
   render() {
     let rankedData = this.props.player.rankedData
     return (
@@ -185,6 +195,16 @@ class CurrentGamePlayerItem extends React.Component {
             src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/champion/${this.championImage()}`}
             className="medium-icon"
           />
+          <span className="summoner-spell-container">
+            <img
+              src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell1()}`}
+              className="summoner-icon-1"
+            />
+            <img
+              src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell2()}`}
+              className="summoner-icon-2"
+            />
+          </span>
           <span>{this.props.player.summonerName}</span>
         </div>
         <div className='player-item-stats'>

@@ -22,6 +22,13 @@ const receivedChampionData = (payload) => {
   }
 }
 
+const receivedSummonerSpells = (payload) => {
+  return {
+    type: actions.RECEIVED_SUMMONER_SPELLS,
+    payload
+  }
+}
+
 export const getRealmVersion = (serviceRegion) => {
   return (dispatch) => {
     return axios.get(`/api/realmVersion?serviceRegion=${serviceRegion}`)
@@ -51,6 +58,18 @@ export const getChampionData = (serviceRegion) => {
     return axios.get(`/api/championData?serviceRegion=${serviceRegion}`)
       .then(response => {
         dispatch(receivedChampionData(response.data.data))
+        return response
+      }).catch(err => {
+        return err.response
+      })
+  }
+}
+
+export const getSummonerSpells = (serviceRegion) => {
+  return (dispatch) => {
+    return axios.get(`/api/summonerSpells?serviceRegion=${serviceRegion}`)
+      .then(response => {
+        dispatch(receivedSummonerSpells(response.data.data))
         return response
       }).catch(err => {
         return err.response

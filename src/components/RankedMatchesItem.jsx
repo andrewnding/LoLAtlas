@@ -96,6 +96,24 @@ class RankedMatchesItem extends React.Component {
     return <span>{participantStats.kills}/{participantStats.deaths}/{participantStats.assists}</span>
   }
 
+  summonerSpell1() {
+    const currentParticipant = this.props.match.gameDetails.participants.filter(participant => {
+      return participant.participantId === this.participantId
+    })
+
+    const summonerSpellOne = this.props.staticData.summonerSpells[currentParticipant[0].spell1Id.toString()]
+    return summonerSpellOne.image.full
+  }
+
+  summonerSpell2() {
+    const currentParticipant = this.props.match.gameDetails.participants.filter(participant => {
+      return participant.participantId === this.participantId
+    })
+
+    const summonerSpellTwo = this.props.staticData.summonerSpells[currentParticipant[0].spell2Id.toString()]
+    return summonerSpellTwo.image.full
+  }
+
   render() {
     if (this.error) {
       return (
@@ -110,6 +128,7 @@ class RankedMatchesItem extends React.Component {
       'defeat-background': this.result === 'Defeat',
       'remake-background': this.result === 'Remake'
     })
+
     return (
       <div className={myClassNames}>
         <div className="space-between item-header-text">
@@ -121,6 +140,16 @@ class RankedMatchesItem extends React.Component {
           src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/champion/${this.championImage()}`}
           className="medium-icon circular-icon"
         />
+        <span className="summoner-spell-container">
+          <img
+            src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell1()}`}
+            className="summoner-icon-1"
+          />
+          <img
+            src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell2()}`}
+            className="summoner-icon-2"
+          />
+        </span>
         <span>
           {this.renderKda()}
         </span>
