@@ -190,7 +190,6 @@ class CurrentGamePage extends React.Component {
     } else {
       return (
         <div className="container-fluid">
-          Current Game Page
           {this.renderPlayerList()}
         </div>
       )

@@ -12,7 +12,7 @@ class CurrentGamePlayerList extends React.Component {
       player.teamId === 100
     ))
     return players.map((player, i) => (
-      <div className="col-md-2" key={i}>
+      <div className="col-md-5ths" key={i}>
         <CurrentGamePlayerItem player={player} />      
       </div>
     ))
@@ -23,7 +23,7 @@ class CurrentGamePlayerList extends React.Component {
       player.teamId === 200
     ))
     return players.map((player, i) => (
-      <div className="col-md-2" key={i}>
+      <div className="col-md-5ths" key={i}>
         <CurrentGamePlayerItem player={player} />      
       </div>
     ))
@@ -31,8 +31,7 @@ class CurrentGamePlayerList extends React.Component {
 
   render() {
     return (
-      <div>
-        Player List
+      <div className='player-list-container'>
         <div className="row team-row">
           {this.renderTeam100()}
         </div>
