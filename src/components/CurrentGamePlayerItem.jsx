@@ -205,7 +205,9 @@ class CurrentGamePlayerItem extends React.Component {
               className="summoner-icon-2"
             />
           </span>
-          <span>{this.props.player.summonerName}</span>
+          <span className='title-left-padding'>
+            {this.props.player.summonerName}
+          </span>
         </div>
         <div className='player-item-stats'>
           <div className='player-item-sub-title'>

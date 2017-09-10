@@ -93,7 +93,7 @@ class RankedMatchesItem extends React.Component {
       return <span></span>
     }
     const participantStats = currentParticipant[0].stats
-    return <span>{participantStats.kills}/{participantStats.deaths}/{participantStats.assists}</span>
+    return <span className='title-left-padding'>{participantStats.kills}/{participantStats.deaths}/{participantStats.assists}</span>
   }
 
   summonerSpell1() {
@@ -150,9 +150,7 @@ class RankedMatchesItem extends React.Component {
             className="summoner-icon-2"
           />
         </span>
-        <span>
-          {this.renderKda()}
-        </span>
+        {this.renderKda()}
       </div>
     )
   }

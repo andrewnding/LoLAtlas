@@ -2,6 +2,14 @@
 @import 'playerItem';
 @import 'searchBar';
 
+.body {
+  font-family: 'Lato', sans-serif;
+}
+
+.title-left-padding {
+  padding-left: 10px;
+}
+
 .team-row {
   margin-bottom: 30px;
 }
@@ -30,6 +38,7 @@
 
 .item-header-text {
   font-size: 13px;
+  padding: 0 3px;
 }
 
 .color-green {
