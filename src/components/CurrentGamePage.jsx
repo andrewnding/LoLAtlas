@@ -6,6 +6,7 @@ import { getRealmVersion, getChampionImages, getChampionData, getSummonerSpells 
 
 import CurrentGamePlayerList from './CurrentGamePlayerList'
 import SearchBarAutosuggest from './SearchBarAutosuggest'
+import LoadingScreen from './LoadingScreen'
 
 class CurrentGamePage extends React.Component {
   constructor(props) {
@@ -172,15 +173,11 @@ class CurrentGamePage extends React.Component {
       )
   }
 
-  renderPlayerList() {
-    if (this.doneFetchingData()) {
-      return <CurrentGamePlayerList />
-    } else {
-      return <div></div>
-    }
-  }
-
   render() {
+    if (!this.doneFetchingData() && !this.state.searchError) {
+      return <LoadingScreen />
+    }
+    
     if (this.state.searchError === 'PLAYER_NOT_FOUND') {
       return this.renderErrorPage('Player not found')
     } else if (this.state.searchError === 'GAME_NOT_FOUND') {
@@ -190,7 +187,7 @@ class CurrentGamePage extends React.Component {
     } else {
       return (
         <div className="container-fluid">
-          {this.renderPlayerList()}
+          <CurrentGamePlayerList />
         </div>
       )
     }

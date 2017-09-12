@@ -69,6 +69,14 @@
   margin-top: 50px;
 }
 
+.loading-container {
+  text-align: center;
+  margin-top: 40vh;
+  height: -webkit-calc(60vh - 60px - #{$footer-height});
+  height:    -moz-calc(60vh - 60px - #{$footer-height});
+  height:         calc(60vh - 60px - #{$footer-height});
+}
+
 // Bootstrap override to create five columns
 .col-xs-5ths,
 .col-sm-5ths,

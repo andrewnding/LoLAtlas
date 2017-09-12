@@ -8,10 +8,10 @@
 
 .search-bar-container {
   text-align: center;
-  padding-top: 35vh;
-  height: -webkit-calc(100vh - 72px - #{$footer-height});
-  height:    -moz-calc(100vh - 72px - #{$footer-height});
-  height:         calc(100vh - 72px - #{$footer-height});
+  padding-top: 40vh;
+  height: -webkit-calc(100vh - 54px - #{$footer-height});
+  height:    -moz-calc(100vh - 54px - #{$footer-height});
+  height:         calc(100vh - 54px - #{$footer-height});
   position: relative;
   overflow: hidden;
 }
