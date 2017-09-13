@@ -111,7 +111,14 @@ class SearchBarAutosuggest extends React.Component {
       }
 
       return (
-        <div className="search-bar-container"> 
+        <div className="search-bar-container">
+          <div className="title-text">
+            <h1>LoLCamp</h1>
+            <p>The fastest way to understand your allies and enemies.</p>  
+          </div>
+          <div className='search-error-message'>
+            {this.props.errorMessage}
+          </div>
           <form className="search-bar-items" onSubmit={this.handleSubmit.bind(this)}>
             <Autosuggest
               suggestions={this.state.suggestions}

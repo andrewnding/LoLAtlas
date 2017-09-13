@@ -31,7 +31,7 @@ class CurrentGamePlayerList extends React.Component {
 
   render() {
     return (
-      <div className='player-list-container'>
+      <div className='player-list-container container-fluid'>
         <div className="row team-row">
           {this.renderTeam100()}
         </div>

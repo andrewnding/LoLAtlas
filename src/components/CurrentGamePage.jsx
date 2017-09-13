@@ -164,12 +164,10 @@ class CurrentGamePage extends React.Component {
 
   renderErrorPage(message) {
     return (
-        <div>
-          {message}
-          <SearchBarAutosuggest
-            history={this.props.history}
-          />
-        </div>
+        <SearchBarAutosuggest
+          history={this.props.history}
+          errorMessage={message}
+        />
       )
   }
 
@@ -186,9 +184,7 @@ class CurrentGamePage extends React.Component {
       return this.renderErrorPage('Not a solo/duo ranked game')
     } else {
       return (
-        <div className="container-fluid">
-          <CurrentGamePlayerList />
-        </div>
+        <CurrentGamePlayerList />
       )
     }
   }  
