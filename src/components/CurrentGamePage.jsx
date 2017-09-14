@@ -28,7 +28,7 @@ class CurrentGamePage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.location.search !== this.props.location.search || prevProps.location.pathname !== this.props.location.pathname) {
+    if (prevProps.location.key !== this.props.location.key) {
       this.loadCurrentGameData()
     }
   }
