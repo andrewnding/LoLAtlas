@@ -129,6 +129,18 @@ class CurrentGamePlayerItem extends React.Component {
     return this.props.staticData.championImages[this.props.player.championId].image.full
   }
 
+  renderChampionMasteryBadge() {
+    if (this.props.player.currentChampionMastery.championLevel === 0) {
+      return <span className="medium-icon"></span>
+    }
+    return(
+      <img
+        src={this.currentChampionMasterySrc()}
+        className="medium-icon"
+      />
+    )
+  }
+
   renderChampionMastery() {
     let lastPlayed;
     if (this.props.player.currentChampionMastery.championLevel > 0) {
@@ -142,10 +154,7 @@ class CurrentGamePlayerItem extends React.Component {
         <div className='player-item-sub-title'>Champion Mastery</div>
         <div className='player-item-content'>
           <div className='space-between vertical-align'>
-            <img
-              src={this.currentChampionMasterySrc()}
-              className="medium-icon"
-            />
+            {this.renderChampionMasteryBadge()}
             <span className='text-align-center'>
               <div>
                 Level

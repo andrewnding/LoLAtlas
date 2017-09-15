@@ -1,6 +1,7 @@
 @import 'variables';
 @import 'playerItem';
 @import 'searchBar';
+@import 'headerFooter';
 
 .body {
   font-family: 'Lato', sans-serif;
@@ -67,7 +68,7 @@
 
 .player-list-container {
   padding-top: 50px;
-  background: linear-gradient(#3b5256, #463658)
+  background: linear-gradient(#CBEEF4, #EDE5F6)
 }
 
 .loading-container {

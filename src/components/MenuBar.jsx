@@ -4,7 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 
 const MenuBar = () => {
   return (
-    <Navbar inverse collapseOnSelect>
+    <Navbar collapseOnSelect>
       <LinkContainer to="/">
         <Navbar.Header>
           <Navbar.Brand>
@@ -14,16 +14,12 @@ const MenuBar = () => {
         </Navbar.Header>
       </LinkContainer>
       <Navbar.Collapse>
-        <Nav>
-          <NavItem eventKey={1} href="#">Link</NavItem>
-          <NavItem eventKey={2} href="#">Link</NavItem>
-        </Nav>
         <Nav pullRight>
-          <LinkContainer to="/sign_in">
-            <NavItem eventKey={1}>Sign In</NavItem>
+          <LinkContainer to="/about">
+            <NavItem eventKey={1}>About</NavItem>
           </LinkContainer>
-          <LinkContainer to="/register">
-            <NavItem eventKey={2}>Register</NavItem>
+          <LinkContainer to="/contact">
+            <NavItem eventKey={2}>Contact</NavItem>
           </LinkContainer>
         </Nav>
       </Navbar.Collapse>
