@@ -4,6 +4,7 @@ import { getCurrentGame } from '../actions/searchActions'
 import { getRankedLeague, getAccountId, getRecentRankedMatches, getMatchDetails, getChampionMastery } from '../actions/currentGameActions'
 import { getRealmVersion, getChampionImages, getChampionData, getSummonerSpells } from '../actions/staticDataActions'
 
+import CurrentGameHeader from './CurrentGameHeader'
 import CurrentGamePlayerList from './CurrentGamePlayerList'
 import SearchBarAutosuggest from './SearchBarAutosuggest'
 import LoadingScreen from './LoadingScreen'
@@ -184,7 +185,10 @@ class CurrentGamePage extends React.Component {
       return this.renderErrorPage('Not a solo/duo ranked game')
     } else {
       return (
-        <CurrentGamePlayerList />
+        <div>
+          <CurrentGameHeader gameStartTime={this.props.currentGame.gameInfo.gameStartTime} />
+          <CurrentGamePlayerList />
+        </div>
       )
     }
   }  
