@@ -11,6 +11,8 @@ export default class CurrentGameHeader extends React.Component {
     this.state = {
       currentGameDuration
     }
+
+    this.incrementTimeInterval
   }
 
   incrementTime() {
@@ -33,7 +35,11 @@ export default class CurrentGameHeader extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(() => this.incrementTime(), 1000)
+    this.incrementTimeInterval = setInterval(() => this.incrementTime(), 1000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.incrementTimeInterval)
   }
 
   render() {

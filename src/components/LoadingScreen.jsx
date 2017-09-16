@@ -4,7 +4,7 @@ const LoadingScreen = () => {
   return (
     <div className='loading-container'>
       <div>
-        <i className="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+        <i className="fa fa-spinner fa-spin fa-5x fa-fw"></i>
       </div>
       <span>Loading Game...</span>
     </div>
