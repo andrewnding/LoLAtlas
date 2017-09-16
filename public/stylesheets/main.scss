@@ -66,9 +66,25 @@ body {
   height: $footer-height;
 }
 
+.team-banner {
+  height: 40px;
+  font-weight: 700;
+  font-size: 20px;
+  border: 1px solid black;
+  justify-content: center;
+}
+
+.blue-team {
+  background-color: $blue-team-color;
+}
+
+.red-team {
+  background-color: $lose-red;
+}
+
 .player-list-container {
   padding-top: 50px;
-  background: linear-gradient(#CBEEF4, #EDE5F6)
+  background-color: white;
 }
 
 .loading-container {

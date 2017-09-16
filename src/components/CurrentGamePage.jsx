@@ -59,6 +59,10 @@ class CurrentGamePage extends React.Component {
     let name = searchParams.get('name');
     this.props.dispatch(getCurrentGame(this.props.match.params.region, name))
       .then(response => {
+        if (response.data.error) {
+          this.setState({ searchError: response.data.error })
+          return
+        }
         this.checkForErrors(response)
         
         if (this.state.searchError === 'NOT_RANKED_GAME') {
@@ -69,6 +73,10 @@ class CurrentGamePage extends React.Component {
           this.setState({ searchError: '' })
           this.props.dispatch(getChampionImages(this.props.match.params.region))
             .then(response => {
+              if (response.data.error) {
+                this.setState({ searchError: response.data.error })
+                return
+              }
               if (response.status === 200) {
                 this.setState({ receivedChampionImages: true })
               }
@@ -78,6 +86,10 @@ class CurrentGamePage extends React.Component {
 
           this.props.dispatch(getChampionData(this.props.match.params.region))
             .then(response => {
+              if (response.data.error) {
+                this.setState({ searchError: response.data.error })
+                return
+              }
               if (response.status === 200) {
                 this.setState({ receivedChampionData: true })
               }
@@ -87,6 +99,10 @@ class CurrentGamePage extends React.Component {
 
           this.props.dispatch(getSummonerSpells(this.props.match.params.region))
             .then(response => {
+              if (response.data.error) {
+                this.setState({ searchError: response.data.error })
+                return
+              }
               if (response.status === 200) {
                 this.setState({ receivedSummonerSpells: true })
               }
@@ -97,6 +113,10 @@ class CurrentGamePage extends React.Component {
           this.props.currentGame.gameInfo.participants.map(participant => {
             this.props.dispatch(getRankedLeague(this.props.match.params.region, participant.summonerId))
               .then(response => {
+                if (response.data.error) {
+                  this.setState({ searchError: response.data.error })
+                  return
+                }
                 
               }).catch(error => {
                 console.log(error)
@@ -104,8 +124,16 @@ class CurrentGamePage extends React.Component {
             
             this.props.dispatch(getAccountId(this.props.match.params.region, participant.summonerId))
               .then(response => {
+                if (response.data.error) {
+                  this.setState({ searchError: response.data.error })
+                  return
+                }
                 this.props.dispatch(getRecentRankedMatches(this.props.match.params.region, response.data.accountId))
                   .then(response => {
+                    if (response.data.error) {
+                      this.setState({ searchError: response.data.error })
+                      return
+                    }
                     if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
                       if (response.data.length < 5) {
                         this.setState({ numberOfMatchesLoaded: this.state.numberOfMatchesLoaded + (5 - response.data.length) })
@@ -113,6 +141,10 @@ class CurrentGamePage extends React.Component {
                       response.data.map((match) => {
                         this.props.dispatch(getMatchDetails(this.props.match.params.region, participant.summonerId, match.gameId))
                           .then(response => {
+                            if (response.data.error) {
+                              this.setState({ searchError: response.data.error })
+                              return
+                            }
                             this.setState({ numberOfMatchesLoaded: this.state.numberOfMatchesLoaded + 1 })
                           }).catch(error => {
                             console.log(error)
@@ -131,6 +163,10 @@ class CurrentGamePage extends React.Component {
             
             this.props.dispatch(getChampionMastery(this.props.match.params.region, participant.summonerId, participant.championId))
               .then(response => {
+                if (response.data.error) {
+                  this.setState({ searchError: response.data.error })
+                  return
+                }
                 this.setState({ numberOfChampionMasteriesLoaded: this.state.numberOfChampionMasteriesLoaded + 1 })
               }).catch(error => {
 
@@ -143,6 +179,10 @@ class CurrentGamePage extends React.Component {
 
     this.props.dispatch(getRealmVersion(this.props.match.params.region))
       .then(response => {
+        if (response.data.error) {
+          this.setState({ searchError: response.data.error })
+          return
+        }
         if (response.status === 200) {
           this.setState({ receivedRealmVersion: true })
         }
@@ -177,20 +217,24 @@ class CurrentGamePage extends React.Component {
       return <LoadingScreen />
     }
     
-    if (this.state.searchError === 'PLAYER_NOT_FOUND') {
-      return this.renderErrorPage('Player not found')
-    } else if (this.state.searchError === 'GAME_NOT_FOUND') {
-      return this.renderErrorPage('Player is not in a game')
-    } else if (this.state.searchError === 'NOT_RANKED_GAME') {
-      return this.renderErrorPage('Not a solo/duo ranked game')
-    } else {
-      return (
-        <div>
-          <CurrentGameHeader gameStartTime={this.props.currentGame.gameInfo.gameStartTime} />
-          <CurrentGamePlayerList />
-        </div>
-      )
+    if (this.state.searchError) {
+      if (this.state.searchError === 'PLAYER_NOT_FOUND') {
+        return this.renderErrorPage('Player not found')
+      } else if (this.state.searchError === 'GAME_NOT_FOUND') {
+        return this.renderErrorPage('Player is not in a game')
+      } else if (this.state.searchError === 'NOT_RANKED_GAME') {
+        return this.renderErrorPage('Not a solo/duo ranked game')
+      } else {
+        return this.renderErrorPage(this.state.searchError)
+      }  
     }
+   
+    return (
+      <div>
+        <CurrentGameHeader gameStartTime={this.props.currentGame.gameInfo.gameStartTime} />
+        <CurrentGamePlayerList />
+      </div>
+    )
   }  
 }
 

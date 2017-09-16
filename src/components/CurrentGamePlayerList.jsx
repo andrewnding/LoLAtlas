@@ -32,8 +32,14 @@ class CurrentGamePlayerList extends React.Component {
   render() {
     return (
       <div className='player-list-container container-fluid'>
+        <div className='team-banner blue-team vertical-align'>
+          Blue Team
+        </div>
         <div className="row team-row">
           {this.renderTeam100()}
+        </div>
+        <div className='team-banner red-team vertical-align'>
+          Red Team
         </div>
         <div className="row team-row">
           {this.renderTeam200()}
