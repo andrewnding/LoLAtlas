@@ -172,7 +172,7 @@ class CurrentGamePlayerItem extends React.Component {
               </div>
             </span>
           </div>
-          <div>Last Played: {lastPlayed}</div>
+          <div>Champion Played: {lastPlayed}</div>
         </div>
       </div>
     )

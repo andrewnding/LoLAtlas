@@ -7,12 +7,20 @@ body {
   font-family: 'Lato', sans-serif;
 }
 
+h1 {
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 18px;
+}
+
 .title-left-padding {
   padding-left: 10px;
 }
 
 .team-row {
-  margin-bottom: 30px;
+  margin: 15px 0;
 }
 
 .vertical-align {
@@ -66,24 +74,7 @@ body {
   height: $footer-height;
 }
 
-.team-banner {
-  height: 40px;
-  font-weight: 700;
-  font-size: 20px;
-  border: 1px solid black;
-  justify-content: center;
-}
-
-.blue-team {
-  background-color: $blue-team-color;
-}
-
-.red-team {
-  background-color: $lose-red;
-}
-
 .player-list-container {
-  padding-top: 50px;
   background-color: white;
 }
 
@@ -104,6 +95,11 @@ body {
   border-top: 1px solid $light-gray;
   border-bottom: 1px solid $light-gray;
   padding: 0 15px;
+}
+
+.versus-text {
+  font-size: 20px;
+  font-weight: 700;
 }
 
 // Bootstrap override to create five columns

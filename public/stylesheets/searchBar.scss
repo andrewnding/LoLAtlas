@@ -42,12 +42,16 @@ body:before {
 
 .search-error-message {
   height: 20px;
+  font-size: 16px;
+  color: $lose-red;
+  font-weight: 700px;
 }
 
 .search-bar-items {
   display: inline-block;
   position: relative;
   width: $search-input-width + $region-select-width + $search-button-width;
+  margin-top: 10px;
 
   .search-input {
     width: $search-input-width;

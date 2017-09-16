@@ -106,7 +106,7 @@ class RankedMatchesItem extends React.Component {
 
     const kdaClassNames = classNames({
       'gold-text': kdaString === 'Perfect' || kda >= 5,
-      'red-text': kda < 1.5,
+      'red-text': kda < 1,
       'title-left-padding': true
     })
 
