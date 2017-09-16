@@ -92,8 +92,30 @@ class RankedMatchesItem extends React.Component {
     if (currentParticipant.length === 0) {
       return <span></span>
     }
+
     const participantStats = currentParticipant[0].stats
-    return <span className='title-left-padding'>{participantStats.kills}/{participantStats.deaths}/{participantStats.assists}</span>
+    let kda
+    let kdaString
+
+    if (participantStats.deaths === 0) {
+      kdaString = 'Perfect'
+    } else {
+      kda = ((participantStats.kills + participantStats.assists) / participantStats.deaths).toFixed(2)
+      kdaString = `${kda} : 1`
+    }
+
+    const kdaClassNames = classNames({
+      'gold-text': kdaString === 'Perfect' || kda >= 5,
+      'red-text': kda < 1.5,
+      'title-left-padding': true
+    })
+
+    return (
+      <span>
+        <span className='title-left-padding'>{participantStats.kills}/{participantStats.deaths}/{participantStats.assists}</span>
+        <span className={kdaClassNames}>{kdaString}</span>
+      </span>
+    )
   }
 
   summonerSpell1() {
@@ -136,21 +158,23 @@ class RankedMatchesItem extends React.Component {
           {this.renderGameEndTime()}
           {this.renderGameDuration()}
         </div>
-        <img
-          src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/champion/${this.championImage()}`}
-          className="medium-icon circular-icon"
-        />
-        <span className="summoner-spell-container">
+        <div>
           <img
-            src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell1()}`}
-            className="summoner-icon-1"
+            src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/champion/${this.championImage()}`}
+            className="medium-icon circular-icon"
           />
-          <img
-            src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell2()}`}
-            className="summoner-icon-2"
-          />
-        </span>
-        {this.renderKda()}
+          <span className="summoner-spell-container">
+            <img
+              src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell1()}`}
+              className="summoner-icon-1"
+            />
+            <img
+              src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell2()}`}
+              className="summoner-icon-2"
+            />
+          </span>
+          {this.renderKda()}
+        </div>
       </div>
     )
   }

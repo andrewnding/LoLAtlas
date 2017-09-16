@@ -164,8 +164,10 @@ class CurrentGamePage extends React.Component {
             this.props.dispatch(getChampionMastery(this.props.match.params.region, participant.summonerId, participant.championId))
               .then(response => {
                 if (response.data.error) {
-                  this.setState({ searchError: response.data.error })
-                  return
+                  if (response.status !== 404) {
+                    this.setState({ searchError: response.data.error })
+                    return
+                  }
                 }
                 this.setState({ numberOfChampionMasteriesLoaded: this.state.numberOfChampionMasteriesLoaded + 1 })
               }).catch(error => {

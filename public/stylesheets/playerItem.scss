@@ -72,4 +72,14 @@
   .series-icon {
     margin: 0 2px;
   }
+
+  .gold-text {
+    color: $gold-kda;
+    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black;
+  }
+
+  .red-text {
+    color: $red-kda;
+    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black;
+  }
 }
