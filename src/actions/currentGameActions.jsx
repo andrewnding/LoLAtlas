@@ -89,7 +89,7 @@ export const getRecentRankedMatches = (serviceRegion, accountId) => {
 export const getMatchDetails = (serviceRegion, summonerId, gameId) => {
   console.log('GETTING RANKED MATCH DETAILS')
   return (dispatch) => {
-    return axios.get(`/api/matchDetails?serviceRegion=${serviceRegion}&gameId=${gameId}`)
+    return axios.get(`/api/matchDetails?serviceRegion=${serviceRegion}&gameId=${gameId}&summonerId=${summonerId}`)
       .then(response => {
         dispatch(receivedMatchDetails(response.data, summonerId, gameId))
         return response

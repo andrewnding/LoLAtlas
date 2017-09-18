@@ -248,15 +248,52 @@ app.get('/recentRankedMatches', (req, res) => {
   })
 })
 
+function cleanMatchDetails(data, summonerId) {
+  var currentParticipant = data.participants.filter(function(participant) {
+    var currentParticipantIdentity = data.participantIdentities.filter(function(identity) {
+      return identity.participantId === participant.participantId
+    })
+
+    return currentParticipantIdentity[0].player.summonerId === summonerId
+  })
+
+  data.participant = {
+    championId: currentParticipant[0].championId,
+    spell1Id: currentParticipant[0].spell1Id,
+    spell2Id: currentParticipant[0].spell2Id,
+    stats: {
+      assists: currentParticipant[0].stats.assists,
+      deaths: currentParticipant[0].stats.deaths,
+      kills: currentParticipant[0].stats.kills,
+      win: currentParticipant[0].stats.win
+    },
+    summonerId: summonerId
+  }
+
+  delete data.participants
+  delete data.teams
+  delete data.participantIdentities
+  delete data.gameType
+  delete data.gameMode
+  delete data.gameVersion
+  delete data.seasonId
+  delete data.mapId
+  delete data.queueId
+  delete data.platformId
+
+  return data
+}
+
 function getMatchDetails(req, res) {
   return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matches/${req.query.gameId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
-      MatchDetails.create({ data: response.data }, function(err, match) {
+      var cleanedData = cleanMatchDetails(response.data, Number(req.query.summonerId))
+      MatchDetails.create({ data: cleanedData }, function(err, match) {
         if (err) {
           console.log(err)
           return err
         }
-        res.json(response.data)
+        res.json(cleanedData)
       })
     }).catch(error => {
       console.log(error)
@@ -265,7 +302,7 @@ function getMatchDetails(req, res) {
 }
 
 app.get('/matchDetails', (req, res) => {
-  MatchDetails.find({ 'data.gameId': Number(req.query.gameId) }, function(err, match) {
+  MatchDetails.find({ 'data.gameId': Number(req.query.gameId), 'data.participant.summonerId': Number(req.query.summonerId) }, function(err, match) {
     if (err) {
       console.log(err)
       return err

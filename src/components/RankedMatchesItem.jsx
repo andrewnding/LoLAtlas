@@ -23,7 +23,7 @@ class RankedMatchesItem extends React.Component {
     const currentParticipantIdentity = this.props.match.gameDetails.participantIdentities.filter(identity => {
       return identity.player.summonerName === this.props.player.summonerName
     })
-    return currentParticipantIdentity && currentParticipantIdentity ? currentParticipantIdentity[0].participantId : null
+    return currentParticipantIdentity && currentParticipantIdentity[0] ? currentParticipantIdentity[0].participantId : null
   }
 
   getTeamId() {

@@ -28,11 +28,12 @@ class CurrentGamePage extends React.Component {
     this.loadCurrentGameData()
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (prevProps.location.key !== this.props.location.key) {
-  //     this.loadCurrentGameData()
-  //   }
-  // }
+  // Required to do a repeat search after a failed search
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.location.key !== this.props.location.key) {
+      this.loadCurrentGameData()
+    }
+  }
   
   checkForErrors(response) {
     this.setState({ searchError: '' })
