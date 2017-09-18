@@ -10,8 +10,6 @@ class RankedMatchesItem extends React.Component {
 
     try {
       this.error = false
-      this.participantId = this.getParticipantId()
-      this.teamId = this.getTeamId()
       this.result = this.winOrLose()
     } catch (e) {
       console.log(e)
@@ -19,30 +17,12 @@ class RankedMatchesItem extends React.Component {
     }
   }
 
-  getParticipantId() {
-    const currentParticipantIdentity = this.props.match.gameDetails.participantIdentities.filter(identity => {
-      return identity.player.summonerName === this.props.player.summonerName
-    })
-    return currentParticipantIdentity && currentParticipantIdentity[0] ? currentParticipantIdentity[0].participantId : null
-  }
-
-  getTeamId() {
-    const currentParticipant = this.props.match.gameDetails.participants.filter(participant => {
-      return participant.participantId === this.participantId
-    })
-    return currentParticipant ? currentParticipant[0].teamId : null
-  }
-
   winOrLose() {
     if (this.props.match.gameDetails.gameDuration < 300) {
       return 'Remake'
     }
 
-    const playerTeamData = this.props.match.gameDetails.teams.filter(team => {
-      return team.teamId === this.teamId
-    })
-
-    if (playerTeamData[0].win === 'Win') {
+    if (this.props.match.gameDetails.participant.stats.win) {
       return 'Victory'
     }
     return 'Defeat'
@@ -85,15 +65,8 @@ class RankedMatchesItem extends React.Component {
   }
 
   renderKda() {
-    const currentParticipant = this.props.match.gameDetails.participants.filter(participant => {
-      return participant.participantId === this.participantId
-    })
-
-    if (currentParticipant.length === 0) {
-      return <span></span>
-    }
-
-    const participantStats = currentParticipant[0].stats
+    const currentParticipant = this.props.match.gameDetails.participant
+    const participantStats = currentParticipant.stats
     let kda
     let kdaString
 
@@ -119,20 +92,16 @@ class RankedMatchesItem extends React.Component {
   }
 
   summonerSpell1() {
-    const currentParticipant = this.props.match.gameDetails.participants.filter(participant => {
-      return participant.participantId === this.participantId
-    })
+    const currentParticipant = this.props.match.gameDetails.participant
 
-    const summonerSpellOne = this.props.staticData.summonerSpells[currentParticipant[0].spell1Id.toString()]
+    const summonerSpellOne = this.props.staticData.summonerSpells[currentParticipant.spell1Id.toString()]
     return summonerSpellOne.image.full
   }
 
   summonerSpell2() {
-    const currentParticipant = this.props.match.gameDetails.participants.filter(participant => {
-      return participant.participantId === this.participantId
-    })
+    const currentParticipant = this.props.match.gameDetails.participant
 
-    const summonerSpellTwo = this.props.staticData.summonerSpells[currentParticipant[0].spell2Id.toString()]
+    const summonerSpellTwo = this.props.staticData.summonerSpells[currentParticipant.spell2Id.toString()]
     return summonerSpellTwo.image.full
   }
 
