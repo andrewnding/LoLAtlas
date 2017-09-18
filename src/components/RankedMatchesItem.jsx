@@ -113,7 +113,7 @@ class RankedMatchesItem extends React.Component {
     return (
       <span>
         <span className='title-left-padding'>{participantStats.kills}/{participantStats.deaths}/{participantStats.assists}</span>
-        <span className={kdaClassNames}>{kdaString}</span>
+        <span className={kdaClassNames}>{this.result === 'Remake' ? '' : kdaString }</span>
       </span>
     )
   }
