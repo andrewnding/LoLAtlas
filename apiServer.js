@@ -425,7 +425,7 @@ app.get('/championData', (req, res) => {
     }
 
     if (championData.length === 0) {
-      axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/champions?locale=en_US&dataById=false`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+      axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/champions?locale=en_US&dataById=true`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
         .then(response => {
           ChampionData.create({ data: response.data }, function(err, championData) {
             if (err) {

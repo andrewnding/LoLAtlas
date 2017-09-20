@@ -172,7 +172,7 @@ class CurrentGamePlayerItem extends React.Component {
               </div>
             </span>
           </div>
-          <div>Champion Played: {lastPlayed}</div>
+          <div>{this.props.staticData.championData[this.props.player.championId.toString()].name} Played: {lastPlayed}</div>
         </div>
       </div>
     )

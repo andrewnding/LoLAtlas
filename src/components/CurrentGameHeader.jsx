@@ -26,6 +26,10 @@ export default class CurrentGameHeader extends React.Component {
     let seconds = time.seconds < 10 ? '0' + time.seconds : time.seconds.toString()
     let hours
 
+    if (time.hours > 10) {
+      return 'Game Loading'
+    }
+
     if (time.hours > 0) {
       hours = time.hours < 10 ? '0' + time.hours : time.hours.toString()
       return `${hours}:${minutes}:${seconds}`
