@@ -35,7 +35,7 @@ export default class CurrentGameHeader extends React.Component {
       return `${hours}:${minutes}:${seconds}`
     }
 
-    return  `${minutes}:${seconds}`
+    return `${minutes}:${seconds}`
   }
 
   componentDidMount() {

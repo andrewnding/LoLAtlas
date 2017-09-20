@@ -38,13 +38,8 @@ class CurrentGamePage extends React.Component {
   checkForErrors(response) {
     this.setState({ searchError: '' })
 
-    if (response.data.error === 'PLAYER_NOT_FOUND') {
-      this.setState({ searchError: 'PLAYER_NOT_FOUND' })
-      return
-    }
-
-    if (response.data.error === 'GAME_NOT_FOUND') {
-      this.setState({ searchError: 'GAME_NOT_FOUND' })
+    if (response.data.error) {
+      this.setState({ searchError: response.data.error })
       return
     }
 
@@ -60,18 +55,13 @@ class CurrentGamePage extends React.Component {
     let name = searchParams.get('name');
     this.props.dispatch(getCurrentGame(this.props.match.params.region, name))
       .then(response => {
-        if (response.data.error) {
-          this.setState({ searchError: response.data.error })
-          return
-        }
         this.checkForErrors(response)
         
-        if (this.state.searchError === 'NOT_RANKED_GAME') {
+        if (this.state.searchError) {
           return
         }
 
         if (response.status === 200) {
-          this.setState({ searchError: '' })
           this.props.dispatch(getChampionImages(this.props.match.params.region))
             .then(response => {
               if (response.data.error) {
@@ -156,10 +146,10 @@ class CurrentGamePage extends React.Component {
                     }
                     this.setState({ numberOfSummonersLoaded: this.state.numberOfSummonersLoaded + 1 })
                   }).catch(error => {
-                    
+                    console.log(error)
                   })
               }).catch(error => {
-
+                console.log(error)
               })
             
             this.props.dispatch(getChampionMastery(this.props.match.params.region, participant.summonerId, participant.championId))

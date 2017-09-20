@@ -25,7 +25,6 @@ class CurrentGamePlayerItem extends React.Component {
     let rank = rankedData.rank
 
     if (!this.tier) {
-      // Error
       return ''
     }
 
@@ -116,8 +115,7 @@ class CurrentGamePlayerItem extends React.Component {
     }
     const recentRankedMatches = this.props.player.recentRankedMatches.map((match, i) => {
       return (
-        <div key={i}>
-          
+        <div key={i}>     
           <span>{match.gameDetails.gameId}</span>
         </div>
       )
@@ -135,7 +133,7 @@ class CurrentGamePlayerItem extends React.Component {
     }
     return(
       <img
-        src={this.currentChampionMasterySrc()}
+        src={`/images/champion-mastery/level_${this.props.player.currentChampionMastery.championLevel}.png`}
         className="medium-icon"
       />
     )
@@ -176,13 +174,6 @@ class CurrentGamePlayerItem extends React.Component {
         </div>
       </div>
     )
-  }
-
-  currentChampionMasterySrc() {
-    if (false) {
-      // Handle 404 (level 0)
-    }
-    return `/images/champion-mastery/level_${this.props.player.currentChampionMastery.championLevel}.png`
   }
 
   summonerSpell1() {

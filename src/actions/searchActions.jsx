@@ -68,7 +68,6 @@ export const getCurrentGame = (serviceRegion, summonerName) => {
             if (err.response.data.error === "GAME_NOT_FOUND") {
               dispatch(errorFetchingCurrentGame(err.response))
               return err.response
-              // Do data not found stuff here
             }
           })
       })
@@ -76,7 +75,6 @@ export const getCurrentGame = (serviceRegion, summonerName) => {
         if (err.response.data.error === "PLAYER_NOT_FOUND") {
           dispatch(errorFetchingCurrentGame(err.response))
           return err.response
-          // Do player not found stuff here
         }
       })
   }
