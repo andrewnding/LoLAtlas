@@ -12,6 +12,8 @@ var Bottleneck = require('bottleneck');
 var limiter = new Bottleneck(20, 60);
 var mongoose = require('mongoose');
 
+var LeakyBucket = require('leaky-bucket');
+
 // Database Setup
 mongoose.connect(`mongodb://${process.env.LOL_USERNAME}:${process.env.LOL_PASSWORD}@ds127564.mlab.com:27564/lolcamp`)
 
@@ -41,6 +43,14 @@ app.use(session({
   })
 }))
 // Done with user session setup
+
+// Rate limiting setup
+var bucket = new LeakyBucket({
+  capacity: 20,         // items per interval, defaults to 60
+  interval: 1,          // seconds, defaults to 60
+  maxWaitingTime: 120     // seconds, defaults to 300
+});
+// Done with rate limiting setup
 
 var summonerNotFoundResponse = {
   message: 'Data not found - summoner not found',
@@ -88,7 +98,9 @@ app.get('/summonerByName', (req, res) => {
     }
 
     if (summoner.length === 0) {
-      limiter.schedule(getSummonerByName, req, res)
+      bucket.throttle(function(err) {
+        getSummonerByName(req, res)
+      })
     } else {
       req.session.summonerName = req.query.summonerName
       addSummonerToSearchHistory(req)
@@ -140,7 +152,9 @@ function getCurrentGame(req, res) {
 }
 
 app.get('/currentGame', (req, res) => {
-  limiter.schedule(getCurrentGame, req, res)
+  bucket.throttle(function(err) {
+    getCurrentGame(req, res)
+  })
 })
 
 function getRankedLeague(req, res) {
@@ -173,7 +187,9 @@ app.get('/rankedLeague', (req, res) => {
     }
 
     if (rankedLeague.length === 0) {
-      limiter.schedule(getRankedLeague, req, res)
+      bucket.throttle(function(err) {
+        getRankedLeague(req, res)
+      })
     } else {
       res.json(rankedLeague[0].data)
     }
@@ -204,7 +220,9 @@ app.get('/summonerByAccountId', (req, res) => {
     }
 
     if (summoner.length === 0) {
-      limiter.schedule(getSummonerByAccountId, req, res)
+      bucket.throttle(function(err) {
+        getSummonerByAccountId(req, res)
+      })
     } else {
       res.json(summoner[0].data)
     }
@@ -241,7 +259,9 @@ app.get('/recentRankedMatches', (req, res) => {
     }
 
     if (matches.length === 0) {
-      limiter.schedule(getRecentRankedMatches, req, res)
+      bucket.throttle(function(err) {
+        getRecentRankedMatches(req, res)
+      })
     } else {
       res.json(matches[0].data)
     }
@@ -309,7 +329,9 @@ app.get('/matchDetails', (req, res) => {
     }
 
     if (match.length === 0) {
-      limiter.schedule(getMatchDetails, req, res)
+      bucket.throttle(function(err) {
+        getMatchDetails(req, res)
+      })
     } else {
       res.json(match[0].data)
     }
@@ -340,7 +362,9 @@ app.get('/championMastery', (req, res) => {
     }
 
     if (championMastery.length === 0) {
-      limiter.schedule(getChampionMastery, req, res)
+      bucket.throttle(function(err) {
+        getChampionMastery(req, res)
+      })
     } else {
       res.json(championMastery[0].data)
     }
