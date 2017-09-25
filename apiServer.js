@@ -46,8 +46,8 @@ app.use(session({
 
 // Rate limiting setup
 var bucket = new LeakyBucket({
-  capacity: 20,         // items per interval, defaults to 60
-  interval: 1,          // seconds, defaults to 60
+  capacity: Number(process.env.LOL_NUM_REQUESTS),        // items per interval, defaults to 60
+  interval: Number(process.env.LOL_REQUESTS_INTERVAL),   // seconds, defaults to 60
   maxWaitingTime: 120     // seconds, defaults to 300
 });
 // Done with rate limiting setup
