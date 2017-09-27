@@ -8,8 +8,6 @@ const MongoStore = require('connect-mongo')(session);
 var _ = require('lodash');
 var regionalEndpoints = require('./src/constants/regionalEndpoints');
 var app = express();
-var Bottleneck = require('bottleneck');
-var limiter = new Bottleneck(20, 60);
 var mongoose = require('mongoose');
 
 var LeakyBucket = require('leaky-bucket');
