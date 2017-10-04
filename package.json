@@ -1,5 +1,5 @@
 {
-  "name": "lolcamp",
+  "name": "lolpreview",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andrewnding/LoLCamp.git"
+    "url": "git+https://github.com/andrewnding/LoLPreview.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/andrewnding/LoLCamp/issues"
+    "url": "https://github.com/andrewnding/LoLPreview/issues"
   },
-  "homepage": "https://github.com/andrewnding/LoLCamp#readme",
+  "homepage": "https://github.com/andrewnding/LoLPreview#readme",
   "dependencies": {
     "axios": "^0.16.2",
     "body-parser": "^1.17.2",

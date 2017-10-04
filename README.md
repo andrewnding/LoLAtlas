@@ -1,2 +1,1 @@
-# LoLCamp
-# List of Known Bugs:
+# LoLPreview
