@@ -2,6 +2,7 @@
 
 var express = require('express');
 var axios = require('axios');
+const axiosRetry = require('axios-retry');
 var encodeUrl = require('encodeurl')
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
@@ -9,8 +10,9 @@ var _ = require('lodash');
 var regionalEndpoints = require('./src/constants/regionalEndpoints');
 var app = express();
 var mongoose = require('mongoose');
-
 var LeakyBucket = require('leaky-bucket');
+
+axiosRetry(axios, { retries: 3 });
 
 // Database Setup
 mongoose.connect(`mongodb://${process.env.LOL_USERNAME}:${process.env.LOL_PASSWORD}@ds127564.mlab.com:27564/lolcamp`)
