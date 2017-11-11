@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Autosuggest from 'react-autosuggest'
 import XRegExp from 'xregexp'
+import classNames from 'classnames'
 
 import { getSearchHistory } from '../actions/searchActions'
 var regionalEndpoints = require('../constants/regionalEndpoints')
@@ -14,7 +15,8 @@ class SearchBarAutosuggest extends React.Component {
       name: '',
       suggestions: [],
       searchHistory: [],
-      region: 'NA'
+      region: 'NA',
+      isFocused: false
     }
   }
 
@@ -34,6 +36,14 @@ class SearchBarAutosuggest extends React.Component {
     this.setState({
       name: newValue
     })
+  }
+
+  onFocus() {
+    this.setState({ isFocused: true })
+  }
+
+  onBlur() {
+    this.setState({ isFocused: false })
   }
 
   // Teach Autosuggest how to calculate suggestions for any given input value.
@@ -101,13 +111,20 @@ class SearchBarAutosuggest extends React.Component {
   }
 
   render() {
+    const searchBarItemsClassNames = classNames({
+      'not-focused': !this.state.isFocused,
+      'search-bar-items': true
+    })
+
     if (this.state.doneFetchingData) {
       // Autosuggest will pass through all these props to the input.
       const inputProps = {
         placeholder: 'Summoner Name',
         value: this.state.name,
         onChange: this.onChange.bind(this),
-        className: 'search-input'
+        className: 'search-input',
+        onFocus: this.onFocus.bind(this),
+        onBlur: this.onBlur.bind(this)
       }
 
       return (
@@ -119,7 +136,7 @@ class SearchBarAutosuggest extends React.Component {
           <div className='search-error-message'>
             {this.props.errorMessage}
           </div>
-          <form className="search-bar-items" onSubmit={this.handleSubmit.bind(this)}>
+          <form className={searchBarItemsClassNames} onSubmit={this.handleSubmit.bind(this)}>
             <Autosuggest
               suggestions={this.state.suggestions}
               onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}

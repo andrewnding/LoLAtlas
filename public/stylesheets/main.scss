@@ -77,7 +77,7 @@ h2 {
 }
 
 .player-list-container {
-  background-color: white;
+  background-color: $gray-e;
 }
 
 .loading-container {
@@ -93,7 +93,7 @@ h2 {
   font-size: 24px;
   font-weight: 700;
   color: black;
-  background-color: $gray-e;
+  background-color: white;
   border-top: 1px solid $light-gray;
   border-bottom: 1px solid $light-gray;
   padding: 0 15px;

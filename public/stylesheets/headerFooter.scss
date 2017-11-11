@@ -4,4 +4,22 @@
   background-color: $gray-d; 
   border: none;
   border-radius: 0;
+
+  div.navbar-header a {
+    color: black;
+  }
+
+  div.navbar-header a:hover {
+    color: black;
+    text-decoration: underline;
+  }
+
+  ul.nav li a {
+    color: black;
+  }
+
+  ul.nav li a:hover {
+    color: black;
+    text-decoration: underline;
+  }
 }
