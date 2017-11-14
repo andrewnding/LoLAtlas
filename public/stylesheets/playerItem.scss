@@ -22,6 +22,18 @@
     }
   }
 
+  .player-summary-icons {
+    font-size: 16px;
+
+    .fa-fire {
+      color: $fire-orange;
+    }
+
+    .fa-minus-circle {
+      color: $lose-red;
+    }
+  }
+
   .player-item-sub-title {
     text-align: center;
     border-top: 1px solid black;

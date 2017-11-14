@@ -20,6 +20,80 @@ class CurrentGamePlayerItem extends React.Component {
     }
   }
 
+  renderSummaryIcons() {
+    let summaryIcons = []
+
+    if (this.isOnWinningStreak()) {
+      summaryIcons.push(<i className="fa fa-fire" aria-hidden="true"></i>)
+    }
+
+    if (this.isOnLosingStreak()) {
+      summaryIcons.push(<i className="fa fa-minus-circle" aria-hidden="true"></i>)
+    }
+
+    if (this.championLongTime()) {
+      summaryIcons.push(<i className="fa fa-clock-o" aria-hidden="true"></i>)
+    }
+    
+    return summaryIcons
+  }
+
+  isOnWinningStreak() {
+    let winningStreak = false
+    let numWins = 0
+
+    for (let match of this.props.player.recentRankedMatches) {
+      if (match.gameDetails.gameDuration < 300) {
+        continue
+      }
+
+      if (!match.gameDetails.participant.stats.win) {
+        break
+      }
+
+      numWins++
+
+      if (numWins >= 3) {
+        winningStreak = true
+        break
+      }
+    }
+
+    return winningStreak
+  }
+
+  isOnLosingStreak() {
+    let losingStreak = false
+    let numLosses = 0
+
+    for (let match of this.props.player.recentRankedMatches) {
+      if (match.gameDetails.gameDuration < 300) {
+        continue
+      }
+
+      if (match.gameDetails.participant.stats.win) {
+        break
+      }
+
+      numLosses++
+
+      if (numLosses >= 3) {
+        losingStreak = true
+        break
+      }
+    }
+
+    return losingStreak
+  }
+
+  championLongTime() {
+    if (this.props.player.currentChampionMastery.championLevel > 0) {
+      lastPlayed = moment(this.props.player.currentChampionMastery.lastPlayTime).fromNow()
+    } else {
+      lastPlayed = 'First Time'
+    }
+  }
+
   rankedBadgeSrc() {
     let rankedData = this.props.player.rankedData
     let rank = rankedData.rank
@@ -208,6 +282,9 @@ class CurrentGamePlayerItem extends React.Component {
           <span className='title-left-padding'>
             {this.props.player.summonerName}
           </span>
+        </div>
+        <div className='player-summary-icons'>
+          {this.renderSummaryIcons()}
         </div>
         <div className='player-item-stats'>
           <div className='player-item-sub-title'>

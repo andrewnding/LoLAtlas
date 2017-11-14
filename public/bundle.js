@@ -71762,6 +71762,126 @@ var CurrentGamePlayerItem = function (_React$Component) {
   }
 
   _createClass(CurrentGamePlayerItem, [{
+    key: 'renderSummaryIcons',
+    value: function renderSummaryIcons() {
+      var summaryIcons = [];
+
+      if (this.isOnWinningStreak()) {
+        summaryIcons.push(_react2.default.createElement('i', { className: 'fa fa-fire', 'aria-hidden': 'true' }));
+      }
+
+      if (this.isOnLosingStreak()) {
+        summaryIcons.push(_react2.default.createElement('i', { className: 'fa fa-minus-circle', 'aria-hidden': 'true' }));
+      }
+
+      if (this.championLongTime()) {
+        summaryIcons.push(_react2.default.createElement('i', { className: 'fa fa-clock-o', 'aria-hidden': 'true' }));
+      }
+
+      return summaryIcons;
+    }
+  }, {
+    key: 'isOnWinningStreak',
+    value: function isOnWinningStreak() {
+      var winningStreak = false;
+      var numWins = 0;
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.props.player.recentRankedMatches[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var match = _step.value;
+
+          if (match.gameDetails.gameDuration < 300) {
+            continue;
+          }
+
+          if (!match.gameDetails.participant.stats.win) {
+            break;
+          }
+
+          numWins++;
+
+          if (numWins >= 3) {
+            winningStreak = true;
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return winningStreak;
+    }
+  }, {
+    key: 'isOnLosingStreak',
+    value: function isOnLosingStreak() {
+      var losingStreak = false;
+      var numLosses = 0;
+
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.props.player.recentRankedMatches[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var match = _step2.value;
+
+          if (match.gameDetails.gameDuration < 300) {
+            continue;
+          }
+
+          if (match.gameDetails.participant.stats.win) {
+            break;
+          }
+
+          numLosses++;
+
+          if (numLosses >= 3) {
+            losingStreak = true;
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return losingStreak;
+    }
+  }, {
+    key: 'championLongTime',
+    value: function championLongTime() {
+      if (this.props.player.currentChampionMastery.championLevel > 0) {
+        lastPlayed = (0, _moment2.default)(this.props.player.currentChampionMastery.lastPlayTime).fromNow();
+      } else {
+        lastPlayed = 'First Time';
+      }
+    }
+  }, {
     key: 'rankedBadgeSrc',
     value: function rankedBadgeSrc() {
       var rankedData = this.props.player.rankedData;
@@ -72034,6 +72154,11 @@ var CurrentGamePlayerItem = function (_React$Component) {
             { className: 'title-left-padding' },
             this.props.player.summonerName
           )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'player-summary-icons' },
+          this.renderSummaryIcons()
         ),
         _react2.default.createElement(
           'div',
@@ -72775,7 +72900,7 @@ exports = module.exports = __webpack_require__(701)(undefined);
 
 
 // module
-exports.push([module.i, ".player-item-container {\n  border: 1px solid black;\n  margin: 10px 0; }\n  .player-item-container .summoner-spell-container {\n    display: inline-block;\n    width: 20px;\n    position: relative; }\n    .player-item-container .summoner-spell-container .summoner-icon-1 {\n      width: 20px;\n      position: absolute;\n      top: -24px; }\n    .player-item-container .summoner-spell-container .summoner-icon-2 {\n      width: 20px;\n      position: absolute;\n      top: -4px; }\n  .player-item-container .player-item-sub-title {\n    text-align: center;\n    border-top: 1px solid black;\n    background-color: #dddddd; }\n  .player-item-container .player-item-content {\n    padding: 4px;\n    background-color: white; }\n  .player-item-container .blue-team-background {\n    background-color: #a9f2ff; }\n  .player-item-container .purple-team-background {\n    background-color: #c1aeda; }\n  .player-item-container .victory-background {\n    border-top: 1px solid #888888;\n    background-color: #a9e6ff; }\n    .player-item-container .victory-background .item-header-text {\n      background-color: #6dd0f9; }\n  .player-item-container .defeat-background {\n    border-top: 1px solid #888888;\n    background-color: #fdb6b6; }\n    .player-item-container .defeat-background .item-header-text {\n      background-color: #fd8f8f; }\n  .player-item-container .remake-background {\n    border-top: 1px solid #888888;\n    background-color: #bbbbbb; }\n    .player-item-container .remake-background .item-header-text {\n      background-color: #999999; }\n  .player-item-container .series-icon {\n    margin: 0 2px; }\n  .player-item-container .gold-text {\n    color: #ffc63a;\n    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black; }\n  .player-item-container .red-text {\n    color: #f75353;\n    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black; }\n\n.react-autosuggest__container {\n  display: inline-block;\n  position: relative;\n  left: -70px; }\n\n.search-bar-container {\n  text-align: center;\n  margin-top: 20vh;\n  height: 250px;\n  margin-left: 320px;\n  margin-right: 320px;\n  padding-top: 20px;\n  margin-bottom: -webkit-calc(80vh - 304px - 20px);\n  margin-bottom: -moz-calc(80vh - 304px - 20px);\n  margin-bottom: calc(80vh - 304px - 20px);\n  position: relative;\n  background-color: #eeeeee; }\n\n.search-error-message {\n  height: 20px;\n  font-size: 16px;\n  color: #d62c2c;\n  font-weight: 700px; }\n\n.not-focused {\n  box-shadow: 0 3px 6px #bbb; }\n\n.search-bar-items {\n  display: inline-block;\n  position: relative;\n  width: 640px;\n  margin-top: 10px; }\n  .search-bar-items .search-input {\n    width: 500px;\n    height: 40px;\n    font-size: 16px;\n    padding: 0px 15px;\n    -webkit-box-sizing: border-box;\n    -moz-box-sizing: border-box;\n    box-sizing: border-box;\n    border: 1px solid #bbbbbb; }\n  .search-bar-items .region-select {\n    display: inline-block;\n    width: 70px;\n    height: 40px;\n    position: absolute;\n    left: 500px;\n    top: 0; }\n  .search-bar-items select:not([multiple]).region-select {\n    border: 1px solid #bbbbbb;\n    border-left: none;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    background-position: right 50%;\n    background-repeat: no-repeat;\n    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=);\n    padding: .5em;\n    padding-right: 1.5em; }\n  .search-bar-items .form-control {\n    border-radius: 0; }\n  .search-bar-items .search-button {\n    position: absolute;\n    width: 70px;\n    height: 40px;\n    left: 570px;\n    top: 0;\n    border-radius: 0; }\n  .search-bar-items .react-autosuggest__suggestions-container {\n    background-color: white; }\n    .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list {\n      padding: 0;\n      margin: 0;\n      text-align: left; }\n      .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list li {\n        list-style: none;\n        padding: 5px 10px;\n        font-size: 14px;\n        border-bottom: 1px solid #888888;\n        border-left: 1px solid #888888;\n        border-right: 1px solid #888888; }\n      .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list li.react-autosuggest__suggestion--highlighted {\n        background-color: #dddddd;\n        cursor: pointer; }\n\n.navbar-default {\n  background-color: #dddddd;\n  border: none;\n  border-radius: 0; }\n  .navbar-default div.navbar-header a {\n    color: black; }\n  .navbar-default div.navbar-header a:hover {\n    color: black;\n    text-decoration: underline; }\n  .navbar-default ul.nav li a {\n    color: black; }\n  .navbar-default ul.nav li a:hover {\n    color: black;\n    text-decoration: underline; }\n\nbody {\n  font-family: 'Lato', sans-serif;\n  background-color: #eeeeee; }\n\nh1 {\n  font-weight: 700; }\n\nh2 {\n  font-size: 18px; }\n\n.title-left-padding {\n  padding-left: 10px; }\n\n.team-row {\n  margin: 15px 0; }\n\n.vertical-align {\n  display: flex;\n  align-items: center; }\n\n.text-align-center {\n  text-align: center; }\n\n.space-between {\n  display: flex;\n  justify-content: space-between; }\n\n.medium-icon {\n  width: 40px; }\n\n.circular-icon {\n  border-radius: 50%; }\n\n.item-header-text {\n  font-size: 13px;\n  padding: 0 3px; }\n\n.color-green {\n  color: #25b325; }\n\n.color-red {\n  color: #d62c2c; }\n\n.color-gray {\n  color: #bbbbbb; }\n\n.float-right {\n  float: right; }\n\n.navbar {\n  margin-bottom: 0;\n  background-color: #eeeeee; }\n\n.footer {\n  height: 20px; }\n\n.player-list-container {\n  background-color: #eeeeee; }\n\n.loading-container {\n  text-align: center;\n  margin-top: 40vh;\n  height: -webkit-calc(60vh - 60px - 20px);\n  height: -moz-calc(60vh - 60px - 20px);\n  height: calc(60vh - 60px - 20px); }\n\n.current-game-header {\n  height: 50px;\n  font-size: 24px;\n  font-weight: 700;\n  color: black;\n  background-color: white;\n  border-top: 1px solid #888888;\n  border-bottom: 1px solid #888888;\n  padding: 0 15px; }\n\n.versus-text {\n  font-size: 20px;\n  font-weight: 700; }\n\n.col-xs-5ths,\n.col-sm-5ths,\n.col-md-5ths,\n.col-lg-5ths {\n  position: relative;\n  min-height: 1px;\n  padding-right: 15px;\n  padding-left: 15px; }\n\n.col-xs-5ths {\n  width: 20%;\n  float: left; }\n\n@media (min-width: 768px) {\n  .col-sm-5ths {\n    width: 20%;\n    float: left; } }\n\n@media (min-width: 992px) {\n  .col-md-5ths {\n    width: 20%;\n    float: left; } }\n\n@media (min-width: 1200px) {\n  .col-lg-5ths {\n    width: 20%;\n    float: left; } }\n", ""]);
+exports.push([module.i, ".player-item-container {\n  border: 1px solid black;\n  margin: 10px 0; }\n  .player-item-container .summoner-spell-container {\n    display: inline-block;\n    width: 20px;\n    position: relative; }\n    .player-item-container .summoner-spell-container .summoner-icon-1 {\n      width: 20px;\n      position: absolute;\n      top: -24px; }\n    .player-item-container .summoner-spell-container .summoner-icon-2 {\n      width: 20px;\n      position: absolute;\n      top: -4px; }\n  .player-item-container .player-summary-icons {\n    font-size: 16px; }\n    .player-item-container .player-summary-icons .fa-fire {\n      color: #ff8600; }\n    .player-item-container .player-summary-icons .fa-minus-circle {\n      color: #d62c2c; }\n  .player-item-container .player-item-sub-title {\n    text-align: center;\n    border-top: 1px solid black;\n    background-color: #dddddd; }\n  .player-item-container .player-item-content {\n    padding: 4px;\n    background-color: white; }\n  .player-item-container .blue-team-background {\n    background-color: #a9f2ff; }\n  .player-item-container .purple-team-background {\n    background-color: #c1aeda; }\n  .player-item-container .victory-background {\n    border-top: 1px solid #888888;\n    background-color: #a9e6ff; }\n    .player-item-container .victory-background .item-header-text {\n      background-color: #6dd0f9; }\n  .player-item-container .defeat-background {\n    border-top: 1px solid #888888;\n    background-color: #fdb6b6; }\n    .player-item-container .defeat-background .item-header-text {\n      background-color: #fd8f8f; }\n  .player-item-container .remake-background {\n    border-top: 1px solid #888888;\n    background-color: #bbbbbb; }\n    .player-item-container .remake-background .item-header-text {\n      background-color: #999999; }\n  .player-item-container .series-icon {\n    margin: 0 2px; }\n  .player-item-container .gold-text {\n    color: #ffc63a;\n    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black; }\n  .player-item-container .red-text {\n    color: #f75353;\n    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black; }\n\n.react-autosuggest__container {\n  display: inline-block;\n  position: relative;\n  left: -70px; }\n\n.search-bar-container {\n  text-align: center;\n  margin-top: 20vh;\n  height: 250px;\n  margin-left: 320px;\n  margin-right: 320px;\n  padding-top: 20px;\n  margin-bottom: -webkit-calc(80vh - 304px - 20px);\n  margin-bottom: -moz-calc(80vh - 304px - 20px);\n  margin-bottom: calc(80vh - 304px - 20px);\n  position: relative;\n  background-color: #eeeeee; }\n\n.search-error-message {\n  height: 20px;\n  font-size: 16px;\n  color: #d62c2c;\n  font-weight: 700px; }\n\n.not-focused {\n  box-shadow: 0 3px 6px #bbb; }\n\n.search-bar-items {\n  display: inline-block;\n  position: relative;\n  width: 640px;\n  margin-top: 10px; }\n  .search-bar-items .search-input {\n    width: 500px;\n    height: 40px;\n    font-size: 16px;\n    padding: 0px 15px;\n    -webkit-box-sizing: border-box;\n    -moz-box-sizing: border-box;\n    box-sizing: border-box;\n    border: 1px solid #bbbbbb; }\n  .search-bar-items .region-select {\n    display: inline-block;\n    width: 70px;\n    height: 40px;\n    position: absolute;\n    left: 500px;\n    top: 0; }\n  .search-bar-items select:not([multiple]).region-select {\n    border: 1px solid #bbbbbb;\n    border-left: none;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    background-position: right 50%;\n    background-repeat: no-repeat;\n    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=);\n    padding: .5em;\n    padding-right: 1.5em; }\n  .search-bar-items .form-control {\n    border-radius: 0; }\n  .search-bar-items .search-button {\n    position: absolute;\n    width: 70px;\n    height: 40px;\n    left: 570px;\n    top: 0;\n    border-radius: 0; }\n  .search-bar-items .react-autosuggest__suggestions-container {\n    background-color: white; }\n    .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list {\n      padding: 0;\n      margin: 0;\n      text-align: left; }\n      .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list li {\n        list-style: none;\n        padding: 5px 10px;\n        font-size: 14px;\n        border-bottom: 1px solid #888888;\n        border-left: 1px solid #888888;\n        border-right: 1px solid #888888; }\n      .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list li.react-autosuggest__suggestion--highlighted {\n        background-color: #dddddd;\n        cursor: pointer; }\n\n.navbar-default {\n  background-color: #dddddd;\n  border: none;\n  border-radius: 0; }\n  .navbar-default div.navbar-header a {\n    color: black; }\n  .navbar-default div.navbar-header a:hover {\n    color: black;\n    text-decoration: underline; }\n  .navbar-default ul.nav li a {\n    color: black; }\n  .navbar-default ul.nav li a:hover {\n    color: black;\n    text-decoration: underline; }\n\nbody {\n  font-family: 'Lato', sans-serif;\n  background-color: #eeeeee; }\n\nh1 {\n  font-weight: 700; }\n\nh2 {\n  font-size: 18px; }\n\n.title-left-padding {\n  padding-left: 10px; }\n\n.team-row {\n  margin: 15px 0; }\n\n.vertical-align {\n  display: flex;\n  align-items: center; }\n\n.text-align-center {\n  text-align: center; }\n\n.space-between {\n  display: flex;\n  justify-content: space-between; }\n\n.medium-icon {\n  width: 40px; }\n\n.circular-icon {\n  border-radius: 50%; }\n\n.item-header-text {\n  font-size: 13px;\n  padding: 0 3px; }\n\n.color-green {\n  color: #25b325; }\n\n.color-red {\n  color: #d62c2c; }\n\n.color-gray {\n  color: #bbbbbb; }\n\n.float-right {\n  float: right; }\n\n.navbar {\n  margin-bottom: 0;\n  background-color: #eeeeee; }\n\n.footer {\n  height: 20px; }\n\n.player-list-container {\n  background-color: #eeeeee; }\n\n.loading-container {\n  text-align: center;\n  margin-top: 40vh;\n  height: -webkit-calc(60vh - 60px - 20px);\n  height: -moz-calc(60vh - 60px - 20px);\n  height: calc(60vh - 60px - 20px); }\n\n.current-game-header {\n  height: 50px;\n  font-size: 24px;\n  font-weight: 700;\n  color: black;\n  background-color: white;\n  border-top: 1px solid #888888;\n  border-bottom: 1px solid #888888;\n  padding: 0 15px; }\n\n.versus-text {\n  font-size: 20px;\n  font-weight: 700; }\n\n.col-xs-5ths,\n.col-sm-5ths,\n.col-md-5ths,\n.col-lg-5ths {\n  position: relative;\n  min-height: 1px;\n  padding-right: 15px;\n  padding-left: 15px; }\n\n.col-xs-5ths {\n  width: 20%;\n  float: left; }\n\n@media (min-width: 768px) {\n  .col-sm-5ths {\n    width: 20%;\n    float: left; } }\n\n@media (min-width: 992px) {\n  .col-md-5ths {\n    width: 20%;\n    float: left; } }\n\n@media (min-width: 1200px) {\n  .col-lg-5ths {\n    width: 20%;\n    float: left; } }\n", ""]);
 
 // exports
 
