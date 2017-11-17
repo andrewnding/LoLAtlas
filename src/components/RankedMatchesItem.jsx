@@ -32,10 +32,11 @@ class RankedMatchesItem extends React.Component {
     return this.props.staticData.championImages[this.props.match.champion].image.full
   }
 
+  // Time since the game ended
   renderGameEndTime() {
     return (
       <span>
-        {moment(this.props.match.gameDetails.gameCreation).fromNow()}
+        {moment(this.props.match.gameDetails.gameCreation + this.props.match.gameDetails.gameDuration * 1000).fromNow()}
       </span>
     )
   }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import ReactTooltip from 'react-tooltip'
 
 import RankedMatchesList from './RankedMatchesList'
 
@@ -24,15 +25,27 @@ class CurrentGamePlayerItem extends React.Component {
     let summaryIcons = []
 
     if (this.isOnWinningStreak()) {
-      summaryIcons.push(<i className="fa fa-fire" aria-hidden="true"></i>)
+      summaryIcons.push(<i data-tip="Winning Streak" key="fa-fire" className="fa fa-fire" aria-hidden="true"></i>)
     }
 
     if (this.isOnLosingStreak()) {
-      summaryIcons.push(<i className="fa fa-minus-circle" aria-hidden="true"></i>)
+      summaryIcons.push(<i data-tip="Losing Streak" key="fa-fire-extinguisher" className="fa fa-fire-extinguisher" aria-hidden="true"></i>)
     }
 
     if (this.championLongTime()) {
-      summaryIcons.push(<i className="fa fa-clock-o" aria-hidden="true"></i>)
+      summaryIcons.push(<i data-tip="Rusty Champion" key="fa-clock-o" className="fa fa-clock-o" aria-hidden="true"></i>)
+    }
+
+    if (this.championFirstTime()) {
+      summaryIcons.push(<i data-tip="First Time Champion" key="fa-hourglass-start" className="fa fa-hourglass-start" aria-hidden="true"></i>)
+    }
+
+    if (this.recentWin()) {
+      summaryIcons.push(<i data-tip="Recent Win" key="fa-level-up" className="fa fa-level-up" aria-hidden="true"></i>)
+    }
+
+    if (this.recentLoss()) {
+      summaryIcons.push(<i data-tip="Recent Loss" key="fa-level-down" className="fa fa-level-down" aria-hidden="true"></i>)
     }
     
     return summaryIcons
@@ -88,10 +101,60 @@ class CurrentGamePlayerItem extends React.Component {
 
   championLongTime() {
     if (this.props.player.currentChampionMastery.championLevel > 0) {
-      lastPlayed = moment(this.props.player.currentChampionMastery.lastPlayTime).fromNow()
-    } else {
-      lastPlayed = 'First Time'
+      let lastPlayed = moment(this.props.player.currentChampionMastery.lastPlayTime)
+      let difference = moment().diff(lastPlayed, 'months')
+      if (difference > 1) {
+        return true
+      }
     }
+  }
+
+  championFirstTime() {
+    return this.props.player.currentChampionMastery.championLevel === 0
+  }
+
+  recentWin() {
+    // find most recent non remake and see if it ended within 30 minutes ago
+    for (let match of this.props.player.recentRankedMatches) {
+      if (match.gameDetails.gameDuration >= 300) {
+        if (!match.gameDetails.participant.stats.win) {
+          return false
+        }
+
+        let lastPlayed = match.gameDetails.gameCreation + match.gameDetails.gameDuration * 1000
+        let difference = moment().diff(lastPlayed, 'minutes')
+
+        if (difference <= 60) {
+          return true
+        }
+
+        return false
+      }
+    }
+
+    return false
+  }
+
+  recentLoss() {
+    // find most recent non remake and see if it ended within 30 minutes ago
+    for (let match of this.props.player.recentRankedMatches) {
+      if (match.gameDetails.gameDuration >= 300) {
+        if (match.gameDetails.participant.stats.win) {
+          return false
+        }
+
+        let lastPlayed = match.gameDetails.gameCreation + match.gameDetails.gameDuration * 1000
+        let difference = moment().diff(lastPlayed, 'minutes')
+
+        if (difference <= 60) {
+          return true
+        }
+
+        return false
+      }
+    }
+
+    return false
   }
 
   rankedBadgeSrc() {
@@ -285,6 +348,7 @@ class CurrentGamePlayerItem extends React.Component {
         </div>
         <div className='player-summary-icons'>
           {this.renderSummaryIcons()}
+          <ReactTooltip effect="solid" />
         </div>
         <div className='player-item-stats'>
           <div className='player-item-sub-title'>
