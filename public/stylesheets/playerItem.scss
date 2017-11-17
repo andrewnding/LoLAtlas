@@ -14,10 +14,18 @@
     }
   }
 
+  .tooltip {
+    max-width: 300px;
+  }
+
   .summoner-spell-container {
     display: inline-block;
     width: 20px;
     position: relative;
+
+    img:hover {
+      cursor: pointer;
+    }
 
     .summoner-icon-1 {
       width: 20px;

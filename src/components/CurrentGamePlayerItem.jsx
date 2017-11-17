@@ -324,6 +324,10 @@ class CurrentGamePlayerItem extends React.Component {
     return summonerSpellTwo.image.full
   }
 
+  summonerSpellTooltip(summonerSpell) {
+    return `${summonerSpell.name}<br />${summonerSpell.sanitizedDescription}`
+  }
+
   render() {
     let rankedData = this.props.player.rankedData
     return (
@@ -336,10 +340,12 @@ class CurrentGamePlayerItem extends React.Component {
           <span className="summoner-spell-container">
             <img
               src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell1()}`}
+              data-tip={this.summonerSpellTooltip(this.props.staticData.summonerSpells[this.props.player.spell1Id])}
               className="summoner-icon-1"
             />
             <img
               src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell2()}`}
+              data-tip={this.summonerSpellTooltip(this.props.staticData.summonerSpells[this.props.player.spell2Id])}
               className="summoner-icon-2"
             />
           </span>
@@ -349,7 +355,7 @@ class CurrentGamePlayerItem extends React.Component {
         </div>
         <div className='player-summary-icons'>
           {this.renderSummaryIcons()}
-          <ReactTooltip effect="solid" />
+          <ReactTooltip effect="solid" className="tooltip" multiline={true} />
         </div>
         <div className='player-item-stats'>
           <div className='player-item-sub-title'>

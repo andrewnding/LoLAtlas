@@ -475,7 +475,7 @@ app.get('/summonerSpells', (req, res) => {
     }
 
     if (summonerSpells.length === 0) {
-      axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/summoner-spells?locale=en_US&dataById=true&tags=image`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+      axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/static-data/v3/summoner-spells?locale=en_US&dataById=true&tags=image&tags=sanitizedDescription`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
         .then(response => {
           SummonerSpells.create({ data: response.data }, function(err, summonerSpells) {
             if (err) {
