@@ -4,6 +4,16 @@
   border: 1px solid black;
   margin: 10px 0;
 
+  .summoner-name-link {
+    a {
+      color: black;
+    }
+
+    a:hover {
+      color: black;
+    }
+  }
+
   .summoner-spell-container {
     display: inline-block;
     width: 20px;

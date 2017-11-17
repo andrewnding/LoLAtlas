@@ -4,6 +4,7 @@ import moment from 'moment'
 import ReactTooltip from 'react-tooltip'
 
 import RankedMatchesList from './RankedMatchesList'
+import summonerUrl from '../utils/summonerUrl'
 
 class CurrentGamePlayerItem extends React.Component {
   constructor(props) {
@@ -342,8 +343,8 @@ class CurrentGamePlayerItem extends React.Component {
               className="summoner-icon-2"
             />
           </span>
-          <span className='title-left-padding'>
-            {this.props.player.summonerName}
+          <span className='title-left-padding summoner-name-link'>
+            <a href={summonerUrl(this.props.currentGame.gameInfo.platformId, this.props.player.summonerName)} target="_blank">{this.props.player.summonerName}</a>
           </span>
         </div>
         <div className='player-summary-icons'>
