@@ -5,6 +5,7 @@ import ReactTooltip from 'react-tooltip'
 
 import RankedMatchesList from './RankedMatchesList'
 import summonerUrl from '../utils/summonerUrl'
+import summonerSpellTooltip from '../utils/summonerSpellTooltip'
 
 class CurrentGamePlayerItem extends React.Component {
   constructor(props) {
@@ -324,10 +325,6 @@ class CurrentGamePlayerItem extends React.Component {
     return summonerSpellTwo.image.full
   }
 
-  summonerSpellTooltip(summonerSpell) {
-    return `${summonerSpell.name}<br />${summonerSpell.sanitizedDescription}`
-  }
-
   render() {
     let rankedData = this.props.player.rankedData
     return (
@@ -340,12 +337,14 @@ class CurrentGamePlayerItem extends React.Component {
           <span className="summoner-spell-container">
             <img
               src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell1()}`}
-              data-tip={this.summonerSpellTooltip(this.props.staticData.summonerSpells[this.props.player.spell1Id])}
+              data-tip={summonerSpellTooltip(this.props.staticData.summonerSpells[this.props.player.spell1Id])}
+              data-html={true}
               className="summoner-icon-1"
             />
             <img
               src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell2()}`}
-              data-tip={this.summonerSpellTooltip(this.props.staticData.summonerSpells[this.props.player.spell2Id])}
+              data-tip={summonerSpellTooltip(this.props.staticData.summonerSpells[this.props.player.spell2Id])}
+              data-html={true}
               className="summoner-icon-2"
             />
           </span>

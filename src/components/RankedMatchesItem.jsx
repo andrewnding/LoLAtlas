@@ -2,7 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import classNames from 'classnames'
+import ReactTooltip from 'react-tooltip'
+
 import secondsToTime from '../utils/secondsToTime'
+import summonerSpellTooltip from '../utils/summonerSpellTooltip'
 
 class RankedMatchesItem extends React.Component {
   constructor(props) {
@@ -136,12 +139,17 @@ class RankedMatchesItem extends React.Component {
           <span className="summoner-spell-container">
             <img
               src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell1()}`}
+              data-tip={summonerSpellTooltip(this.props.staticData.summonerSpells[this.props.match.gameDetails.participant.spell1Id])}
+              data-html={true}
               className="summoner-icon-1"
             />
             <img
               src={`http://ddragon.leagueoflegends.com/cdn/${this.props.staticData.realmVersion}/img/spell/${this.summonerSpell2()}`}
+              data-tip={summonerSpellTooltip(this.props.staticData.summonerSpells[this.props.match.gameDetails.participant.spell2Id])}
+              data-html={true}
               className="summoner-icon-2"
             />
+            <ReactTooltip effect="solid" className="tooltip" multiline={true} />
           </span>
           {this.renderKda()}
         </div>

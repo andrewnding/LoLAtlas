@@ -8,6 +8,7 @@ import MenuBar from './components/MenuBar'
 import Footer from './components/Footer'
 import MainSearchBar from './components/MainSearchBar'
 import CurrentGamePage from './components/CurrentGamePage'
+import About from './components/About'
 import PageNotFound from './components/PageNotFound'
 require("!style-loader!css-loader!sass-loader!../public/stylesheets/main.scss");
 
@@ -20,6 +21,7 @@ const App = () => {
           <Switch>
             <Route exact path="/" component={MainSearchBar} />
             <Route path="/:region/search" component={CurrentGamePage} />
+            <Route exact path="/about" component={About} />
             <Route component={PageNotFound} />
           </Switch>
           <Footer />
