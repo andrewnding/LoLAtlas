@@ -7,6 +7,14 @@ export default class RankedMatchesList extends React.Component {
   }
 
   renderRankedMatchesItems() {
+    if (this.props.matches.length === 0) {
+      return (
+        <div className="text-align-center">
+          No Ranked Matches
+        </div>
+      )
+    }
+
     return (
       this.props.matches.map((match, i) => {
         return (

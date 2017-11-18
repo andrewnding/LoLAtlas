@@ -249,9 +249,6 @@ class CurrentGamePlayerItem extends React.Component {
   }
 
   renderRecentRankedMatches() {
-    if (!this.props.player.recentRankedMatches) {
-      return
-    }
     const recentRankedMatches = this.props.player.recentRankedMatches.map((match, i) => {
       return (
         <div key={i}>     

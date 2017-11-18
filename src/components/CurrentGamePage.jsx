@@ -42,12 +42,6 @@ class CurrentGamePage extends React.Component {
       this.setState({ searchError: response.data.error })
       return
     }
-
-    // If not solo/duo queue ranked match
-    if (response.data.gameQueueConfigId !== 420) {
-      this.setState({ searchError: 'NOT_RANKED_GAME' })
-      return
-    }
   }
 
   loadCurrentGameData() {
@@ -121,10 +115,6 @@ class CurrentGamePage extends React.Component {
                 }
                 this.props.dispatch(getRecentRankedMatches(this.props.match.params.region, response.data.accountId))
                   .then(response => {
-                    if (response.data.error) {
-                      this.setState({ searchError: response.data.error })
-                      return
-                    }
                     if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
                       if (response.data.length < 5) {
                         this.setState({ numberOfMatchesLoaded: this.state.numberOfMatchesLoaded + (5 - response.data.length) })
@@ -215,8 +205,6 @@ class CurrentGamePage extends React.Component {
         return this.renderErrorPage('Player not found')
       } else if (this.state.searchError === 'GAME_NOT_FOUND') {
         return this.renderErrorPage('Player is not in a game')
-      } else if (this.state.searchError === 'NOT_RANKED_GAME') {
-        return this.renderErrorPage('Not a solo/duo ranked game')
       } else {
         return this.renderErrorPage(this.state.searchError)
       }  

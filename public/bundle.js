@@ -24984,7 +24984,7 @@ var SearchBarAutosuggest = function (_React$Component) {
             _react2.default.createElement(
               'h2',
               null,
-              'The quickest in-game research tool'
+              'The quickest live game lookup tool'
             )
           ),
           _react2.default.createElement(
@@ -71270,12 +71270,6 @@ var CurrentGamePage = function (_React$Component) {
         this.setState({ searchError: response.data.error });
         return;
       }
-
-      // If not solo/duo queue ranked match
-      if (response.data.gameQueueConfigId !== 420) {
-        this.setState({ searchError: 'NOT_RANKED_GAME' });
-        return;
-      }
     }
   }, {
     key: 'loadCurrentGameData',
@@ -71344,10 +71338,6 @@ var CurrentGamePage = function (_React$Component) {
                 return;
               }
               _this2.props.dispatch((0, _currentGameActions.getRecentRankedMatches)(_this2.props.match.params.region, response.data.accountId)).then(function (response) {
-                if (response.data.error) {
-                  _this2.setState({ searchError: response.data.error });
-                  return;
-                }
                 if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
                   if (response.data.length < 5) {
                     _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + (5 - response.data.length) });
@@ -71426,8 +71416,6 @@ var CurrentGamePage = function (_React$Component) {
           return this.renderErrorPage('Player not found');
         } else if (this.state.searchError === 'GAME_NOT_FOUND') {
           return this.renderErrorPage('Player is not in a game');
-        } else if (this.state.searchError === 'NOT_RANKED_GAME') {
-          return this.renderErrorPage('Not a solo/duo ranked game');
         } else {
           return this.renderErrorPage(this.state.searchError);
         }
@@ -71554,7 +71542,7 @@ var getRecentRankedMatches = exports.getRecentRankedMatches = function getRecent
       return response;
     }).catch(function (err) {
       if (err.response.data.error === 'NO_RECENT_RANKED_MATCHES') {
-        dispatch(receivedRecentRankedMatches(undefined, accountId));
+        dispatch(receivedRecentRankedMatches([], accountId));
       }
       return err.response;
     });
@@ -72348,9 +72336,6 @@ var CurrentGamePlayerItem = function (_React$Component) {
   }, {
     key: 'renderRecentRankedMatches',
     value: function renderRecentRankedMatches() {
-      if (!this.props.player.recentRankedMatches) {
-        return;
-      }
       var recentRankedMatches = this.props.player.recentRankedMatches.map(function (match, i) {
         return _react2.default.createElement(
           'div',
@@ -74960,6 +74945,14 @@ var RankedMatchesList = function (_React$Component) {
     value: function renderRankedMatchesItems() {
       var _this2 = this;
 
+      if (this.props.matches.length === 0) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'text-align-center' },
+          'No Ranked Matches'
+        );
+      }
+
       return this.props.matches.map(function (match, i) {
         return _react2.default.createElement(
           'div',
@@ -75962,12 +75955,31 @@ var About = function (_React$Component) {
   }
 
   _createClass(About, [{
-    key: 'render',
+    key: "render",
     value: function render() {
       return _react2.default.createElement(
-        'div',
-        null,
-        'LoLPreview is a tool designed to provide game history data'
+        "div",
+        { className: "about-page" },
+        _react2.default.createElement(
+          "h2",
+          null,
+          "What is LoLPreview?"
+        ),
+        _react2.default.createElement(
+          "p",
+          null,
+          "LoLPreview is a tool that allows you to look up live ranked solo/duo queue League of Legends matches. It provides information about each player in the game, including recent ranked matches data, winning/losing streaks, current champion mastery, and the last time the current champion was played. LoLPreview allows you to evaluate your allies and opponents and can help you identify the paths to victory."
+        ),
+        _react2.default.createElement(
+          "h2",
+          null,
+          "How do I use LoLPreview?"
+        ),
+        _react2.default.createElement(
+          "p",
+          null,
+          "As soon as a match enters the loading screen, you can enter the name of one of the players in the match and LoLPreview will load the match data."
+        )
       );
     }
   }]);
