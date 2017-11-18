@@ -22,4 +22,8 @@
     color: black;
     text-decoration: underline;
   }
+
+  ul.nav li.active a {
+    background-color: $gray-c;
+  }
 }

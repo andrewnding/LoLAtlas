@@ -104,6 +104,30 @@ h2 {
   font-weight: 700;
 }
 
+.about-page {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 700px;
+
+  h1 {
+    font-weight: normal;
+    border-bottom: 1px solid black;
+    padding-bottom: 10px;
+  }
+
+  .about-block {
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 1.8em;
+    }
+  
+    p {
+      font-size: 1.2em;
+    }
+  }
+}
+
 // Bootstrap override to create five columns
 .col-xs-5ths,
 .col-sm-5ths,
