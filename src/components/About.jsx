@@ -4,7 +4,7 @@ export default class About extends React.Component {
   render() {
     return (
       <div className="about-page">
-        <h1>About</h1>
+        <h1 className="page-title">About</h1>
         <div className="about-block">
           <h2>What is LoLPreview?</h2>
           <p>

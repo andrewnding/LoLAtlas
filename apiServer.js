@@ -2,6 +2,7 @@
 
 var express = require('express');
 var axios = require('axios');
+var bodyParser = require('body-parser');
 const axiosRetry = require('axios-retry');
 var encodeUrl = require('encodeurl')
 const session = require('express-session');
@@ -11,8 +12,11 @@ var regionalEndpoints = require('./src/constants/regionalEndpoints');
 var app = express();
 var mongoose = require('mongoose');
 var LeakyBucket = require('leaky-bucket');
+const nodemailer = require('nodemailer');
 
 axiosRetry(axios, { retries: 3 });
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Database Setup
 mongoose.connect(`mongodb://${process.env.LOL_USERNAME}:${process.env.LOL_PASSWORD}@ds127564.mlab.com:27564/lolcamp`)
@@ -491,6 +495,30 @@ app.get('/summonerSpells', (req, res) => {
       res.json(summonerSpells[0].data)
     }
   })
+})
+
+app.post('/sendEmail', (req, res) => {
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+           user: process.env.LOL_EMAIL,
+           pass: process.env.LOL_EMAIL_PASSWORD
+       }
+   });
+
+  const mailOptions = {
+    from: `"${req.body.name}" ${req.body.email}`, // sender address
+    to: process.env.LOL_EMAIL, // list of receivers
+    subject: 'LoLPreview Feedback', // Subject line
+    html: `<p>${req.body.comments}</p>`// plain text body
+  };
+
+  transporter.sendMail(mailOptions, function (err, info) {
+    if(err)
+      console.log(err)
+    else
+      console.log(info);
+ });
 })
 
 app.listen(3001, (err) => {
