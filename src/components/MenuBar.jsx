@@ -8,7 +8,7 @@ const MenuBar = () => {
       <LinkContainer to="/">
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#">LoLPreview</a>
+            <a href="#">LoLAtlas</a>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>

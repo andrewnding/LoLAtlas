@@ -509,7 +509,7 @@ app.post('/sendEmail', (req, res) => {
   const mailOptions = {
     from: req.body.email, // sender address
     to: process.env.LOL_EMAIL, // list of receivers
-    subject: 'LoLPreview Feedback', // Subject line
+    subject: 'LoLAtlas Feedback', // Subject line
     html: `<p>Name: ${req.body.name}</p><p>Email: ${req.body.email}</p><p>${req.body.comments}</p>`// plain text body
   };
 

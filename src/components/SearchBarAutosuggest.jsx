@@ -130,7 +130,7 @@ class SearchBarAutosuggest extends React.Component {
       return (
         <div className="search-bar-container">
           <div className="title-text">
-            <h1>LoLPreview</h1>
+            <h1>LoLAtlas</h1>
             <h2>The quickest live game lookup tool</h2>  
           </div>
           <div className='search-error-message'>

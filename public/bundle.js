@@ -24979,7 +24979,7 @@ var SearchBarAutosuggest = function (_React$Component) {
             _react2.default.createElement(
               'h1',
               null,
-              'LoLPreview'
+              'LoLAtlas'
             ),
             _react2.default.createElement(
               'h2',
@@ -53146,7 +53146,7 @@ var MenuBar = function MenuBar() {
           _react2.default.createElement(
             'a',
             { href: '#' },
-            'LoLPreview'
+            'LoLAtlas'
           )
         ),
         _react2.default.createElement(_reactBootstrap.Navbar.Toggle, null)
@@ -64309,7 +64309,7 @@ var Footer = function Footer() {
   return _react2.default.createElement(
     "footer",
     { className: "footer text-center" },
-    "LoLPreview"
+    "LoLAtlas"
   );
 };
 
@@ -75379,12 +75379,12 @@ var About = function (_React$Component) {
           _react2.default.createElement(
             "h2",
             null,
-            "What is LoLPreview?"
+            "What is LoLAtlas?"
           ),
           _react2.default.createElement(
             "p",
             null,
-            "LoLPreview is a tool that allows you to look up live ranked solo/duo queue League of Legends matches. It provides information about each player in the game, including recent ranked matches data, winning/losing streaks, current champion mastery, and the last time the current champion was played. LoLPreview allows you to quickly evaluate your allies and opponents and can help you identify the paths to victory."
+            "LoLAtlas is a tool that allows you to look up live ranked solo/duo queue League of Legends matches. It provides information about each player in the game, including recent ranked matches data, winning/losing streaks, current champion mastery, and the last time the current champion was played. LoLAtlas allows you to quickly evaluate your allies and opponents and can help you identify the paths to victory."
           )
         ),
         _react2.default.createElement(
@@ -75393,12 +75393,12 @@ var About = function (_React$Component) {
           _react2.default.createElement(
             "h2",
             null,
-            "How do I use LoLPreview?"
+            "How do I use LoLAtlas?"
           ),
           _react2.default.createElement(
             "p",
             null,
-            "As soon as a match enters the loading screen, you can enter the name of one of the players in the match and LoLPreview will load the match data."
+            "As soon as a match enters the loading screen, you can enter the name of one of the players in the match and LoLAtlas will load the match data."
           )
         )
       );

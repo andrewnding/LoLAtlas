@@ -1,5 +1,5 @@
 {
-  "name": "lolpreview",
+  "name": "lolatlas",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andrewnding/LoLPreview.git"
+    "url": "git+https://github.com/andrewnding/LoLAtlas.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/andrewnding/LoLPreview/issues"
+    "url": "https://github.com/andrewnding/LoLAtlas/issues"
   },
-  "homepage": "https://github.com/andrewnding/LoLPreview#readme",
+  "homepage": "https://github.com/andrewnding/LoLAtlas#readme",
   "dependencies": {
     "axios": "^0.16.2",
     "axios-retry": "^3.0.1",

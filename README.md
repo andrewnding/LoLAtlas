@@ -1,1 +1,1 @@
-# LoLPreview
+# LoLAtlas
