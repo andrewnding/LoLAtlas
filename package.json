@@ -19,7 +19,6 @@
   "homepage": "https://github.com/andrewnding/LoLAtlas#readme",
   "dependencies": {
     "axios": "^0.16.2",
-    "axios-retry": "^3.0.1",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-preset-env": "^1.5.2",

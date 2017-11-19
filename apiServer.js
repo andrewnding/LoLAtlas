@@ -3,7 +3,6 @@
 var express = require('express');
 var axios = require('axios');
 var bodyParser = require('body-parser');
-const axiosRetry = require('axios-retry');
 var encodeUrl = require('encodeurl')
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
@@ -14,7 +13,6 @@ var mongoose = require('mongoose');
 var LeakyBucket = require('leaky-bucket');
 const nodemailer = require('nodemailer');
 
-axiosRetry(axios, { retries: 3 });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -55,6 +53,43 @@ var bucket = new LeakyBucket({
   maxWaitingTime: 120     // seconds, defaults to 300
 });
 // Done with rate limiting setup
+
+// Axios retry
+axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
+  if (err.response.status !== 429) {
+    return Promise.reject(err);
+  }
+  var config = err.config;
+  var retryCount = 3
+  var retryDelay = 100
+  // If config does not exist or the retry option is not set, reject
+  if(!config) return Promise.reject(err);
+  
+  // Set the variable for keeping track of the retry count
+  config.__retryCount = config.__retryCount || 0;
+  // Check if we've maxed out the total number of retries
+  if(config.__retryCount >= retryCount) {
+      // Reject with the error
+      return Promise.reject(err);
+  }
+  
+  // Increase the retry count
+  config.__retryCount += 1;
+  console.log('RETRY NUMBER ', config.__retryCount)
+  
+  // Create new promise to handle exponential backoff
+  var backoff = new Promise(function(resolve) {
+      setTimeout(function() {
+          resolve();
+      }, 200);
+  });
+  
+  // Return the promise in which recalls axios to retry the request
+  return backoff.then(function() {
+      return axios(config);
+  });
+});
+// Done with axios retry
 
 var summonerNotFoundResponse = {
   message: 'Data not found - summoner not found',

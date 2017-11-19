@@ -201,13 +201,7 @@ class CurrentGamePage extends React.Component {
     }
     
     if (this.state.searchError) {
-      if (this.state.searchError === 'PLAYER_NOT_FOUND') {
-        return this.renderErrorPage('Player not found')
-      } else if (this.state.searchError === 'GAME_NOT_FOUND') {
-        return this.renderErrorPage('Player is not in a game')
-      } else {
-        return this.renderErrorPage(this.state.searchError)
-      }  
+      return this.renderErrorPage('Something went wrong. Please try again.')
     }
    
     return (
