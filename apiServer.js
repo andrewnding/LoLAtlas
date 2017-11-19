@@ -507,17 +507,21 @@ app.post('/sendEmail', (req, res) => {
    });
 
   const mailOptions = {
-    from: `"${req.body.name}" ${req.body.email}`, // sender address
+    from: req.body.email, // sender address
     to: process.env.LOL_EMAIL, // list of receivers
     subject: 'LoLPreview Feedback', // Subject line
-    html: `<p>${req.body.comments}</p>`// plain text body
+    html: `<p>Name: ${req.body.name}</p><p>Email: ${req.body.email}</p><p>${req.body.comments}</p>`// plain text body
   };
 
   transporter.sendMail(mailOptions, function (err, info) {
-    if(err)
+    if (err) {
       console.log(err)
-    else
+      res.json(err)
+    }
+    else {
       console.log(info);
+      res.json(info)
+    }
  });
 })
 
