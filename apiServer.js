@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Database Setup
-mongoose.connect(`mongodb://${process.env.LOL_USERNAME}:${process.env.LOL_PASSWORD}@ds127564.mlab.com:27564/lolcamp`)
+mongoose.connect(process.env.MONGO_URI)
 
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
