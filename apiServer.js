@@ -412,6 +412,8 @@ app.get('/championMastery', (req, res) => {
 
 app.get('/searchHistory', (req, res) => {
   let searchObject = {}
+  console.log('ekmfwkmekwmkmwak')
+  console.log(req.session)
   if (typeof req.session.serviceRegion !== undefined) {
     searchObject.serviceRegion = req.session.serviceRegion
   }
