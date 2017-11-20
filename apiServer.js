@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Database Setup
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGODB_URI)
 
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -412,8 +412,6 @@ app.get('/championMastery', (req, res) => {
 
 app.get('/searchHistory', (req, res) => {
   let searchObject = {}
-  console.log('ekmfwkmekwmkmwak')
-  console.log(req.session)
   if (typeof req.session.serviceRegion !== undefined) {
     searchObject.serviceRegion = req.session.serviceRegion
   }
