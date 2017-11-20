@@ -64309,7 +64309,7 @@ var Footer = function Footer() {
   return _react2.default.createElement(
     "footer",
     { className: "footer text-center" },
-    "LoLAtlas"
+    "\xA9 2017, LoLAtlas.com"
   );
 };
 
