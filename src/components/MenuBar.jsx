@@ -21,6 +21,9 @@ const MenuBar = () => {
           <LinkContainer to="/contact">
             <NavItem eventKey={2}>Contact</NavItem>
           </LinkContainer>
+          <LinkContainer to="/privacy-policy">
+            <NavItem eventKey={2}>Privacy Policy</NavItem>
+          </LinkContainer>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

@@ -1,7 +1,7 @@
 @import 'variables';
 
 .navbar-default {
-  background-color: $gray-d; 
+  background-color: $gray-e; 
   border: none;
   border-radius: 0;
 
@@ -19,11 +19,10 @@
   }
 
   ul.nav li a:hover {
-    color: black;
     text-decoration: underline;
   }
 
   ul.nav li.active a {
-    background-color: $gray-c;
+    background-color: $gray-c !important;
   }
 }

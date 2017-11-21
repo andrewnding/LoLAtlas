@@ -3,9 +3,9 @@ import React from 'react'
 export default class About extends React.Component {
   render() {
     return (
-      <div className="about-page">
+      <div className="info-page">
         <h1 className="page-title">About</h1>
-        <div className="about-block">
+        <div className="info-block">
           <h2>What is LoLAtlas?</h2>
           <p>
             LoLAtlas is a tool that allows you to look up live ranked solo/duo queue League of Legends matches.
@@ -16,7 +16,7 @@ export default class About extends React.Component {
           </p>
         </div>
 
-        <div className="about-block">
+        <div className="info-block">
           <h2>How do I use LoLAtlas?</h2>
           <p>
             As soon as a match enters the loading screen, you can enter the name of one of the players in the
