@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default class About extends React.Component {
   render() {
@@ -9,9 +10,7 @@ export default class About extends React.Component {
           <h2>What is LoLAtlas?</h2>
           <p>
             LoLAtlas is a tool that allows you to look up live ranked solo/duo queue League of Legends matches.
-            It provides information about each player in the game, including recent ranked matches data,
-            winning/losing streaks, current champion mastery, and the last time the current champion was played.
-            LoLAtlas allows you to quickly evaluate your allies and opponents and can help you identify the paths
+            It allows you to quickly evaluate your allies and opponents and can help you identify the paths
             to victory.
           </p>
         </div>
@@ -21,6 +20,15 @@ export default class About extends React.Component {
           <p>
             As soon as a match enters the loading screen, you can enter the name of one of the players in the
             match and LoLAtlas will load the match data.
+          </p>
+        </div>
+
+        <div className="info-block">
+          <h2>What information does LoLAtlas provide?</h2>
+          <p>
+            LoLAtlas provides information about each player in the game, including recent ranked matches data,
+            winning/losing streaks, current champion mastery, and the last time the current champion was played.
+            You can see an example search <Link to="/sample"> here</Link>.
           </p>
         </div>
       </div>

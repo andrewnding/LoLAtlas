@@ -248,17 +248,6 @@ class CurrentGamePlayerItem extends React.Component {
     }
   }
 
-  renderRecentRankedMatches() {
-    const recentRankedMatches = this.props.player.recentRankedMatches.map((match, i) => {
-      return (
-        <div key={i}>     
-          <span>{match.gameDetails.gameId}</span>
-        </div>
-      )
-    })
-    return recentRankedMatches
-  }
-
   championImage() {
     return this.props.staticData.championImages[this.props.player.championId].image.full
   }

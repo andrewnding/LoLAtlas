@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import CurrentGamePlayerItem from './CurrentGamePlayerItem'
 
-class CurrentGamePlayerList extends React.Component {
+export class CurrentGamePlayerList extends React.Component {
   constructor(props) {
     super(props)
   }
