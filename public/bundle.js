@@ -75471,21 +75471,62 @@ var Contact = function (_React$Component) {
   function Contact() {
     _classCallCheck(this, Contact);
 
-    return _possibleConstructorReturn(this, (Contact.__proto__ || Object.getPrototypeOf(Contact)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Contact.__proto__ || Object.getPrototypeOf(Contact)).call(this));
+
+    _this.state = {
+      bannerMode: 'NONE'
+    };
+    return _this;
   }
 
   _createClass(Contact, [{
+    key: 'renderBanner',
+    value: function renderBanner() {
+      switch (this.state.bannerMode) {
+        case 'NONE':
+          return _react2.default.createElement('div', null);
+        case 'SUCCESS':
+          return _react2.default.createElement(
+            'div',
+            { className: 'alert alert-success', role: 'alert' },
+            'Thanks for the feedback. We will get back to you soon!'
+          );
+        case 'FAILURE':
+          return _react2.default.createElement(
+            'div',
+            { className: 'alert alert-danger', role: 'alert' },
+            'Please fill out all fields'
+          );
+      }
+    }
+  }, {
+    key: 'setBanner',
+    value: function setBanner(bannerMode) {
+      this.setState({ bannerMode: bannerMode });
+      window.scrollTo(0, 0);
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         'div',
         { className: 'contact-page' },
+        this.renderBanner(),
         _react2.default.createElement(
           'h1',
           { className: 'page-title' },
           'Contact'
         ),
-        _react2.default.createElement(_ContactForm2.default, null)
+        _react2.default.createElement(
+          'p',
+          null,
+          'Please feel free to contact us with any questions, comments, or suggestions you may have.'
+        ),
+        _react2.default.createElement(_ContactForm2.default, { setBanner: function setBanner(bannerMode) {
+            return _this2.setBanner(bannerMode);
+          } })
       );
     }
   }]);
@@ -75554,10 +75595,16 @@ var ContactForm = function (_React$Component) {
     value: function handleSubmit() {
       var _this2 = this;
 
+      if (!this.state.name || !this.state.email || !this.state.comments) {
+        this.props.setBanner('FAILURE');
+        return;
+      }
+
       this.setState({ isSending: true });
       _axios2.default.post('/api/sendEmail', this.state).then(function (response) {
         _this2.setState({ isSending: false });
         _this2.setState({ didSend: true });
+        _this2.props.setBanner('SUCCESS');
         return response;
       }).catch(function (err) {
         _this2.setState({ isSending: false });

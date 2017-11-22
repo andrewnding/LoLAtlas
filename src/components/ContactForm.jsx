@@ -21,11 +21,17 @@ export default class ContactForm extends React.Component {
   }
 
   handleSubmit() {
+    if (!this.state.name || !this.state.email || !this.state.comments) {
+      this.props.setBanner('FAILURE')
+      return
+    }
+
     this.setState({ isSending: true })
     axios.post('/api/sendEmail', this.state)
       .then(response => {
         this.setState({ isSending: false })
         this.setState({ didSend: true })
+        this.props.setBanner('SUCCESS')
         return response
       })
       .catch(err => {
