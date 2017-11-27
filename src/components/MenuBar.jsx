@@ -22,7 +22,10 @@ const MenuBar = () => {
             <NavItem eventKey={2}>Contact</NavItem>
           </LinkContainer>
           <LinkContainer to="/privacy-policy">
-            <NavItem eventKey={2}>Privacy Policy</NavItem>
+            <NavItem eventKey={3}>Privacy Policy</NavItem>
+          </LinkContainer>
+          <LinkContainer to="/blog">
+            <NavItem eventKey={4}>Blog</NavItem>
           </LinkContainer>
         </Nav>
       </Navbar.Collapse>

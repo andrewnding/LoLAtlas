@@ -11,6 +11,7 @@ import CurrentGamePage from './components/CurrentGamePage'
 import About from './components/About'
 import Contact from './components/Contact'
 import PrivacyPolicy from './components/PrivacyPolicy'
+import Blog from './components/Blog'
 import Sample from './components/Sample'
 import PageNotFound from './components/PageNotFound'
 require("!style-loader!css-loader!sass-loader!../public/stylesheets/main.scss");
@@ -25,9 +26,10 @@ const App = () => {
             <Route exact path="/" component={MainSearchBar} />
             <Route path="/:region/search" component={CurrentGamePage} />
             <Route exact path="/about" component={About} />
+            <Route exact path="/sample" component={Sample} />
             <Route exact path="/contact" component={Contact} />
             <Route exact path="/privacy-policy" component={PrivacyPolicy} />
-            <Route exact path="/sample" component={Sample} />
+            <Route exact path="/blog" component={Blog} />
             <Route component={PageNotFound} />
           </Switch>
           <Footer />
