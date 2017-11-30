@@ -24771,7 +24771,272 @@ exports.default = LinkContainer;
 module.exports = exports['default'];
 
 /***/ }),
-/* 237 */,
+/* 237 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(42);
+
+var _reactAutosuggest = __webpack_require__(662);
+
+var _reactAutosuggest2 = _interopRequireDefault(_reactAutosuggest);
+
+var _xregexp = __webpack_require__(674);
+
+var _xregexp2 = _interopRequireDefault(_xregexp);
+
+var _classnames = __webpack_require__(9);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _searchActions = __webpack_require__(238);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var regionalEndpoints = __webpack_require__(693);
+
+var SearchBarAutosuggest = function (_React$Component) {
+  _inherits(SearchBarAutosuggest, _React$Component);
+
+  function SearchBarAutosuggest(props) {
+    _classCallCheck(this, SearchBarAutosuggest);
+
+    var _this = _possibleConstructorReturn(this, (SearchBarAutosuggest.__proto__ || Object.getPrototypeOf(SearchBarAutosuggest)).call(this, props));
+
+    _this.state = {
+      doneFetchingData: false,
+      name: '',
+      suggestions: [],
+      searchHistory: [],
+      region: 'NA',
+      isFocused: false
+    };
+    return _this;
+  }
+
+  _createClass(SearchBarAutosuggest, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this.props.dispatch((0, _searchActions.getSearchHistory)()).then(function (response) {
+        _this2.setState({
+          doneFetchingData: true,
+          name: response.data.summonerName || '',
+          region: response.data.serviceRegion || 'NA',
+          searchHistory: response.data.searchHistory || []
+        });
+      });
+    }
+  }, {
+    key: 'onChange',
+    value: function onChange(event, _ref) {
+      var newValue = _ref.newValue;
+
+      this.setState({
+        name: newValue
+      });
+    }
+  }, {
+    key: 'onFocus',
+    value: function onFocus() {
+      this.setState({ isFocused: true });
+    }
+  }, {
+    key: 'onBlur',
+    value: function onBlur() {
+      this.setState({ isFocused: false });
+    }
+
+    // Teach Autosuggest how to calculate suggestions for any given input value.
+
+  }, {
+    key: 'getSuggestions',
+    value: function getSuggestions(value) {
+      var inputValue = value.trim().toLowerCase();
+      var inputLength = inputValue.length;
+
+      var searchHistoryNames = this.state.searchHistory.map(function (summoner) {
+        return summoner.summonerName;
+      });
+
+      return inputLength === 0 ? [] : searchHistoryNames.filter(function (suggestion) {
+        return suggestion.toLowerCase().slice(0, inputLength) === inputValue;
+      });
+    }
+  }, {
+    key: 'getSuggestionValue',
+    value: function getSuggestionValue(suggestion) {
+      return suggestion;
+    }
+
+    // Use your imagination to render suggestions.
+
+  }, {
+    key: 'renderSuggestion',
+    value: function renderSuggestion(suggestion) {
+      return _react2.default.createElement(
+        'div',
+        null,
+        suggestion
+      );
+    }
+
+    // Autosuggest will call this function every time you need to update suggestions.
+    // You already implemented this logic above, so just use it.
+
+  }, {
+    key: 'onSuggestionsFetchRequested',
+    value: function onSuggestionsFetchRequested(_ref2) {
+      var value = _ref2.value;
+
+      this.setState({
+        suggestions: this.getSuggestions(value)
+      });
+    }
+
+    // Autosuggest will call this function every time you need to clear suggestions.
+
+  }, {
+    key: 'onSuggestionsClearRequested',
+    value: function onSuggestionsClearRequested() {
+      this.setState({
+        suggestions: []
+      });
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      if (_xregexp2.default.test(this.state.name, new _xregexp2.default('^(?!.*\\bRiot\\b)[0-9\\p{L} _\\.]{3,16}$', 'i'))) {
+        console.log('searching for player ' + this.state.name);
+        this.props.history.push('/' + this.state.region + '/search?name=' + this.state.name);
+      } else {
+        console.log('Please enter a valid summoner name');
+      }
+    }
+  }, {
+    key: 'renderSelectOptions',
+    value: function renderSelectOptions() {
+      return Object.keys(regionalEndpoints.regions).sort().map(function (region, i) {
+        return _react2.default.createElement(
+          'option',
+          { key: i, value: region },
+          region
+        );
+      });
+    }
+  }, {
+    key: 'handleOnChangeRegion',
+    value: function handleOnChangeRegion(e) {
+      this.setState({
+        region: e.target.value
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var searchBarItemsClassNames = (0, _classnames2.default)({
+        'not-focused': !this.state.isFocused,
+        'search-bar-items': true
+      });
+
+      if (this.state.doneFetchingData) {
+        // Autosuggest will pass through all these props to the input.
+        var inputProps = {
+          placeholder: 'Summoner Name',
+          value: this.state.name,
+          onChange: this.onChange.bind(this),
+          className: 'search-input',
+          onFocus: this.onFocus.bind(this),
+          onBlur: this.onBlur.bind(this)
+        };
+
+        return _react2.default.createElement(
+          'div',
+          { className: 'search-bar-container' },
+          _react2.default.createElement(
+            'div',
+            { className: 'title-text' },
+            _react2.default.createElement(
+              'h1',
+              null,
+              'LoLAtlas'
+            ),
+            _react2.default.createElement(
+              'h2',
+              null,
+              'The quickest live game lookup tool'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'search-error-message' },
+            this.props.errorMessage
+          ),
+          _react2.default.createElement(
+            'form',
+            { className: searchBarItemsClassNames, onSubmit: this.handleSubmit.bind(this) },
+            _react2.default.createElement(_reactAutosuggest2.default, {
+              suggestions: this.state.suggestions,
+              onSuggestionsFetchRequested: this.onSuggestionsFetchRequested.bind(this),
+              onSuggestionsClearRequested: this.onSuggestionsClearRequested.bind(this),
+              getSuggestionValue: this.getSuggestionValue.bind(this),
+              renderSuggestion: this.renderSuggestion.bind(this),
+              inputProps: inputProps
+            }),
+            _react2.default.createElement(
+              'select',
+              {
+                className: 'form-control region-select',
+                value: this.state.region,
+                onChange: this.handleOnChangeRegion.bind(this)
+              },
+              this.renderSelectOptions()
+            ),
+            _react2.default.createElement('input', {
+              type: 'submit',
+              value: 'Search',
+              className: 'btn btn-primary search-button'
+            })
+          )
+        );
+      } else {
+        return null;
+      }
+    }
+  }]);
+
+  return SearchBarAutosuggest;
+}(_react2.default.Component);
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    search: state.searchReducer
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(SearchBarAutosuggest);
+
+/***/ }),
 /* 238 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25141,23 +25406,27 @@ module.exports = Cancel;
 
 /***/ }),
 /* 244 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["default"] = secondsToTime;
-function secondsToTime(sec) {
-    const seconds = Number(sec);
 
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor(seconds % 3600 / 60);
-    const s = Math.floor(seconds % 3600 % 60);
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = secondsToTime;
+function secondsToTime(sec) {
+    var seconds = Number(sec);
+
+    var h = Math.floor(seconds / 3600);
+    var m = Math.floor(seconds % 3600 / 60);
+    var s = Math.floor(seconds % 3600 % 60);
 
     return {
-      hours: h,
-      minutes: m,
-      seconds: s
-    }
+        hours: h,
+        minutes: m,
+        seconds: s
+    };
 }
 
 /***/ }),
@@ -36930,13 +37199,17 @@ exports.default = {
 
 /***/ }),
 /* 363 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["default"] = summonerSpellTooltip;
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = summonerSpellTooltip;
 function summonerSpellTooltip(summonerSpell) {
-  return `<span><div class="summoner-spell-name">${summonerSpell.name}</div><div>${summonerSpell.sanitizedDescription}</div></span>`
+  return "<span><div class=\"summoner-spell-name\">" + summonerSpell.name + "</div><div>" + summonerSpell.sanitizedDescription + "</div></span>";
 }
 
 /***/ }),
@@ -36960,43 +37233,43 @@ var _store = __webpack_require__(513);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _MenuBar = __webpack_require__(734);
+var _MenuBar = __webpack_require__(520);
 
 var _MenuBar2 = _interopRequireDefault(_MenuBar);
 
-var _Footer = __webpack_require__(735);
+var _Footer = __webpack_require__(660);
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
-var _MainSearchBar = __webpack_require__(736);
+var _MainSearchBar = __webpack_require__(661);
 
 var _MainSearchBar2 = _interopRequireDefault(_MainSearchBar);
 
-var _CurrentGamePage = __webpack_require__(737);
+var _CurrentGamePage = __webpack_require__(694);
 
 var _CurrentGamePage2 = _interopRequireDefault(_CurrentGamePage);
 
-var _About = __webpack_require__(744);
+var _About = __webpack_require__(721);
 
 var _About2 = _interopRequireDefault(_About);
 
-var _Contact = __webpack_require__(745);
+var _Contact = __webpack_require__(722);
 
 var _Contact2 = _interopRequireDefault(_Contact);
 
-var _PrivacyPolicy = __webpack_require__(747);
+var _PrivacyPolicy = __webpack_require__(724);
 
 var _PrivacyPolicy2 = _interopRequireDefault(_PrivacyPolicy);
 
-var _Blog = __webpack_require__(748);
+var _Blog = __webpack_require__(725);
 
 var _Blog2 = _interopRequireDefault(_Blog);
 
-var _Sample = __webpack_require__(749);
+var _Sample = __webpack_require__(726);
 
 var _Sample2 = _interopRequireDefault(_Sample);
 
-var _PageNotFound = __webpack_require__(750);
+var _PageNotFound = __webpack_require__(727);
 
 var _PageNotFound2 = _interopRequireDefault(_PageNotFound);
 
@@ -52860,7 +53133,98 @@ var staticDataReducer = function staticDataReducer() {
 exports.default = staticDataReducer;
 
 /***/ }),
-/* 520 */,
+/* 520 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactBootstrap = __webpack_require__(521);
+
+var _reactRouterBootstrap = __webpack_require__(658);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MenuBar = function MenuBar() {
+  return _react2.default.createElement(
+    _reactBootstrap.Navbar,
+    { collapseOnSelect: true },
+    _react2.default.createElement(
+      _reactRouterBootstrap.LinkContainer,
+      { to: '/' },
+      _react2.default.createElement(
+        _reactBootstrap.Navbar.Header,
+        null,
+        _react2.default.createElement(
+          _reactBootstrap.Navbar.Brand,
+          null,
+          _react2.default.createElement(
+            'a',
+            { href: '#' },
+            'LoLAtlas'
+          )
+        ),
+        _react2.default.createElement(_reactBootstrap.Navbar.Toggle, null)
+      )
+    ),
+    _react2.default.createElement(
+      _reactBootstrap.Navbar.Collapse,
+      null,
+      _react2.default.createElement(
+        _reactBootstrap.Nav,
+        { pullRight: true },
+        _react2.default.createElement(
+          _reactRouterBootstrap.LinkContainer,
+          { to: '/about' },
+          _react2.default.createElement(
+            _reactBootstrap.NavItem,
+            { eventKey: 1 },
+            'About'
+          )
+        ),
+        _react2.default.createElement(
+          _reactRouterBootstrap.LinkContainer,
+          { to: '/contact' },
+          _react2.default.createElement(
+            _reactBootstrap.NavItem,
+            { eventKey: 2 },
+            'Contact'
+          )
+        ),
+        _react2.default.createElement(
+          _reactRouterBootstrap.LinkContainer,
+          { to: '/privacy-policy' },
+          _react2.default.createElement(
+            _reactBootstrap.NavItem,
+            { eventKey: 3 },
+            'Privacy Policy'
+          )
+        ),
+        _react2.default.createElement(
+          _reactRouterBootstrap.LinkContainer,
+          { to: '/blog' },
+          _react2.default.createElement(
+            _reactBootstrap.NavItem,
+            { eventKey: 4 },
+            'Blog'
+          )
+        )
+      )
+    )
+  );
+};
+
+exports.default = MenuBar;
+
+/***/ }),
 /* 521 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -63966,8 +64330,96 @@ exports.default = IndexLinkContainer;
 module.exports = exports['default'];
 
 /***/ }),
-/* 660 */,
-/* 661 */,
+/* 660 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Footer = function Footer() {
+  return _react2.default.createElement(
+    "footer",
+    { className: "footer text-center" },
+    "\xA9 2017, LoLAtlas.com"
+  );
+};
+
+exports.default = Footer;
+
+/***/ }),
+/* 661 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(42);
+
+var _SearchBarAutosuggest = __webpack_require__(237);
+
+var _SearchBarAutosuggest2 = _interopRequireDefault(_SearchBarAutosuggest);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MainSearchBar = function (_React$Component) {
+  _inherits(MainSearchBar, _React$Component);
+
+  function MainSearchBar(props) {
+    _classCallCheck(this, MainSearchBar);
+
+    return _possibleConstructorReturn(this, (MainSearchBar.__proto__ || Object.getPrototypeOf(MainSearchBar)).call(this, props));
+  }
+
+  _createClass(MainSearchBar, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.title = 'LoLAtlas';
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(_SearchBarAutosuggest2.default, {
+          history: this.props.history
+        })
+      );
+    }
+  }]);
+
+  return MainSearchBar;
+}(_react2.default.Component);
+
+exports.default = MainSearchBar;
+
+/***/ }),
 /* 662 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -71369,46 +71821,313 @@ module.exports = function spread(callback) {
 "use strict";
 
 
-const regions = {
-  BR:   'br1.api.riotgames.com',
+var regions = {
+  BR: 'br1.api.riotgames.com',
   EUNE: 'eun1.api.riotgames.com',
-  EUW:  'euw1.api.riotgames.com',
-  JP:   'jp1.api.riotgames.com',
-  KR:   'kr.api.riotgames.com',
-  LAN:  'la1.api.riotgames.com',
-  LAS:  'la2.api.riotgames.com',
-  NA:   'na1.api.riotgames.com',
-  OCE:  'oc1.api.riotgames.com',
-  TR:	  'tr1.api.riotgames.com',
-  RU:	  'ru.api.riotgames.com',
-  PBE:  'pbe1.api.riotgames.com',
-}
-
-const platforms = {
-  BR1:   'br1.api.riotgames.com',
-  EUN1: 'eun1.api.riotgames.com',
-  EUW1:  'euw1.api.riotgames.com',
-  JP1:   'jp1.api.riotgames.com',
-  KR:   'kr.api.riotgames.com',
-  LA1:  'la1.api.riotgames.com',
-  LA2:  'la2.api.riotgames.com',
-  NA1:   'na1.api.riotgames.com',
-  NA:   'na1.api.riotgames.com', // Could also be NA for older accounts
-  OC1:  'oc1.api.riotgames.com',
-  TR1:	  'tr1.api.riotgames.com',
-  RU:	  'ru.api.riotgames.com',
-  PBE1:  'pbe1.api.riotgames.com',
-}
-
-var regionalEndpoints = {
-  regions, 
-  platforms
+  EUW: 'euw1.api.riotgames.com',
+  JP: 'jp1.api.riotgames.com',
+  KR: 'kr.api.riotgames.com',
+  LAN: 'la1.api.riotgames.com',
+  LAS: 'la2.api.riotgames.com',
+  NA: 'na1.api.riotgames.com',
+  OCE: 'oc1.api.riotgames.com',
+  TR: 'tr1.api.riotgames.com',
+  RU: 'ru.api.riotgames.com',
+  PBE: 'pbe1.api.riotgames.com'
 };
 
-module.exports = regionalEndpoints
+var platforms = {
+  BR1: 'br1.api.riotgames.com',
+  EUN1: 'eun1.api.riotgames.com',
+  EUW1: 'euw1.api.riotgames.com',
+  JP1: 'jp1.api.riotgames.com',
+  KR: 'kr.api.riotgames.com',
+  LA1: 'la1.api.riotgames.com',
+  LA2: 'la2.api.riotgames.com',
+  NA1: 'na1.api.riotgames.com',
+  NA: 'na1.api.riotgames.com', // Could also be NA for older accounts
+  OC1: 'oc1.api.riotgames.com',
+  TR1: 'tr1.api.riotgames.com',
+  RU: 'ru.api.riotgames.com',
+  PBE1: 'pbe1.api.riotgames.com'
+};
+
+var regionalEndpoints = {
+  regions: regions,
+  platforms: platforms
+};
+
+module.exports = regionalEndpoints;
 
 /***/ }),
-/* 694 */,
+/* 694 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(42);
+
+var _searchActions = __webpack_require__(238);
+
+var _currentGameActions = __webpack_require__(695);
+
+var _staticDataActions = __webpack_require__(697);
+
+var _CurrentGameHeader = __webpack_require__(698);
+
+var _CurrentGameHeader2 = _interopRequireDefault(_CurrentGameHeader);
+
+var _CurrentGamePlayerList = __webpack_require__(699);
+
+var _CurrentGamePlayerList2 = _interopRequireDefault(_CurrentGamePlayerList);
+
+var _SearchBarAutosuggest = __webpack_require__(237);
+
+var _SearchBarAutosuggest2 = _interopRequireDefault(_SearchBarAutosuggest);
+
+var _LoadingScreen = __webpack_require__(720);
+
+var _LoadingScreen2 = _interopRequireDefault(_LoadingScreen);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CurrentGamePage = function (_React$Component) {
+  _inherits(CurrentGamePage, _React$Component);
+
+  function CurrentGamePage(props) {
+    _classCallCheck(this, CurrentGamePage);
+
+    var _this = _possibleConstructorReturn(this, (CurrentGamePage.__proto__ || Object.getPrototypeOf(CurrentGamePage)).call(this, props));
+
+    _this.state = {
+      receivedChampionImages: false,
+      receivedChampionData: false,
+      receivedSummonerSpells: false,
+      receivedRealmVersion: false,
+      numberOfSummonersLoaded: 0,
+      numberOfMatchesLoaded: 0,
+      numberOfChampionMasteriesLoaded: 0,
+      searchError: ''
+    };
+    return _this;
+  }
+
+  _createClass(CurrentGamePage, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.loadCurrentGameData();
+      document.title = 'LoLAtlas';
+    }
+
+    // Required to do a repeat search after a failed search
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.location.key !== this.props.location.key) {
+        this.loadCurrentGameData();
+      }
+    }
+  }, {
+    key: 'checkForErrors',
+    value: function checkForErrors(response) {
+      this.setState({ searchError: '' });
+
+      if (response.data.error) {
+        this.setState({ searchError: response.data.error });
+        return;
+      }
+    }
+  }, {
+    key: 'loadCurrentGameData',
+    value: function loadCurrentGameData() {
+      var _this2 = this;
+
+      var searchParams = new URLSearchParams(this.props.location.search.substring(1));
+      var name = searchParams.get('name');
+      this.props.dispatch((0, _searchActions.getCurrentGame)(this.props.match.params.region, name)).then(function (response) {
+        _this2.checkForErrors(response);
+
+        if (_this2.state.searchError) {
+          return;
+        }
+
+        if (response.status === 200) {
+          _this2.props.dispatch((0, _staticDataActions.getChampionImages)(_this2.props.match.params.region)).then(function (response) {
+            if (response.data.error) {
+              _this2.setState({ searchError: response.data.error });
+              return;
+            }
+            if (response.status === 200) {
+              _this2.setState({ receivedChampionImages: true });
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+
+          _this2.props.dispatch((0, _staticDataActions.getChampionData)(_this2.props.match.params.region)).then(function (response) {
+            if (response.data.error) {
+              _this2.setState({ searchError: response.data.error });
+              return;
+            }
+            if (response.status === 200) {
+              _this2.setState({ receivedChampionData: true });
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+
+          _this2.props.dispatch((0, _staticDataActions.getSummonerSpells)(_this2.props.match.params.region)).then(function (response) {
+            if (response.data.error) {
+              _this2.setState({ searchError: response.data.error });
+              return;
+            }
+            if (response.status === 200) {
+              _this2.setState({ receivedSummonerSpells: true });
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+
+          _this2.props.currentGame.gameInfo.participants.map(function (participant) {
+            _this2.props.dispatch((0, _currentGameActions.getRankedLeague)(_this2.props.match.params.region, participant.summonerId)).then(function (response) {
+              if (response.data.error) {
+                _this2.setState({ searchError: response.data.error });
+                return;
+              }
+            }).catch(function (error) {
+              console.log(error);
+            });
+
+            _this2.props.dispatch((0, _currentGameActions.getAccountId)(_this2.props.match.params.region, participant.summonerId)).then(function (response) {
+              if (response.data.error) {
+                _this2.setState({ searchError: response.data.error });
+                return;
+              }
+              _this2.props.dispatch((0, _currentGameActions.getRecentRankedMatches)(_this2.props.match.params.region, response.data.accountId)).then(function (response) {
+                if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
+                  if (response.data.length < 5) {
+                    _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + (5 - response.data.length) });
+                  }
+                  response.data.map(function (match) {
+                    _this2.props.dispatch((0, _currentGameActions.getMatchDetails)(_this2.props.match.params.region, participant.summonerId, match.gameId)).then(function (response) {
+                      if (response.data.error) {
+                        _this2.setState({ searchError: response.data.error });
+                        return;
+                      }
+                      _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + 1 });
+                    }).catch(function (error) {
+                      console.log(error);
+                    });
+                  });
+                } else {
+                  _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + 5 });
+                }
+                _this2.setState({ numberOfSummonersLoaded: _this2.state.numberOfSummonersLoaded + 1 });
+              }).catch(function (error) {
+                console.log(error);
+              });
+            }).catch(function (error) {
+              console.log(error);
+            });
+
+            _this2.props.dispatch((0, _currentGameActions.getChampionMastery)(_this2.props.match.params.region, participant.summonerId, participant.championId)).then(function (response) {
+              if (response.data.error) {
+                if (response.status !== 404) {
+                  _this2.setState({ searchError: response.data.error });
+                  return;
+                }
+              }
+              _this2.setState({ numberOfChampionMasteriesLoaded: _this2.state.numberOfChampionMasteriesLoaded + 1 });
+            }).catch(function (error) {});
+          });
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+      this.props.dispatch((0, _staticDataActions.getRealmVersion)(this.props.match.params.region)).then(function (response) {
+        if (response.data.error) {
+          _this2.setState({ searchError: response.data.error });
+          return;
+        }
+        if (response.status === 200) {
+          _this2.setState({ receivedRealmVersion: true });
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  }, {
+    key: 'doneFetchingData',
+    value: function doneFetchingData() {
+      return this.state.receivedChampionImages && this.state.receivedRealmVersion && this.state.numberOfSummonersLoaded === 10 && this.state.numberOfMatchesLoaded === 50 && this.state.numberOfChampionMasteriesLoaded === 10 && this.state.receivedChampionData && this.state.receivedSummonerSpells;
+    }
+  }, {
+    key: 'renderErrorPage',
+    value: function renderErrorPage(message) {
+      return _react2.default.createElement(_SearchBarAutosuggest2.default, {
+        history: this.props.history,
+        errorMessage: message
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (!this.doneFetchingData() && !this.state.searchError) {
+        return _react2.default.createElement(_LoadingScreen2.default, null);
+      }
+
+      if (this.state.searchError) {
+        if (this.state.searchError === 'GAME_NOT_FOUND') {
+          return this.renderErrorPage('Player is not currently in a game.');
+        } else if (this.state.searchError === 'PLAYER_NOT_FOUND') {
+          return this.renderErrorPage('Player does not exist.');
+        } else {
+          return this.renderErrorPage('Something went wrong. Please try again.');
+        }
+      }
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(_CurrentGameHeader2.default, { gameStartTime: this.props.currentGame.gameInfo.gameStartTime }),
+        _react2.default.createElement(_CurrentGamePlayerList2.default, null)
+      );
+    }
+  }]);
+
+  return CurrentGamePage;
+}(_react2.default.Component);
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    search: state.searchReducer,
+    currentGame: state.currentGameReducer,
+    staticData: state.staticDataReducer
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(CurrentGamePage);
+
+/***/ }),
 /* 695 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -71650,9 +72369,859 @@ var getSummonerSpells = exports.getSummonerSpells = function getSummonerSpells(s
 };
 
 /***/ }),
-/* 698 */,
-/* 699 */,
-/* 700 */,
+/* 698 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _secondsToTime = __webpack_require__(244);
+
+var _secondsToTime2 = _interopRequireDefault(_secondsToTime);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CurrentGameHeader = function (_React$Component) {
+  _inherits(CurrentGameHeader, _React$Component);
+
+  function CurrentGameHeader(props) {
+    _classCallCheck(this, CurrentGameHeader);
+
+    var _this = _possibleConstructorReturn(this, (CurrentGameHeader.__proto__ || Object.getPrototypeOf(CurrentGameHeader)).call(this, props));
+
+    var gameStartTime = _this.props.gameStartTime;
+    var currentTime = Date.now();
+    var currentGameDuration = (currentTime - gameStartTime) / 1000;
+
+    _this.state = {
+      currentGameDuration: currentGameDuration
+    };
+
+    _this.incrementTimeInterval;
+    return _this;
+  }
+
+  _createClass(CurrentGameHeader, [{
+    key: 'incrementTime',
+    value: function incrementTime() {
+      this.setState({
+        currentGameDuration: this.state.currentGameDuration + 1
+      });
+    }
+  }, {
+    key: 'renderTime',
+    value: function renderTime(time) {
+      var minutes = time.minutes < 10 ? '0' + time.minutes : time.minutes.toString();
+      var seconds = time.seconds < 10 ? '0' + time.seconds : time.seconds.toString();
+      var hours = void 0;
+
+      if (time.hours > 10) {
+        return 'Game Loading';
+      }
+
+      if (time.hours > 0) {
+        hours = time.hours < 10 ? '0' + time.hours : time.hours.toString();
+        return hours + ':' + minutes + ':' + seconds;
+      }
+
+      return minutes + ':' + seconds;
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this.incrementTimeInterval = setInterval(function () {
+        return _this2.incrementTime();
+      }, 1000);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      clearInterval(this.incrementTimeInterval);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var time = (0, _secondsToTime2.default)(this.state.currentGameDuration);
+      return _react2.default.createElement(
+        'div',
+        { className: 'current-game-header space-between vertical-align' },
+        _react2.default.createElement(
+          'span',
+          null,
+          'Summoner\'s Rift'
+        ),
+        _react2.default.createElement(
+          'span',
+          null,
+          this.renderTime(time)
+        ),
+        _react2.default.createElement(
+          'span',
+          null,
+          'Ranked Solo/Duo'
+        )
+      );
+    }
+  }]);
+
+  return CurrentGameHeader;
+}(_react2.default.Component);
+
+exports.default = CurrentGameHeader;
+
+/***/ }),
+/* 699 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CurrentGamePlayerList = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(42);
+
+var _CurrentGamePlayerItem = __webpack_require__(700);
+
+var _CurrentGamePlayerItem2 = _interopRequireDefault(_CurrentGamePlayerItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CurrentGamePlayerList = exports.CurrentGamePlayerList = function (_React$Component) {
+  _inherits(CurrentGamePlayerList, _React$Component);
+
+  function CurrentGamePlayerList(props) {
+    _classCallCheck(this, CurrentGamePlayerList);
+
+    return _possibleConstructorReturn(this, (CurrentGamePlayerList.__proto__ || Object.getPrototypeOf(CurrentGamePlayerList)).call(this, props));
+  }
+
+  _createClass(CurrentGamePlayerList, [{
+    key: 'renderTeam100',
+    value: function renderTeam100() {
+      var players = this.props.currentGame.gameInfo.participants.filter(function (player) {
+        return player.teamId === 100;
+      });
+      return players.map(function (player, i) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'col-md-5ths', key: i },
+          _react2.default.createElement(_CurrentGamePlayerItem2.default, { player: player })
+        );
+      });
+    }
+  }, {
+    key: 'renderTeam200',
+    value: function renderTeam200() {
+      var players = this.props.currentGame.gameInfo.participants.filter(function (player) {
+        return player.teamId === 200;
+      });
+      return players.map(function (player, i) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'col-md-5ths', key: i },
+          _react2.default.createElement(_CurrentGamePlayerItem2.default, { player: player })
+        );
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'player-list-container container-fluid' },
+        _react2.default.createElement(
+          'div',
+          { className: 'row team-row' },
+          this.renderTeam100()
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'text-align-center versus-text' },
+          'Versus'
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'row team-row' },
+          this.renderTeam200()
+        )
+      );
+    }
+  }]);
+
+  return CurrentGamePlayerList;
+}(_react2.default.Component);
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    currentGame: state.currentGameReducer
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(CurrentGamePlayerList);
+
+/***/ }),
+/* 700 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(42);
+
+var _moment = __webpack_require__(1);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _reactTooltip = __webpack_require__(360);
+
+var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
+
+var _RankedMatchesList = __webpack_require__(717);
+
+var _RankedMatchesList2 = _interopRequireDefault(_RankedMatchesList);
+
+var _summonerUrl = __webpack_require__(719);
+
+var _summonerUrl2 = _interopRequireDefault(_summonerUrl);
+
+var _summonerSpellTooltip = __webpack_require__(363);
+
+var _summonerSpellTooltip2 = _interopRequireDefault(_summonerSpellTooltip);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CurrentGamePlayerItem = function (_React$Component) {
+  _inherits(CurrentGamePlayerItem, _React$Component);
+
+  function CurrentGamePlayerItem(props) {
+    _classCallCheck(this, CurrentGamePlayerItem);
+
+    var _this = _possibleConstructorReturn(this, (CurrentGamePlayerItem.__proto__ || Object.getPrototypeOf(CurrentGamePlayerItem)).call(this, props));
+
+    var rankedData = _this.props.player.rankedData;
+    if (rankedData) {
+      if (rankedData.length === 0) {
+        // Unranked
+        _this.tier = 'UNRANKED';
+      } else {
+        // Bronze through Challenger
+        _this.tier = rankedData.tier;
+      }
+    }
+    return _this;
+  }
+
+  _createClass(CurrentGamePlayerItem, [{
+    key: 'renderSummaryIcons',
+    value: function renderSummaryIcons() {
+      var summaryIcons = [];
+
+      if (this.isOnWinningStreak()) {
+        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Winning Streak', key: 'fa-fire', className: 'fa fa-fire', 'aria-hidden': 'true' }));
+      }
+
+      if (this.isOnLosingStreak()) {
+        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Losing Streak', key: 'fa-fire-extinguisher', className: 'fa fa-fire-extinguisher', 'aria-hidden': 'true' }));
+      }
+
+      if (this.championLongTime()) {
+        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Rusty Champion', key: 'fa-clock-o', className: 'fa fa-clock-o', 'aria-hidden': 'true' }));
+      }
+
+      if (this.championFirstTime()) {
+        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'First Time Champion', key: 'fa-hourglass-start', className: 'fa fa-hourglass-start', 'aria-hidden': 'true' }));
+      }
+
+      if (this.recentWin()) {
+        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Recent Win', key: 'fa-level-up', className: 'fa fa-level-up', 'aria-hidden': 'true' }));
+      }
+
+      if (this.recentLoss()) {
+        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Recent Loss', key: 'fa-level-down', className: 'fa fa-level-down', 'aria-hidden': 'true' }));
+      }
+
+      return summaryIcons;
+    }
+  }, {
+    key: 'isOnWinningStreak',
+    value: function isOnWinningStreak() {
+      var winningStreak = false;
+      var numWins = 0;
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.props.player.recentRankedMatches[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var match = _step.value;
+
+          if (match.gameDetails.gameDuration < 300) {
+            continue;
+          }
+
+          if (!match.gameDetails.participant.stats.win) {
+            break;
+          }
+
+          numWins++;
+
+          if (numWins >= 3) {
+            winningStreak = true;
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return winningStreak;
+    }
+  }, {
+    key: 'isOnLosingStreak',
+    value: function isOnLosingStreak() {
+      var losingStreak = false;
+      var numLosses = 0;
+
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.props.player.recentRankedMatches[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var match = _step2.value;
+
+          if (match.gameDetails.gameDuration < 300) {
+            continue;
+          }
+
+          if (match.gameDetails.participant.stats.win) {
+            break;
+          }
+
+          numLosses++;
+
+          if (numLosses >= 3) {
+            losingStreak = true;
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return losingStreak;
+    }
+  }, {
+    key: 'championLongTime',
+    value: function championLongTime() {
+      if (this.props.player.currentChampionMastery.championLevel > 0) {
+        var lastPlayed = (0, _moment2.default)(this.props.player.currentChampionMastery.lastPlayTime);
+        var difference = (0, _moment2.default)().diff(lastPlayed, 'months');
+        if (difference > 1) {
+          return true;
+        }
+      }
+    }
+  }, {
+    key: 'championFirstTime',
+    value: function championFirstTime() {
+      return this.props.player.currentChampionMastery.championLevel === 0;
+    }
+  }, {
+    key: 'recentWin',
+    value: function recentWin() {
+      // find most recent non remake and see if it ended within 30 minutes ago
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = this.props.player.recentRankedMatches[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var match = _step3.value;
+
+          if (match.gameDetails.gameDuration >= 300) {
+            if (!match.gameDetails.participant.stats.win) {
+              return false;
+            }
+
+            var lastPlayed = match.gameDetails.gameCreation + match.gameDetails.gameDuration * 1000;
+            var difference = (0, _moment2.default)().diff(lastPlayed, 'minutes');
+
+            if (difference <= 60) {
+              return true;
+            }
+
+            return false;
+          }
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: 'recentLoss',
+    value: function recentLoss() {
+      // find most recent non remake and see if it ended within 30 minutes ago
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = this.props.player.recentRankedMatches[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var match = _step4.value;
+
+          if (match.gameDetails.gameDuration >= 300) {
+            if (match.gameDetails.participant.stats.win) {
+              return false;
+            }
+
+            var lastPlayed = match.gameDetails.gameCreation + match.gameDetails.gameDuration * 1000;
+            var difference = (0, _moment2.default)().diff(lastPlayed, 'minutes');
+
+            if (difference <= 60) {
+              return true;
+            }
+
+            return false;
+          }
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: 'rankedBadgeSrc',
+    value: function rankedBadgeSrc() {
+      var rankedData = this.props.player.rankedData;
+      var rank = rankedData.rank;
+
+      if (!this.tier) {
+        return '';
+      }
+
+      if (this.tier === 'UNRANKED') {
+        return '/images/ranked-badges/base-icons/provisional.png';
+      }
+
+      if (['MASTER', 'CHALLENGER'].indexOf(this.tier) !== -1) {
+        // Master and Challenger don't have ranks
+        return '/images/ranked-badges/base-icons/' + this.tier.toLowerCase() + '.png';
+      }
+
+      // Bronze through Diamond
+      return '/images/ranked-badges/tier-icons/' + this.tier.toLowerCase() + '_' + rank.toLowerCase() + '.png';
+    }
+  }, {
+    key: 'teamColor',
+    value: function teamColor() {
+      if (this.props.player.teamId === 100) {
+        return 'blue-team-background';
+      }
+
+      if (this.props.player.teamId === 200) {
+        return 'purple-team-background';
+      }
+    }
+  }, {
+    key: 'renderRankInfo',
+    value: function renderRankInfo() {
+      var rankedData = this.props.player.rankedData;
+      if (!rankedData) {
+        return _react2.default.createElement('span', null);
+      }
+
+      var tier = this.tier.charAt(0).toUpperCase() + this.tier.slice(1).toLowerCase();
+      var rank = rankedData.rank;
+      var leaguePoints = rankedData.leaguePoints;
+      var miniSeries = void 0;
+      var miniSeriesIcons = void 0;
+      if (rankedData.miniSeries) {
+        miniSeries = rankedData.miniSeries.progress.split('');
+        miniSeriesIcons = miniSeries.map(function (series, i) {
+          if (series === 'W') {
+            return _react2.default.createElement(
+              'span',
+              { key: i },
+              _react2.default.createElement('i', { className: 'fa fa-check series-icon color-green', 'aria-hidden': 'true' })
+            );
+          } else if (series === 'L') {
+            return _react2.default.createElement(
+              'span',
+              { key: i },
+              _react2.default.createElement('i', { className: 'fa fa-times series-icon color-red', 'aria-hidden': 'true' })
+            );
+          } else {
+            return _react2.default.createElement(
+              'span',
+              { key: i },
+              _react2.default.createElement('i', { className: 'fa fa-minus series-icon color-gray', 'aria-hidden': 'true' })
+            );
+          }
+        });
+      } else {
+        miniSeriesIcons = _react2.default.createElement('span', null);
+      }
+      return _react2.default.createElement(
+        'div',
+        { className: 'space-between vertical-align' },
+        _react2.default.createElement('img', {
+          src: this.rankedBadgeSrc(),
+          className: 'medium-icon'
+        }),
+        _react2.default.createElement(
+          'span',
+          null,
+          tier,
+          ' ',
+          rank
+        ),
+        _react2.default.createElement(
+          'span',
+          null,
+          _react2.default.createElement(
+            'div',
+            null,
+            leaguePoints,
+            ' LP'
+          ),
+          _react2.default.createElement(
+            'div',
+            null,
+            miniSeriesIcons
+          )
+        )
+      );
+    }
+  }, {
+    key: 'renderWinPercent',
+    value: function renderWinPercent() {
+      var rankedData = this.props.player.rankedData;
+      var winPercent = (rankedData.wins / (rankedData.wins + rankedData.losses) * 100).toFixed(0);
+      if (winPercent > 53) {
+        return _react2.default.createElement(
+          'span',
+          { className: 'color-green' },
+          winPercent,
+          '%'
+        );
+      } else if (winPercent < 47) {
+        return _react2.default.createElement(
+          'span',
+          { className: 'color-red' },
+          winPercent,
+          '%'
+        );
+      } else {
+        return _react2.default.createElement(
+          'span',
+          null,
+          winPercent,
+          '%'
+        );
+      }
+    }
+  }, {
+    key: 'championImage',
+    value: function championImage() {
+      return this.props.staticData.championImages[this.props.player.championId].image.full;
+    }
+  }, {
+    key: 'renderChampionMasteryBadge',
+    value: function renderChampionMasteryBadge() {
+      if (this.props.player.currentChampionMastery.championLevel === 0) {
+        return _react2.default.createElement('span', { className: 'medium-icon' });
+      }
+      return _react2.default.createElement('img', {
+        src: '/images/champion-mastery/level_' + this.props.player.currentChampionMastery.championLevel + '.png',
+        className: 'medium-icon'
+      });
+    }
+  }, {
+    key: 'renderChampionMastery',
+    value: function renderChampionMastery() {
+      var lastPlayed = void 0;
+      if (this.props.player.currentChampionMastery.championLevel > 0) {
+        lastPlayed = (0, _moment2.default)(this.props.player.currentChampionMastery.lastPlayTime).fromNow();
+      } else {
+        lastPlayed = 'First Time';
+      }
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'div',
+          { className: 'player-item-sub-title' },
+          'Champion Mastery'
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'player-item-content' },
+          _react2.default.createElement(
+            'div',
+            { className: 'space-between vertical-align' },
+            this.renderChampionMasteryBadge(),
+            _react2.default.createElement(
+              'span',
+              { className: 'text-align-center' },
+              _react2.default.createElement(
+                'div',
+                null,
+                'Level'
+              ),
+              _react2.default.createElement(
+                'div',
+                null,
+                this.props.player.currentChampionMastery.championLevel
+              )
+            ),
+            _react2.default.createElement(
+              'span',
+              { className: 'text-align-center' },
+              _react2.default.createElement(
+                'div',
+                null,
+                'Points'
+              ),
+              _react2.default.createElement(
+                'div',
+                null,
+                this.props.player.currentChampionMastery.championPoints
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            null,
+            this.props.staticData.championData[this.props.player.championId.toString()].name,
+            ' Played: ',
+            lastPlayed
+          )
+        )
+      );
+    }
+  }, {
+    key: 'summonerSpell1',
+    value: function summonerSpell1() {
+      var summonerSpellOne = this.props.staticData.summonerSpells[this.props.player.spell1Id.toString()];
+      return summonerSpellOne.image.full;
+    }
+  }, {
+    key: 'summonerSpell2',
+    value: function summonerSpell2() {
+      var summonerSpellTwo = this.props.staticData.summonerSpells[this.props.player.spell2Id.toString()];
+      return summonerSpellTwo.image.full;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var rankedData = this.props.player.rankedData;
+      return _react2.default.createElement(
+        'div',
+        { className: 'player-item-container' },
+        _react2.default.createElement(
+          'div',
+          { className: 'player-item-title ' + this.teamColor() },
+          _react2.default.createElement('img', {
+            src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/champion/' + this.championImage(),
+            className: 'medium-icon'
+          }),
+          _react2.default.createElement(
+            'span',
+            { className: 'summoner-spell-container' },
+            _react2.default.createElement('img', {
+              src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/spell/' + this.summonerSpell1(),
+              'data-tip': (0, _summonerSpellTooltip2.default)(this.props.staticData.summonerSpells[this.props.player.spell1Id]),
+              'data-html': true,
+              className: 'summoner-icon-1'
+            }),
+            _react2.default.createElement('img', {
+              src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/spell/' + this.summonerSpell2(),
+              'data-tip': (0, _summonerSpellTooltip2.default)(this.props.staticData.summonerSpells[this.props.player.spell2Id]),
+              'data-html': true,
+              className: 'summoner-icon-2'
+            })
+          ),
+          _react2.default.createElement(
+            'span',
+            { className: 'title-left-padding summoner-name-link' },
+            _react2.default.createElement(
+              'a',
+              { href: (0, _summonerUrl2.default)(this.props.currentGame.gameInfo.platformId, this.props.player.summonerName), target: '_blank' },
+              this.props.player.summonerName
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'player-summary-icons' },
+          this.renderSummaryIcons(),
+          _react2.default.createElement(_reactTooltip2.default, { effect: 'solid', className: 'tooltip', multiline: true })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'player-item-stats' },
+          _react2.default.createElement(
+            'div',
+            { className: 'player-item-sub-title' },
+            'Ranked Data'
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'player-item-content' },
+            this.renderRankInfo(),
+            _react2.default.createElement(
+              'div',
+              { className: 'space-between' },
+              _react2.default.createElement(
+                'span',
+                null,
+                'Win / Loss: ',
+                rankedData.wins,
+                ' / ',
+                rankedData.losses
+              ),
+              _react2.default.createElement(
+                'span',
+                null,
+                this.renderWinPercent()
+              )
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          this.renderChampionMastery()
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'player-item-sub-title' },
+            'Recent Ranked Matches'
+          ),
+          _react2.default.createElement(_RankedMatchesList2.default, {
+            matches: this.props.player.recentRankedMatches,
+            player: this.props.player
+          })
+        )
+      );
+    }
+  }]);
+
+  return CurrentGamePlayerItem;
+}(_react2.default.Component);
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    currentGame: state.currentGameReducer,
+    staticData: state.staticDataReducer
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(CurrentGamePlayerItem);
+
+/***/ }),
 /* 701 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -73403,46 +74972,1211 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = '.__react_component_tooltip{border-radius:3px;display:inline-block;font-size:13px;left:-999em;opacity:0;padding:8px 21px;position:fixed;pointer-events:none;transition:opacity 0.3s ease-out;top:-999em;visibility:hidden;z-index:999}.__react_component_tooltip:before,.__react_component_tooltip:after{content:"";width:0;height:0;position:absolute}.__react_component_tooltip.show{opacity:0.9;margin-top:0px;margin-left:0px;visibility:visible}.__react_component_tooltip.type-dark{color:#fff;background-color:#222}.__react_component_tooltip.type-dark.place-top:after{border-top-color:#222;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-dark.place-bottom:after{border-bottom-color:#222;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-dark.place-left:after{border-left-color:#222;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-dark.place-right:after{border-right-color:#222;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-dark.border{border:1px solid #fff}.__react_component_tooltip.type-dark.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-dark.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-dark.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-dark.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-success{color:#fff;background-color:#8DC572}.__react_component_tooltip.type-success.place-top:after{border-top-color:#8DC572;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-success.place-bottom:after{border-bottom-color:#8DC572;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-success.place-left:after{border-left-color:#8DC572;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-success.place-right:after{border-right-color:#8DC572;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-success.border{border:1px solid #fff}.__react_component_tooltip.type-success.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-success.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-success.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-success.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-warning{color:#fff;background-color:#F0AD4E}.__react_component_tooltip.type-warning.place-top:after{border-top-color:#F0AD4E;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-warning.place-bottom:after{border-bottom-color:#F0AD4E;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-warning.place-left:after{border-left-color:#F0AD4E;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-warning.place-right:after{border-right-color:#F0AD4E;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-warning.border{border:1px solid #fff}.__react_component_tooltip.type-warning.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-warning.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-warning.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-warning.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-error{color:#fff;background-color:#BE6464}.__react_component_tooltip.type-error.place-top:after{border-top-color:#BE6464;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-error.place-bottom:after{border-bottom-color:#BE6464;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-error.place-left:after{border-left-color:#BE6464;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-error.place-right:after{border-right-color:#BE6464;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-error.border{border:1px solid #fff}.__react_component_tooltip.type-error.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-error.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-error.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-error.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-info{color:#fff;background-color:#337AB7}.__react_component_tooltip.type-info.place-top:after{border-top-color:#337AB7;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-info.place-bottom:after{border-bottom-color:#337AB7;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-info.place-left:after{border-left-color:#337AB7;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-info.place-right:after{border-right-color:#337AB7;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-info.border{border:1px solid #fff}.__react_component_tooltip.type-info.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-info.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-info.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-info.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-light{color:#222;background-color:#fff}.__react_component_tooltip.type-light.place-top:after{border-top-color:#fff;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-light.place-bottom:after{border-bottom-color:#fff;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-light.place-left:after{border-left-color:#fff;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-light.place-right:after{border-right-color:#fff;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-light.border{border:1px solid #222}.__react_component_tooltip.type-light.border.place-top:before{border-top:8px solid #222}.__react_component_tooltip.type-light.border.place-bottom:before{border-bottom:8px solid #222}.__react_component_tooltip.type-light.border.place-left:before{border-left:8px solid #222}.__react_component_tooltip.type-light.border.place-right:before{border-right:8px solid #222}.__react_component_tooltip.place-top{margin-top:-10px}.__react_component_tooltip.place-top:before{border-left:10px solid transparent;border-right:10px solid transparent;bottom:-8px;left:50%;margin-left:-10px}.__react_component_tooltip.place-top:after{border-left:8px solid transparent;border-right:8px solid transparent;bottom:-6px;left:50%;margin-left:-8px}.__react_component_tooltip.place-bottom{margin-top:10px}.__react_component_tooltip.place-bottom:before{border-left:10px solid transparent;border-right:10px solid transparent;top:-8px;left:50%;margin-left:-10px}.__react_component_tooltip.place-bottom:after{border-left:8px solid transparent;border-right:8px solid transparent;top:-6px;left:50%;margin-left:-8px}.__react_component_tooltip.place-left{margin-left:-10px}.__react_component_tooltip.place-left:before{border-top:6px solid transparent;border-bottom:6px solid transparent;right:-8px;top:50%;margin-top:-5px}.__react_component_tooltip.place-left:after{border-top:5px solid transparent;border-bottom:5px solid transparent;right:-6px;top:50%;margin-top:-4px}.__react_component_tooltip.place-right{margin-left:10px}.__react_component_tooltip.place-right:before{border-top:6px solid transparent;border-bottom:6px solid transparent;left:-8px;top:50%;margin-top:-5px}.__react_component_tooltip.place-right:after{border-top:5px solid transparent;border-bottom:5px solid transparent;left:-6px;top:50%;margin-top:-4px}.__react_component_tooltip .multi-line{display:block;padding:2px 0px;text-align:center}';
 
 /***/ }),
-/* 717 */,
-/* 718 */,
-/* 719 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 717 */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["default"] = summonerUrl;
-const platformIdToRegion = {
-  BR1:  'br',
-  EUN1: 'eune',
-  EUW1: 'euw',
-  JP1:  'jp',
-  LA1:  'lan',
-  LA2:  'las',
-  NA1:  'na',
-  NA:   'na', // Could also be NA for older accounts
-  OC1:  'oce',
-  TR1:	'tr',
-  RU:	  'ru'
-}
 
-function summonerUrl(platform, summonerName) {
-  let urlSummonerName = summonerName.replace(/ /g, '+')
-  if (platform === 'KR') {
-    return 'http://op.gg/summoner/userName=' + urlSummonerName
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _RankedMatchesItem = __webpack_require__(718);
+
+var _RankedMatchesItem2 = _interopRequireDefault(_RankedMatchesItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RankedMatchesList = function (_React$Component) {
+  _inherits(RankedMatchesList, _React$Component);
+
+  function RankedMatchesList(props) {
+    _classCallCheck(this, RankedMatchesList);
+
+    return _possibleConstructorReturn(this, (RankedMatchesList.__proto__ || Object.getPrototypeOf(RankedMatchesList)).call(this, props));
   }
 
-  return 'http://' + platformIdToRegion[platform] + '.op.gg/summoner/userName=' + urlSummonerName
+  _createClass(RankedMatchesList, [{
+    key: 'renderRankedMatchesItems',
+    value: function renderRankedMatchesItems() {
+      var _this2 = this;
+
+      if (this.props.matches.length === 0) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'text-align-center' },
+          'No Ranked Matches'
+        );
+      }
+
+      return this.props.matches.map(function (match, i) {
+        return _react2.default.createElement(
+          'div',
+          { key: i },
+          _react2.default.createElement(_RankedMatchesItem2.default, {
+            match: match,
+            player: _this2.props.player
+          })
+        );
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.renderRankedMatchesItems()
+      );
+    }
+  }]);
+
+  return RankedMatchesList;
+}(_react2.default.Component);
+
+exports.default = RankedMatchesList;
+
+/***/ }),
+/* 718 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(42);
+
+var _moment = __webpack_require__(1);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _classnames = __webpack_require__(9);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _reactTooltip = __webpack_require__(360);
+
+var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
+
+var _secondsToTime = __webpack_require__(244);
+
+var _secondsToTime2 = _interopRequireDefault(_secondsToTime);
+
+var _summonerSpellTooltip = __webpack_require__(363);
+
+var _summonerSpellTooltip2 = _interopRequireDefault(_summonerSpellTooltip);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RankedMatchesItem = function (_React$Component) {
+  _inherits(RankedMatchesItem, _React$Component);
+
+  function RankedMatchesItem(props) {
+    _classCallCheck(this, RankedMatchesItem);
+
+    var _this = _possibleConstructorReturn(this, (RankedMatchesItem.__proto__ || Object.getPrototypeOf(RankedMatchesItem)).call(this, props));
+
+    try {
+      _this.error = false;
+      _this.result = _this.winOrLose();
+    } catch (e) {
+      console.log(e);
+      _this.error = true;
+    }
+    return _this;
+  }
+
+  _createClass(RankedMatchesItem, [{
+    key: 'winOrLose',
+    value: function winOrLose() {
+      if (this.props.match.gameDetails.gameDuration < 300) {
+        return 'Remake';
+      }
+
+      if (this.props.match.gameDetails.participant.stats.win) {
+        return 'Victory';
+      }
+      return 'Defeat';
+    }
+  }, {
+    key: 'championImage',
+    value: function championImage() {
+      return this.props.staticData.championImages[this.props.match.champion].image.full;
+    }
+
+    // Time since the game ended
+
+  }, {
+    key: 'renderGameEndTime',
+    value: function renderGameEndTime() {
+      return _react2.default.createElement(
+        'span',
+        null,
+        (0, _moment2.default)(this.props.match.gameDetails.gameCreation + this.props.match.gameDetails.gameDuration * 1000).fromNow()
+      );
+    }
+  }, {
+    key: 'renderGameDuration',
+    value: function renderGameDuration() {
+      var duration = (0, _secondsToTime2.default)(this.props.match.gameDetails.gameDuration);
+
+      if (duration.hours > 0) {
+        return _react2.default.createElement(
+          'span',
+          null,
+          [_react2.default.createElement(
+            'span',
+            { key: 0 },
+            duration.hours,
+            'h '
+          ), _react2.default.createElement(
+            'span',
+            { key: 1 },
+            duration.minutes,
+            'm '
+          ), _react2.default.createElement(
+            'span',
+            { key: 2 },
+            duration.seconds,
+            's'
+          )]
+        );
+      }
+      return _react2.default.createElement(
+        'span',
+        null,
+        [_react2.default.createElement(
+          'span',
+          { key: 1 },
+          duration.minutes,
+          'm '
+        ), _react2.default.createElement(
+          'span',
+          { key: 2 },
+          duration.seconds,
+          's'
+        )]
+      );
+    }
+  }, {
+    key: 'renderKda',
+    value: function renderKda() {
+      var currentParticipant = this.props.match.gameDetails.participant;
+      var participantStats = currentParticipant.stats;
+      var kda = void 0;
+      var kdaString = void 0;
+
+      if (participantStats.deaths === 0) {
+        kdaString = 'Perfect';
+      } else {
+        kda = ((participantStats.kills + participantStats.assists) / participantStats.deaths).toFixed(2);
+        kdaString = kda + ' : 1';
+      }
+
+      var kdaClassNames = (0, _classnames2.default)({
+        'gold-text': kdaString === 'Perfect' || kda >= 5,
+        'red-text': kda < 1,
+        'title-left-padding': true
+      });
+
+      return _react2.default.createElement(
+        'span',
+        null,
+        _react2.default.createElement(
+          'span',
+          { className: 'title-left-padding' },
+          participantStats.kills,
+          '/',
+          participantStats.deaths,
+          '/',
+          participantStats.assists
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: kdaClassNames },
+          this.result === 'Remake' ? '' : kdaString
+        )
+      );
+    }
+  }, {
+    key: 'summonerSpell1',
+    value: function summonerSpell1() {
+      var currentParticipant = this.props.match.gameDetails.participant;
+
+      var summonerSpellOne = this.props.staticData.summonerSpells[currentParticipant.spell1Id.toString()];
+      return summonerSpellOne.image.full;
+    }
+  }, {
+    key: 'summonerSpell2',
+    value: function summonerSpell2() {
+      var currentParticipant = this.props.match.gameDetails.participant;
+
+      var summonerSpellTwo = this.props.staticData.summonerSpells[currentParticipant.spell2Id.toString()];
+      return summonerSpellTwo.image.full;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (this.error) {
+        return _react2.default.createElement(
+          'div',
+          null,
+          'ERROR'
+        );
+      }
+
+      var myClassNames = (0, _classnames2.default)({
+        'victory-background': this.result === 'Victory',
+        'defeat-background': this.result === 'Defeat',
+        'remake-background': this.result === 'Remake'
+      });
+
+      return _react2.default.createElement(
+        'div',
+        { className: myClassNames },
+        _react2.default.createElement(
+          'div',
+          { className: 'space-between item-header-text' },
+          _react2.default.createElement(
+            'span',
+            null,
+            this.result
+          ),
+          this.renderGameEndTime(),
+          this.renderGameDuration()
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement('img', {
+            src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/champion/' + this.championImage(),
+            className: 'medium-icon circular-icon'
+          }),
+          _react2.default.createElement(
+            'span',
+            { className: 'summoner-spell-container' },
+            _react2.default.createElement('img', {
+              src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/spell/' + this.summonerSpell1(),
+              'data-tip': (0, _summonerSpellTooltip2.default)(this.props.staticData.summonerSpells[this.props.match.gameDetails.participant.spell1Id]),
+              'data-html': true,
+              className: 'summoner-icon-1'
+            }),
+            _react2.default.createElement('img', {
+              src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/spell/' + this.summonerSpell2(),
+              'data-tip': (0, _summonerSpellTooltip2.default)(this.props.staticData.summonerSpells[this.props.match.gameDetails.participant.spell2Id]),
+              'data-html': true,
+              className: 'summoner-icon-2'
+            }),
+            _react2.default.createElement(_reactTooltip2.default, { effect: 'solid', className: 'tooltip', multiline: true })
+          ),
+          this.renderKda()
+        )
+      );
+    }
+  }]);
+
+  return RankedMatchesItem;
+}(_react2.default.Component);
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    currentGame: state.currentGameReducer,
+    staticData: state.staticDataReducer
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(RankedMatchesItem);
+
+/***/ }),
+/* 719 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = summonerUrl;
+var platformIdToRegion = {
+  BR1: 'br',
+  EUN1: 'eune',
+  EUW1: 'euw',
+  JP1: 'jp',
+  LA1: 'lan',
+  LA2: 'las',
+  NA1: 'na',
+  NA: 'na', // Could also be NA for older accounts
+  OC1: 'oce',
+  TR1: 'tr',
+  RU: 'ru'
+};
+
+function summonerUrl(platform, summonerName) {
+  var urlSummonerName = summonerName.replace(/ /g, '+');
+  if (platform === 'KR') {
+    return 'http://op.gg/summoner/userName=' + urlSummonerName;
+  }
+
+  return 'http://' + platformIdToRegion[platform] + '.op.gg/summoner/userName=' + urlSummonerName;
 }
 
 /***/ }),
-/* 720 */,
-/* 721 */,
-/* 722 */,
-/* 723 */,
-/* 724 */,
-/* 725 */,
-/* 726 */,
-/* 727 */,
+/* 720 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var LoadingScreen = function LoadingScreen() {
+  return _react2.default.createElement(
+    'div',
+    { className: 'loading-container' },
+    _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement('i', { className: 'fa fa-spinner fa-spin fa-5x fa-fw' })
+    ),
+    _react2.default.createElement(
+      'span',
+      null,
+      'Loading Game...'
+    )
+  );
+};
+
+exports.default = LoadingScreen;
+
+/***/ }),
+/* 721 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouterDom = __webpack_require__(61);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var About = function (_React$Component) {
+  _inherits(About, _React$Component);
+
+  function About() {
+    _classCallCheck(this, About);
+
+    return _possibleConstructorReturn(this, (About.__proto__ || Object.getPrototypeOf(About)).apply(this, arguments));
+  }
+
+  _createClass(About, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.title = 'LoLAtlas - About';
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'info-page' },
+        _react2.default.createElement(
+          'h1',
+          { className: 'page-title' },
+          'About'
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'info-block' },
+          _react2.default.createElement(
+            'h2',
+            null,
+            'What is LoLAtlas?'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'LoLAtlas is a League of Legends tool that allows you to look up live ranked solo/duo queue matches. It allows you to quickly evaluate your allies and opponents and can help you identify the paths to victory.'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'info-block' },
+          _react2.default.createElement(
+            'h2',
+            null,
+            'How do I use LoLAtlas?'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'As soon as a match enters the loading screen, you can enter the name of one of the players in the match and LoLAtlas will load the match data.'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'info-block' },
+          _react2.default.createElement(
+            'h2',
+            null,
+            'What information does LoLAtlas provide?'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'LoLAtlas provides information about each player in the game, including recent ranked matches data, winning/losing streaks, current champion mastery, and the last time the current champion was played. You can see an example search ',
+            _react2.default.createElement(
+              _reactRouterDom.Link,
+              { to: '/sample' },
+              ' here'
+            ),
+            '.'
+          )
+        )
+      );
+    }
+  }]);
+
+  return About;
+}(_react2.default.Component);
+
+exports.default = About;
+
+/***/ }),
+/* 722 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _ContactForm = __webpack_require__(723);
+
+var _ContactForm2 = _interopRequireDefault(_ContactForm);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Contact = function (_React$Component) {
+  _inherits(Contact, _React$Component);
+
+  function Contact() {
+    _classCallCheck(this, Contact);
+
+    var _this = _possibleConstructorReturn(this, (Contact.__proto__ || Object.getPrototypeOf(Contact)).call(this));
+
+    _this.state = {
+      bannerMode: 'NONE'
+    };
+    return _this;
+  }
+
+  _createClass(Contact, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.title = 'LoLAtlas - Contact';
+    }
+  }, {
+    key: 'renderBanner',
+    value: function renderBanner() {
+      switch (this.state.bannerMode) {
+        case 'NONE':
+          return _react2.default.createElement('div', null);
+        case 'SUCCESS':
+          return _react2.default.createElement(
+            'div',
+            { className: 'alert alert-success', role: 'alert' },
+            'Thanks for the feedback. We will get back to you soon!'
+          );
+        case 'FAILURE':
+          return _react2.default.createElement(
+            'div',
+            { className: 'alert alert-danger', role: 'alert' },
+            'Please fill out all fields'
+          );
+      }
+    }
+  }, {
+    key: 'setBanner',
+    value: function setBanner(bannerMode) {
+      this.setState({ bannerMode: bannerMode });
+      window.scrollTo(0, 0);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'contact-page' },
+        this.renderBanner(),
+        _react2.default.createElement(
+          'h1',
+          { className: 'page-title' },
+          'Contact'
+        ),
+        _react2.default.createElement(
+          'p',
+          null,
+          'Please feel free to contact us with any questions, comments, or suggestions you may have.'
+        ),
+        _react2.default.createElement(_ContactForm2.default, { setBanner: function setBanner(bannerMode) {
+            return _this2.setBanner(bannerMode);
+          } })
+      );
+    }
+  }]);
+
+  return Contact;
+}(_react2.default.Component);
+
+exports.default = Contact;
+
+/***/ }),
+/* 723 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _axios = __webpack_require__(89);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ContactForm = function (_React$Component) {
+  _inherits(ContactForm, _React$Component);
+
+  function ContactForm() {
+    _classCallCheck(this, ContactForm);
+
+    var _this = _possibleConstructorReturn(this, (ContactForm.__proto__ || Object.getPrototypeOf(ContactForm)).call(this));
+
+    _this.state = {
+      isSending: false,
+      didSend: false,
+      name: "",
+      email: "",
+      comments: ""
+    };
+    return _this;
+  }
+
+  _createClass(ContactForm, [{
+    key: 'onChangeHandler',
+    value: function onChangeHandler(e) {
+      var stateObj = {};
+      stateObj[e.target.id] = e.target.value;
+      this.setState(stateObj);
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit() {
+      var _this2 = this;
+
+      if (!this.state.name || !this.state.email || !this.state.comments) {
+        this.props.setBanner('FAILURE');
+        return;
+      }
+
+      this.setState({ isSending: true });
+      _axios2.default.post('/api/sendEmail', this.state).then(function (response) {
+        _this2.setState({ isSending: false });
+        _this2.setState({ didSend: true });
+        _this2.props.setBanner('SUCCESS');
+        return response;
+      }).catch(function (err) {
+        _this2.setState({ isSending: false });
+        _this2.setState({ didSend: true });
+        return err.response;
+      });
+    }
+  }, {
+    key: 'renderButton',
+    value: function renderButton() {
+      var _this3 = this;
+
+      var value = void 0;
+      var classNames = void 0;
+
+      if (this.state.isSending) {
+        value = _react2.default.createElement(
+          'span',
+          null,
+          _react2.default.createElement('i', { className: 'fa fa-spinner fa-spin fa-3x fa-fw' }),
+          ' Submitting'
+        );
+        classNames = "btn btn-primary";
+      } else if (this.state.didSend) {
+        value = _react2.default.createElement(
+          'span',
+          null,
+          'Submitted - Thanks for your feedback!'
+        );
+        classNames = "btn btn-success";
+      } else {
+        value = _react2.default.createElement(
+          'span',
+          null,
+          'Submit'
+        );
+        classNames = "btn btn-primary";
+      }
+
+      return _react2.default.createElement(
+        'button',
+        { type: 'button', className: classNames, onClick: function onClick() {
+            return _this3.handleSubmit();
+          } },
+        value
+      );
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      return _react2.default.createElement(
+        'form',
+        { className: 'form-page' },
+        _react2.default.createElement(
+          'div',
+          { className: 'form-block form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'name' },
+            'Name'
+          ),
+          _react2.default.createElement('input', {
+            type: 'text',
+            className: 'form-control',
+            id: 'name',
+            name: 'name',
+            placeholder: 'Name',
+            maxLength: '100',
+            onChange: function onChange(e) {
+              return _this4.onChangeHandler(e);
+            }
+          })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-block form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'email' },
+            'Email'
+          ),
+          _react2.default.createElement('input', {
+            type: 'email',
+            className: 'form-control',
+            id: 'email',
+            name: 'email',
+            placeholder: 'Email',
+            maxLength: '100',
+            onChange: function onChange(e) {
+              return _this4.onChangeHandler(e);
+            }
+          })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-block form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'comments' },
+            'Comments'
+          ),
+          _react2.default.createElement('textarea', {
+            className: 'form-control',
+            id: 'comments',
+            name: 'comments',
+            placeholder: 'Comments',
+            maxLength: '2000',
+            rows: '10',
+            onChange: function onChange(e) {
+              return _this4.onChangeHandler(e);
+            }
+          })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-block' },
+          this.renderButton()
+        )
+      );
+    }
+  }]);
+
+  return ContactForm;
+}(_react2.default.Component);
+
+exports.default = ContactForm;
+
+/***/ }),
+/* 724 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouterDom = __webpack_require__(61);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PrivacyPolicy = function (_React$Component) {
+  _inherits(PrivacyPolicy, _React$Component);
+
+  function PrivacyPolicy() {
+    _classCallCheck(this, PrivacyPolicy);
+
+    return _possibleConstructorReturn(this, (PrivacyPolicy.__proto__ || Object.getPrototypeOf(PrivacyPolicy)).apply(this, arguments));
+  }
+
+  _createClass(PrivacyPolicy, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.title = 'LoLAtlas - Privacy Policy';
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'info-page' },
+        _react2.default.createElement(
+          'h1',
+          { className: 'page-title' },
+          'Privacy Policy'
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'info-block' },
+            _react2.default.createElement(
+              'p',
+              null,
+              'Thanks for visiting our website. Your privacy is important to us, so we have outlined what data we use and how we use it below.'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'info-block' },
+            _react2.default.createElement(
+              'h2',
+              null,
+              'Cookies'
+            ),
+            _react2.default.createElement(
+              'p',
+              null,
+              'We use cookies to remember your previous searches and what regions you searched in order to help you easily repeat searches on summoners and regions. If you prefer to disable cookies, you can do so through your browser settings.'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'info-block' },
+            _react2.default.createElement(
+              'h2',
+              null,
+              'Analytics and Advertisements'
+            ),
+            _react2.default.createElement(
+              'p',
+              null,
+              'We use Google Analytics to understand usage patterns for our website. For more information about how Google Analytics uses data, please',
+              _react2.default.createElement(
+                'a',
+                { href: 'https://www.google.com/policies/privacy/partners', target: '_blank' },
+                ' click here'
+              ),
+              '. To opt out of Google Analytics, please',
+              _react2.default.createElement(
+                'a',
+                { href: 'https://tools.google.com/dlpage/gaoptout', target: '_blank' },
+                ' click here'
+              ),
+              '.'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'info-block' },
+            _react2.default.createElement(
+              'h2',
+              null,
+              'Changes to Our Privacy Policy'
+            ),
+            _react2.default.createElement(
+              'p',
+              null,
+              'Any changes to our privacy policy can be found here. You will be notified by a website notification and the Last Updated date will be changed.'
+            ),
+            _react2.default.createElement(
+              'p',
+              null,
+              'Last Updated: 11/20/2017'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'info-block' },
+            _react2.default.createElement(
+              'h2',
+              null,
+              'Contacting Us'
+            ),
+            _react2.default.createElement(
+              'p',
+              null,
+              'You can contact us with any questions about our Privacy Policy by visiting the',
+              _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: '/contact' },
+                ' Contact Us'
+              ),
+              ' page.'
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return PrivacyPolicy;
+}(_react2.default.Component);
+
+exports.default = PrivacyPolicy;
+
+/***/ }),
+/* 725 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouterDom = __webpack_require__(61);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Blog = function (_React$Component) {
+  _inherits(Blog, _React$Component);
+
+  function Blog() {
+    _classCallCheck(this, Blog);
+
+    return _possibleConstructorReturn(this, (Blog.__proto__ || Object.getPrototypeOf(Blog)).apply(this, arguments));
+  }
+
+  _createClass(Blog, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.title = 'LoLAtlas - Blog';
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'info-page' },
+        _react2.default.createElement(
+          'h1',
+          { className: 'page-title' },
+          'Blog'
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'info-block' },
+          _react2.default.createElement(
+            'h2',
+            null,
+            'November 26, 2017'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'Runes reforged data will be made available soon. The data is currently available, but only through a kind of roundabout way. Once the data is made officially available, the runes data will be added to the live game page.'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'info-block' },
+          _react2.default.createElement(
+            'h2',
+            null,
+            'November 12, 2017'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'Welcome to LoLAtlas! I\'ll use this blog as a place to put information that probably isn\'t worthy of being on the ',
+            _react2.default.createElement(
+              _reactRouterDom.Link,
+              { to: '/about' },
+              ' About '
+            ),
+            ' page, as well as general announcements, progress reports, and anything else I can think of. This first blog post will just detail why I created LoLAtlas and why I believe it can be a really helpful tool for everyone.'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'My inspiration for creating LoLAtlas came from realizing the value that can be gained from some of the existing live game tools. Being able to see everyone\'s ranks, win rates, and most commonly played champions really helped me get a feeling of who on my team would be dependable and who on the other team might be prone to making mistakes. Despite the usefulness of these tools, I often found myself looking up summoners individually anyway because I felt that the information was lacking. This repetitive process lead me to think of ways that I could speed up this process, and eventually gave me the idea to create LoLAtlas.'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'The idea behind LoLAtlas is to quickly and concisely provide information about each player that may help you guess how they might perform. For example, everyone knows that League of Legends can be an emotionally-charged game, so players coming off of a recent win or loss may be in a different mindset than they normally would be in. LoLAtlas not only shows winning streaks and losing streaks, it also indicates how recently players won or lost a game. Another example is that some players may take ranked matches less seriously than others and practice unfamiliar champions in a ranked match. LoLAtlas shows each player\'s current champion\'s mastery as well as the last time they played that champion. These are just a couple of examples of existing features, and more will be added in the future.'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'That\'s it for this first blog post. If there\'s something else you would like me to talk about,',
+            _react2.default.createElement(
+              _reactRouterDom.Link,
+              { to: '/contact' },
+              ' contact me '
+            ),
+            ' with suggestions and I might address it in the future.'
+          )
+        )
+      );
+    }
+  }]);
+
+  return Blog;
+}(_react2.default.Component);
+
+exports.default = Blog;
+
+/***/ }),
+/* 726 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Sample = function (_React$Component) {
+  _inherits(Sample, _React$Component);
+
+  function Sample() {
+    _classCallCheck(this, Sample);
+
+    return _possibleConstructorReturn(this, (Sample.__proto__ || Object.getPrototypeOf(Sample)).apply(this, arguments));
+  }
+
+  _createClass(Sample, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.title = 'LoLAtlas';
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'sample-page' },
+        _react2.default.createElement('img', { src: '/images/sample_image.jpg' })
+      );
+    }
+  }]);
+
+  return Sample;
+}(_react2.default.Component);
+
+exports.default = Sample;
+
+/***/ }),
+/* 727 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PageNotFound = function (_React$Component) {
+  _inherits(PageNotFound, _React$Component);
+
+  function PageNotFound(props) {
+    _classCallCheck(this, PageNotFound);
+
+    return _possibleConstructorReturn(this, (PageNotFound.__proto__ || Object.getPrototypeOf(PageNotFound)).call(this, props));
+  }
+
+  _createClass(PageNotFound, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.title = 'LoLAtlas - About';
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        'Page Not Found'
+      );
+    }
+  }]);
+
+  return PageNotFound;
+}(_react2.default.Component);
+
+exports.default = PageNotFound;
+
+/***/ }),
 /* 728 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -74022,2746 +76756,6 @@ module.exports = function (css) {
 	return fixedCss;
 };
 
-
-/***/ }),
-/* 733 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRedux = __webpack_require__(42);
-
-var _reactAutosuggest = __webpack_require__(662);
-
-var _reactAutosuggest2 = _interopRequireDefault(_reactAutosuggest);
-
-var _xregexp = __webpack_require__(674);
-
-var _xregexp2 = _interopRequireDefault(_xregexp);
-
-var _classnames = __webpack_require__(9);
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
-var _searchActions = __webpack_require__(238);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var regionalEndpoints = __webpack_require__(693);
-
-var SearchBarAutosuggest = function (_React$Component) {
-  _inherits(SearchBarAutosuggest, _React$Component);
-
-  function SearchBarAutosuggest(props) {
-    _classCallCheck(this, SearchBarAutosuggest);
-
-    var _this = _possibleConstructorReturn(this, (SearchBarAutosuggest.__proto__ || Object.getPrototypeOf(SearchBarAutosuggest)).call(this, props));
-
-    _this.state = {
-      doneFetchingData: false,
-      name: '',
-      suggestions: [],
-      searchHistory: [],
-      region: 'NA',
-      isFocused: false
-    };
-    return _this;
-  }
-
-  _createClass(SearchBarAutosuggest, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      this.props.dispatch((0, _searchActions.getSearchHistory)()).then(function (response) {
-        _this2.setState({
-          doneFetchingData: true,
-          name: response.data.summonerName || '',
-          region: response.data.serviceRegion || 'NA',
-          searchHistory: response.data.searchHistory || []
-        });
-      });
-    }
-  }, {
-    key: 'onChange',
-    value: function onChange(event, _ref) {
-      var newValue = _ref.newValue;
-
-      this.setState({
-        name: newValue
-      });
-    }
-  }, {
-    key: 'onFocus',
-    value: function onFocus() {
-      this.setState({ isFocused: true });
-    }
-  }, {
-    key: 'onBlur',
-    value: function onBlur() {
-      this.setState({ isFocused: false });
-    }
-
-    // Teach Autosuggest how to calculate suggestions for any given input value.
-
-  }, {
-    key: 'getSuggestions',
-    value: function getSuggestions(value) {
-      var inputValue = value.trim().toLowerCase();
-      var inputLength = inputValue.length;
-
-      var searchHistoryNames = this.state.searchHistory.map(function (summoner) {
-        return summoner.summonerName;
-      });
-
-      return inputLength === 0 ? [] : searchHistoryNames.filter(function (suggestion) {
-        return suggestion.toLowerCase().slice(0, inputLength) === inputValue;
-      });
-    }
-  }, {
-    key: 'getSuggestionValue',
-    value: function getSuggestionValue(suggestion) {
-      return suggestion;
-    }
-
-    // Use your imagination to render suggestions.
-
-  }, {
-    key: 'renderSuggestion',
-    value: function renderSuggestion(suggestion) {
-      return _react2.default.createElement(
-        'div',
-        null,
-        suggestion
-      );
-    }
-
-    // Autosuggest will call this function every time you need to update suggestions.
-    // You already implemented this logic above, so just use it.
-
-  }, {
-    key: 'onSuggestionsFetchRequested',
-    value: function onSuggestionsFetchRequested(_ref2) {
-      var value = _ref2.value;
-
-      this.setState({
-        suggestions: this.getSuggestions(value)
-      });
-    }
-
-    // Autosuggest will call this function every time you need to clear suggestions.
-
-  }, {
-    key: 'onSuggestionsClearRequested',
-    value: function onSuggestionsClearRequested() {
-      this.setState({
-        suggestions: []
-      });
-    }
-  }, {
-    key: 'handleSubmit',
-    value: function handleSubmit(e) {
-      e.preventDefault();
-      if (_xregexp2.default.test(this.state.name, new _xregexp2.default('^(?!.*\\bRiot\\b)[0-9\\p{L} _\\.]{3,16}$', 'i'))) {
-        console.log('searching for player ' + this.state.name);
-        this.props.history.push('/' + this.state.region + '/search?name=' + this.state.name);
-      } else {
-        console.log('Please enter a valid summoner name');
-      }
-    }
-  }, {
-    key: 'renderSelectOptions',
-    value: function renderSelectOptions() {
-      return Object.keys(regionalEndpoints.regions).sort().map(function (region, i) {
-        return _react2.default.createElement(
-          'option',
-          { key: i, value: region },
-          region
-        );
-      });
-    }
-  }, {
-    key: 'handleOnChangeRegion',
-    value: function handleOnChangeRegion(e) {
-      this.setState({
-        region: e.target.value
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var searchBarItemsClassNames = (0, _classnames2.default)({
-        'not-focused': !this.state.isFocused,
-        'search-bar-items': true
-      });
-
-      if (this.state.doneFetchingData) {
-        // Autosuggest will pass through all these props to the input.
-        var inputProps = {
-          placeholder: 'Summoner Name',
-          value: this.state.name,
-          onChange: this.onChange.bind(this),
-          className: 'search-input',
-          onFocus: this.onFocus.bind(this),
-          onBlur: this.onBlur.bind(this)
-        };
-
-        return _react2.default.createElement(
-          'div',
-          { className: 'search-bar-container' },
-          _react2.default.createElement(
-            'div',
-            { className: 'title-text' },
-            _react2.default.createElement(
-              'h1',
-              null,
-              'LoLAtlas'
-            ),
-            _react2.default.createElement(
-              'h2',
-              null,
-              'The quickest live game lookup tool'
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'search-error-message' },
-            this.props.errorMessage
-          ),
-          _react2.default.createElement(
-            'form',
-            { className: searchBarItemsClassNames, onSubmit: this.handleSubmit.bind(this) },
-            _react2.default.createElement(_reactAutosuggest2.default, {
-              suggestions: this.state.suggestions,
-              onSuggestionsFetchRequested: this.onSuggestionsFetchRequested.bind(this),
-              onSuggestionsClearRequested: this.onSuggestionsClearRequested.bind(this),
-              getSuggestionValue: this.getSuggestionValue.bind(this),
-              renderSuggestion: this.renderSuggestion.bind(this),
-              inputProps: inputProps
-            }),
-            _react2.default.createElement(
-              'select',
-              {
-                className: 'form-control region-select',
-                value: this.state.region,
-                onChange: this.handleOnChangeRegion.bind(this)
-              },
-              this.renderSelectOptions()
-            ),
-            _react2.default.createElement('input', {
-              type: 'submit',
-              value: 'Search',
-              className: 'btn btn-primary search-button'
-            })
-          )
-        );
-      } else {
-        return null;
-      }
-    }
-  }]);
-
-  return SearchBarAutosuggest;
-}(_react2.default.Component);
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    search: state.searchReducer
-  };
-};
-
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(SearchBarAutosuggest);
-
-/***/ }),
-/* 734 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactBootstrap = __webpack_require__(521);
-
-var _reactRouterBootstrap = __webpack_require__(658);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var MenuBar = function MenuBar() {
-  return _react2.default.createElement(
-    _reactBootstrap.Navbar,
-    { collapseOnSelect: true },
-    _react2.default.createElement(
-      _reactRouterBootstrap.LinkContainer,
-      { to: '/' },
-      _react2.default.createElement(
-        _reactBootstrap.Navbar.Header,
-        null,
-        _react2.default.createElement(
-          _reactBootstrap.Navbar.Brand,
-          null,
-          _react2.default.createElement(
-            'a',
-            { href: '#' },
-            'LoLAtlas'
-          )
-        ),
-        _react2.default.createElement(_reactBootstrap.Navbar.Toggle, null)
-      )
-    ),
-    _react2.default.createElement(
-      _reactBootstrap.Navbar.Collapse,
-      null,
-      _react2.default.createElement(
-        _reactBootstrap.Nav,
-        { pullRight: true },
-        _react2.default.createElement(
-          _reactRouterBootstrap.LinkContainer,
-          { to: '/about' },
-          _react2.default.createElement(
-            _reactBootstrap.NavItem,
-            { eventKey: 1 },
-            'About'
-          )
-        ),
-        _react2.default.createElement(
-          _reactRouterBootstrap.LinkContainer,
-          { to: '/contact' },
-          _react2.default.createElement(
-            _reactBootstrap.NavItem,
-            { eventKey: 2 },
-            'Contact'
-          )
-        ),
-        _react2.default.createElement(
-          _reactRouterBootstrap.LinkContainer,
-          { to: '/privacy-policy' },
-          _react2.default.createElement(
-            _reactBootstrap.NavItem,
-            { eventKey: 3 },
-            'Privacy Policy'
-          )
-        ),
-        _react2.default.createElement(
-          _reactRouterBootstrap.LinkContainer,
-          { to: '/blog' },
-          _react2.default.createElement(
-            _reactBootstrap.NavItem,
-            { eventKey: 4 },
-            'Blog'
-          )
-        )
-      )
-    )
-  );
-};
-
-exports.default = MenuBar;
-
-/***/ }),
-/* 735 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Footer = function Footer() {
-  return _react2.default.createElement(
-    "footer",
-    { className: "footer text-center" },
-    "\xA9 2017, LoLAtlas.com"
-  );
-};
-
-exports.default = Footer;
-
-/***/ }),
-/* 736 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRedux = __webpack_require__(42);
-
-var _SearchBarAutosuggest = __webpack_require__(733);
-
-var _SearchBarAutosuggest2 = _interopRequireDefault(_SearchBarAutosuggest);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var MainSearchBar = function (_React$Component) {
-  _inherits(MainSearchBar, _React$Component);
-
-  function MainSearchBar(props) {
-    _classCallCheck(this, MainSearchBar);
-
-    return _possibleConstructorReturn(this, (MainSearchBar.__proto__ || Object.getPrototypeOf(MainSearchBar)).call(this, props));
-  }
-
-  _createClass(MainSearchBar, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      document.title = 'LoLAtlas';
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(_SearchBarAutosuggest2.default, {
-          history: this.props.history
-        })
-      );
-    }
-  }]);
-
-  return MainSearchBar;
-}(_react2.default.Component);
-
-exports.default = MainSearchBar;
-
-/***/ }),
-/* 737 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRedux = __webpack_require__(42);
-
-var _searchActions = __webpack_require__(238);
-
-var _currentGameActions = __webpack_require__(695);
-
-var _staticDataActions = __webpack_require__(697);
-
-var _CurrentGameHeader = __webpack_require__(738);
-
-var _CurrentGameHeader2 = _interopRequireDefault(_CurrentGameHeader);
-
-var _CurrentGamePlayerList = __webpack_require__(739);
-
-var _CurrentGamePlayerList2 = _interopRequireDefault(_CurrentGamePlayerList);
-
-var _SearchBarAutosuggest = __webpack_require__(733);
-
-var _SearchBarAutosuggest2 = _interopRequireDefault(_SearchBarAutosuggest);
-
-var _LoadingScreen = __webpack_require__(743);
-
-var _LoadingScreen2 = _interopRequireDefault(_LoadingScreen);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CurrentGamePage = function (_React$Component) {
-  _inherits(CurrentGamePage, _React$Component);
-
-  function CurrentGamePage(props) {
-    _classCallCheck(this, CurrentGamePage);
-
-    var _this = _possibleConstructorReturn(this, (CurrentGamePage.__proto__ || Object.getPrototypeOf(CurrentGamePage)).call(this, props));
-
-    _this.state = {
-      receivedChampionImages: false,
-      receivedChampionData: false,
-      receivedSummonerSpells: false,
-      receivedRealmVersion: false,
-      numberOfSummonersLoaded: 0,
-      numberOfMatchesLoaded: 0,
-      numberOfChampionMasteriesLoaded: 0,
-      searchError: ''
-    };
-    return _this;
-  }
-
-  _createClass(CurrentGamePage, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.loadCurrentGameData();
-      document.title = 'LoLAtlas';
-    }
-
-    // Required to do a repeat search after a failed search
-
-  }, {
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate(prevProps, prevState) {
-      if (prevProps.location.key !== this.props.location.key) {
-        this.loadCurrentGameData();
-      }
-    }
-  }, {
-    key: 'checkForErrors',
-    value: function checkForErrors(response) {
-      this.setState({ searchError: '' });
-
-      if (response.data.error) {
-        this.setState({ searchError: response.data.error });
-        return;
-      }
-    }
-  }, {
-    key: 'loadCurrentGameData',
-    value: function loadCurrentGameData() {
-      var _this2 = this;
-
-      var searchParams = new URLSearchParams(this.props.location.search.substring(1));
-      var name = searchParams.get('name');
-      this.props.dispatch((0, _searchActions.getCurrentGame)(this.props.match.params.region, name)).then(function (response) {
-        _this2.checkForErrors(response);
-
-        if (_this2.state.searchError) {
-          return;
-        }
-
-        if (response.status === 200) {
-          _this2.props.dispatch((0, _staticDataActions.getChampionImages)(_this2.props.match.params.region)).then(function (response) {
-            if (response.data.error) {
-              _this2.setState({ searchError: response.data.error });
-              return;
-            }
-            if (response.status === 200) {
-              _this2.setState({ receivedChampionImages: true });
-            }
-          }).catch(function (error) {
-            console.log(error);
-          });
-
-          _this2.props.dispatch((0, _staticDataActions.getChampionData)(_this2.props.match.params.region)).then(function (response) {
-            if (response.data.error) {
-              _this2.setState({ searchError: response.data.error });
-              return;
-            }
-            if (response.status === 200) {
-              _this2.setState({ receivedChampionData: true });
-            }
-          }).catch(function (error) {
-            console.log(error);
-          });
-
-          _this2.props.dispatch((0, _staticDataActions.getSummonerSpells)(_this2.props.match.params.region)).then(function (response) {
-            if (response.data.error) {
-              _this2.setState({ searchError: response.data.error });
-              return;
-            }
-            if (response.status === 200) {
-              _this2.setState({ receivedSummonerSpells: true });
-            }
-          }).catch(function (error) {
-            console.log(error);
-          });
-
-          _this2.props.currentGame.gameInfo.participants.map(function (participant) {
-            _this2.props.dispatch((0, _currentGameActions.getRankedLeague)(_this2.props.match.params.region, participant.summonerId)).then(function (response) {
-              if (response.data.error) {
-                _this2.setState({ searchError: response.data.error });
-                return;
-              }
-            }).catch(function (error) {
-              console.log(error);
-            });
-
-            _this2.props.dispatch((0, _currentGameActions.getAccountId)(_this2.props.match.params.region, participant.summonerId)).then(function (response) {
-              if (response.data.error) {
-                _this2.setState({ searchError: response.data.error });
-                return;
-              }
-              _this2.props.dispatch((0, _currentGameActions.getRecentRankedMatches)(_this2.props.match.params.region, response.data.accountId)).then(function (response) {
-                if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
-                  if (response.data.length < 5) {
-                    _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + (5 - response.data.length) });
-                  }
-                  response.data.map(function (match) {
-                    _this2.props.dispatch((0, _currentGameActions.getMatchDetails)(_this2.props.match.params.region, participant.summonerId, match.gameId)).then(function (response) {
-                      if (response.data.error) {
-                        _this2.setState({ searchError: response.data.error });
-                        return;
-                      }
-                      _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + 1 });
-                    }).catch(function (error) {
-                      console.log(error);
-                    });
-                  });
-                } else {
-                  _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + 5 });
-                }
-                _this2.setState({ numberOfSummonersLoaded: _this2.state.numberOfSummonersLoaded + 1 });
-              }).catch(function (error) {
-                console.log(error);
-              });
-            }).catch(function (error) {
-              console.log(error);
-            });
-
-            _this2.props.dispatch((0, _currentGameActions.getChampionMastery)(_this2.props.match.params.region, participant.summonerId, participant.championId)).then(function (response) {
-              if (response.data.error) {
-                if (response.status !== 404) {
-                  _this2.setState({ searchError: response.data.error });
-                  return;
-                }
-              }
-              _this2.setState({ numberOfChampionMasteriesLoaded: _this2.state.numberOfChampionMasteriesLoaded + 1 });
-            }).catch(function (error) {});
-          });
-        }
-      }).catch(function (error) {
-        console.log(error);
-      });
-
-      this.props.dispatch((0, _staticDataActions.getRealmVersion)(this.props.match.params.region)).then(function (response) {
-        if (response.data.error) {
-          _this2.setState({ searchError: response.data.error });
-          return;
-        }
-        if (response.status === 200) {
-          _this2.setState({ receivedRealmVersion: true });
-        }
-      }).catch(function (error) {
-        console.log(error);
-      });
-    }
-  }, {
-    key: 'doneFetchingData',
-    value: function doneFetchingData() {
-      return this.state.receivedChampionImages && this.state.receivedRealmVersion && this.state.numberOfSummonersLoaded === 10 && this.state.numberOfMatchesLoaded === 50 && this.state.numberOfChampionMasteriesLoaded === 10 && this.state.receivedChampionData && this.state.receivedSummonerSpells;
-    }
-  }, {
-    key: 'renderErrorPage',
-    value: function renderErrorPage(message) {
-      return _react2.default.createElement(_SearchBarAutosuggest2.default, {
-        history: this.props.history,
-        errorMessage: message
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      if (!this.doneFetchingData() && !this.state.searchError) {
-        return _react2.default.createElement(_LoadingScreen2.default, null);
-      }
-
-      if (this.state.searchError) {
-        if (this.state.searchError === 'GAME_NOT_FOUND') {
-          return this.renderErrorPage('Player is not currently in a game.');
-        } else if (this.state.searchError === 'PLAYER_NOT_FOUND') {
-          return this.renderErrorPage('Player does not exist.');
-        } else {
-          return this.renderErrorPage('Something went wrong. Please try again.');
-        }
-      }
-
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(_CurrentGameHeader2.default, { gameStartTime: this.props.currentGame.gameInfo.gameStartTime }),
-        _react2.default.createElement(_CurrentGamePlayerList2.default, null)
-      );
-    }
-  }]);
-
-  return CurrentGamePage;
-}(_react2.default.Component);
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    search: state.searchReducer,
-    currentGame: state.currentGameReducer,
-    staticData: state.staticDataReducer
-  };
-};
-
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(CurrentGamePage);
-
-/***/ }),
-/* 738 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _secondsToTime = __webpack_require__(244);
-
-var _secondsToTime2 = _interopRequireDefault(_secondsToTime);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CurrentGameHeader = function (_React$Component) {
-  _inherits(CurrentGameHeader, _React$Component);
-
-  function CurrentGameHeader(props) {
-    _classCallCheck(this, CurrentGameHeader);
-
-    var _this = _possibleConstructorReturn(this, (CurrentGameHeader.__proto__ || Object.getPrototypeOf(CurrentGameHeader)).call(this, props));
-
-    var gameStartTime = _this.props.gameStartTime;
-    var currentTime = Date.now();
-    var currentGameDuration = (currentTime - gameStartTime) / 1000;
-
-    _this.state = {
-      currentGameDuration: currentGameDuration
-    };
-
-    _this.incrementTimeInterval;
-    return _this;
-  }
-
-  _createClass(CurrentGameHeader, [{
-    key: 'incrementTime',
-    value: function incrementTime() {
-      this.setState({
-        currentGameDuration: this.state.currentGameDuration + 1
-      });
-    }
-  }, {
-    key: 'renderTime',
-    value: function renderTime(time) {
-      var minutes = time.minutes < 10 ? '0' + time.minutes : time.minutes.toString();
-      var seconds = time.seconds < 10 ? '0' + time.seconds : time.seconds.toString();
-      var hours = void 0;
-
-      if (time.hours > 10) {
-        return 'Game Loading';
-      }
-
-      if (time.hours > 0) {
-        hours = time.hours < 10 ? '0' + time.hours : time.hours.toString();
-        return hours + ':' + minutes + ':' + seconds;
-      }
-
-      return minutes + ':' + seconds;
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      this.incrementTimeInterval = setInterval(function () {
-        return _this2.incrementTime();
-      }, 1000);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      clearInterval(this.incrementTimeInterval);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var time = (0, _secondsToTime2.default)(this.state.currentGameDuration);
-      return _react2.default.createElement(
-        'div',
-        { className: 'current-game-header space-between vertical-align' },
-        _react2.default.createElement(
-          'span',
-          null,
-          'Summoner\'s Rift'
-        ),
-        _react2.default.createElement(
-          'span',
-          null,
-          this.renderTime(time)
-        ),
-        _react2.default.createElement(
-          'span',
-          null,
-          'Ranked Solo/Duo'
-        )
-      );
-    }
-  }]);
-
-  return CurrentGameHeader;
-}(_react2.default.Component);
-
-exports.default = CurrentGameHeader;
-
-/***/ }),
-/* 739 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.CurrentGamePlayerList = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRedux = __webpack_require__(42);
-
-var _CurrentGamePlayerItem = __webpack_require__(740);
-
-var _CurrentGamePlayerItem2 = _interopRequireDefault(_CurrentGamePlayerItem);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CurrentGamePlayerList = exports.CurrentGamePlayerList = function (_React$Component) {
-  _inherits(CurrentGamePlayerList, _React$Component);
-
-  function CurrentGamePlayerList(props) {
-    _classCallCheck(this, CurrentGamePlayerList);
-
-    return _possibleConstructorReturn(this, (CurrentGamePlayerList.__proto__ || Object.getPrototypeOf(CurrentGamePlayerList)).call(this, props));
-  }
-
-  _createClass(CurrentGamePlayerList, [{
-    key: 'renderTeam100',
-    value: function renderTeam100() {
-      var players = this.props.currentGame.gameInfo.participants.filter(function (player) {
-        return player.teamId === 100;
-      });
-      return players.map(function (player, i) {
-        return _react2.default.createElement(
-          'div',
-          { className: 'col-md-5ths', key: i },
-          _react2.default.createElement(_CurrentGamePlayerItem2.default, { player: player })
-        );
-      });
-    }
-  }, {
-    key: 'renderTeam200',
-    value: function renderTeam200() {
-      var players = this.props.currentGame.gameInfo.participants.filter(function (player) {
-        return player.teamId === 200;
-      });
-      return players.map(function (player, i) {
-        return _react2.default.createElement(
-          'div',
-          { className: 'col-md-5ths', key: i },
-          _react2.default.createElement(_CurrentGamePlayerItem2.default, { player: player })
-        );
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { className: 'player-list-container container-fluid' },
-        _react2.default.createElement(
-          'div',
-          { className: 'row team-row' },
-          this.renderTeam100()
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'text-align-center versus-text' },
-          'Versus'
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'row team-row' },
-          this.renderTeam200()
-        )
-      );
-    }
-  }]);
-
-  return CurrentGamePlayerList;
-}(_react2.default.Component);
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    currentGame: state.currentGameReducer
-  };
-};
-
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(CurrentGamePlayerList);
-
-/***/ }),
-/* 740 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRedux = __webpack_require__(42);
-
-var _moment = __webpack_require__(1);
-
-var _moment2 = _interopRequireDefault(_moment);
-
-var _reactTooltip = __webpack_require__(360);
-
-var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
-
-var _RankedMatchesList = __webpack_require__(741);
-
-var _RankedMatchesList2 = _interopRequireDefault(_RankedMatchesList);
-
-var _summonerUrl = __webpack_require__(719);
-
-var _summonerUrl2 = _interopRequireDefault(_summonerUrl);
-
-var _summonerSpellTooltip = __webpack_require__(363);
-
-var _summonerSpellTooltip2 = _interopRequireDefault(_summonerSpellTooltip);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CurrentGamePlayerItem = function (_React$Component) {
-  _inherits(CurrentGamePlayerItem, _React$Component);
-
-  function CurrentGamePlayerItem(props) {
-    _classCallCheck(this, CurrentGamePlayerItem);
-
-    var _this = _possibleConstructorReturn(this, (CurrentGamePlayerItem.__proto__ || Object.getPrototypeOf(CurrentGamePlayerItem)).call(this, props));
-
-    var rankedData = _this.props.player.rankedData;
-    if (rankedData) {
-      if (rankedData.length === 0) {
-        // Unranked
-        _this.tier = 'UNRANKED';
-      } else {
-        // Bronze through Challenger
-        _this.tier = rankedData.tier;
-      }
-    }
-    return _this;
-  }
-
-  _createClass(CurrentGamePlayerItem, [{
-    key: 'renderSummaryIcons',
-    value: function renderSummaryIcons() {
-      var summaryIcons = [];
-
-      if (this.isOnWinningStreak()) {
-        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Winning Streak', key: 'fa-fire', className: 'fa fa-fire', 'aria-hidden': 'true' }));
-      }
-
-      if (this.isOnLosingStreak()) {
-        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Losing Streak', key: 'fa-fire-extinguisher', className: 'fa fa-fire-extinguisher', 'aria-hidden': 'true' }));
-      }
-
-      if (this.championLongTime()) {
-        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Rusty Champion', key: 'fa-clock-o', className: 'fa fa-clock-o', 'aria-hidden': 'true' }));
-      }
-
-      if (this.championFirstTime()) {
-        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'First Time Champion', key: 'fa-hourglass-start', className: 'fa fa-hourglass-start', 'aria-hidden': 'true' }));
-      }
-
-      if (this.recentWin()) {
-        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Recent Win', key: 'fa-level-up', className: 'fa fa-level-up', 'aria-hidden': 'true' }));
-      }
-
-      if (this.recentLoss()) {
-        summaryIcons.push(_react2.default.createElement('i', { 'data-tip': 'Recent Loss', key: 'fa-level-down', className: 'fa fa-level-down', 'aria-hidden': 'true' }));
-      }
-
-      return summaryIcons;
-    }
-  }, {
-    key: 'isOnWinningStreak',
-    value: function isOnWinningStreak() {
-      var winningStreak = false;
-      var numWins = 0;
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this.props.player.recentRankedMatches[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var match = _step.value;
-
-          if (match.gameDetails.gameDuration < 300) {
-            continue;
-          }
-
-          if (!match.gameDetails.participant.stats.win) {
-            break;
-          }
-
-          numWins++;
-
-          if (numWins >= 3) {
-            winningStreak = true;
-            break;
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      return winningStreak;
-    }
-  }, {
-    key: 'isOnLosingStreak',
-    value: function isOnLosingStreak() {
-      var losingStreak = false;
-      var numLosses = 0;
-
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
-
-      try {
-        for (var _iterator2 = this.props.player.recentRankedMatches[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var match = _step2.value;
-
-          if (match.gameDetails.gameDuration < 300) {
-            continue;
-          }
-
-          if (match.gameDetails.participant.stats.win) {
-            break;
-          }
-
-          numLosses++;
-
-          if (numLosses >= 3) {
-            losingStreak = true;
-            break;
-          }
-        }
-      } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
-      }
-
-      return losingStreak;
-    }
-  }, {
-    key: 'championLongTime',
-    value: function championLongTime() {
-      if (this.props.player.currentChampionMastery.championLevel > 0) {
-        var lastPlayed = (0, _moment2.default)(this.props.player.currentChampionMastery.lastPlayTime);
-        var difference = (0, _moment2.default)().diff(lastPlayed, 'months');
-        if (difference > 1) {
-          return true;
-        }
-      }
-    }
-  }, {
-    key: 'championFirstTime',
-    value: function championFirstTime() {
-      return this.props.player.currentChampionMastery.championLevel === 0;
-    }
-  }, {
-    key: 'recentWin',
-    value: function recentWin() {
-      // find most recent non remake and see if it ended within 30 minutes ago
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
-
-      try {
-        for (var _iterator3 = this.props.player.recentRankedMatches[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var match = _step3.value;
-
-          if (match.gameDetails.gameDuration >= 300) {
-            if (!match.gameDetails.participant.stats.win) {
-              return false;
-            }
-
-            var lastPlayed = match.gameDetails.gameCreation + match.gameDetails.gameDuration * 1000;
-            var difference = (0, _moment2.default)().diff(lastPlayed, 'minutes');
-
-            if (difference <= 60) {
-              return true;
-            }
-
-            return false;
-          }
-        }
-      } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return) {
-            _iterator3.return();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
-        }
-      }
-
-      return false;
-    }
-  }, {
-    key: 'recentLoss',
-    value: function recentLoss() {
-      // find most recent non remake and see if it ended within 30 minutes ago
-      var _iteratorNormalCompletion4 = true;
-      var _didIteratorError4 = false;
-      var _iteratorError4 = undefined;
-
-      try {
-        for (var _iterator4 = this.props.player.recentRankedMatches[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          var match = _step4.value;
-
-          if (match.gameDetails.gameDuration >= 300) {
-            if (match.gameDetails.participant.stats.win) {
-              return false;
-            }
-
-            var lastPlayed = match.gameDetails.gameCreation + match.gameDetails.gameDuration * 1000;
-            var difference = (0, _moment2.default)().diff(lastPlayed, 'minutes');
-
-            if (difference <= 60) {
-              return true;
-            }
-
-            return false;
-          }
-        }
-      } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion4 && _iterator4.return) {
-            _iterator4.return();
-          }
-        } finally {
-          if (_didIteratorError4) {
-            throw _iteratorError4;
-          }
-        }
-      }
-
-      return false;
-    }
-  }, {
-    key: 'rankedBadgeSrc',
-    value: function rankedBadgeSrc() {
-      var rankedData = this.props.player.rankedData;
-      var rank = rankedData.rank;
-
-      if (!this.tier) {
-        return '';
-      }
-
-      if (this.tier === 'UNRANKED') {
-        return '/images/ranked-badges/base-icons/provisional.png';
-      }
-
-      if (['MASTER', 'CHALLENGER'].indexOf(this.tier) !== -1) {
-        // Master and Challenger don't have ranks
-        return '/images/ranked-badges/base-icons/' + this.tier.toLowerCase() + '.png';
-      }
-
-      // Bronze through Diamond
-      return '/images/ranked-badges/tier-icons/' + this.tier.toLowerCase() + '_' + rank.toLowerCase() + '.png';
-    }
-  }, {
-    key: 'teamColor',
-    value: function teamColor() {
-      if (this.props.player.teamId === 100) {
-        return 'blue-team-background';
-      }
-
-      if (this.props.player.teamId === 200) {
-        return 'purple-team-background';
-      }
-    }
-  }, {
-    key: 'renderRankInfo',
-    value: function renderRankInfo() {
-      var rankedData = this.props.player.rankedData;
-      if (!rankedData) {
-        return _react2.default.createElement('span', null);
-      }
-
-      var tier = this.tier.charAt(0).toUpperCase() + this.tier.slice(1).toLowerCase();
-      var rank = rankedData.rank;
-      var leaguePoints = rankedData.leaguePoints;
-      var miniSeries = void 0;
-      var miniSeriesIcons = void 0;
-      if (rankedData.miniSeries) {
-        miniSeries = rankedData.miniSeries.progress.split('');
-        miniSeriesIcons = miniSeries.map(function (series, i) {
-          if (series === 'W') {
-            return _react2.default.createElement(
-              'span',
-              { key: i },
-              _react2.default.createElement('i', { className: 'fa fa-check series-icon color-green', 'aria-hidden': 'true' })
-            );
-          } else if (series === 'L') {
-            return _react2.default.createElement(
-              'span',
-              { key: i },
-              _react2.default.createElement('i', { className: 'fa fa-times series-icon color-red', 'aria-hidden': 'true' })
-            );
-          } else {
-            return _react2.default.createElement(
-              'span',
-              { key: i },
-              _react2.default.createElement('i', { className: 'fa fa-minus series-icon color-gray', 'aria-hidden': 'true' })
-            );
-          }
-        });
-      } else {
-        miniSeriesIcons = _react2.default.createElement('span', null);
-      }
-      return _react2.default.createElement(
-        'div',
-        { className: 'space-between vertical-align' },
-        _react2.default.createElement('img', {
-          src: this.rankedBadgeSrc(),
-          className: 'medium-icon'
-        }),
-        _react2.default.createElement(
-          'span',
-          null,
-          tier,
-          ' ',
-          rank
-        ),
-        _react2.default.createElement(
-          'span',
-          null,
-          _react2.default.createElement(
-            'div',
-            null,
-            leaguePoints,
-            ' LP'
-          ),
-          _react2.default.createElement(
-            'div',
-            null,
-            miniSeriesIcons
-          )
-        )
-      );
-    }
-  }, {
-    key: 'renderWinPercent',
-    value: function renderWinPercent() {
-      var rankedData = this.props.player.rankedData;
-      var winPercent = (rankedData.wins / (rankedData.wins + rankedData.losses) * 100).toFixed(0);
-      if (winPercent > 53) {
-        return _react2.default.createElement(
-          'span',
-          { className: 'color-green' },
-          winPercent,
-          '%'
-        );
-      } else if (winPercent < 47) {
-        return _react2.default.createElement(
-          'span',
-          { className: 'color-red' },
-          winPercent,
-          '%'
-        );
-      } else {
-        return _react2.default.createElement(
-          'span',
-          null,
-          winPercent,
-          '%'
-        );
-      }
-    }
-  }, {
-    key: 'championImage',
-    value: function championImage() {
-      return this.props.staticData.championImages[this.props.player.championId].image.full;
-    }
-  }, {
-    key: 'renderChampionMasteryBadge',
-    value: function renderChampionMasteryBadge() {
-      if (this.props.player.currentChampionMastery.championLevel === 0) {
-        return _react2.default.createElement('span', { className: 'medium-icon' });
-      }
-      return _react2.default.createElement('img', {
-        src: '/images/champion-mastery/level_' + this.props.player.currentChampionMastery.championLevel + '.png',
-        className: 'medium-icon'
-      });
-    }
-  }, {
-    key: 'renderChampionMastery',
-    value: function renderChampionMastery() {
-      var lastPlayed = void 0;
-      if (this.props.player.currentChampionMastery.championLevel > 0) {
-        lastPlayed = (0, _moment2.default)(this.props.player.currentChampionMastery.lastPlayTime).fromNow();
-      } else {
-        lastPlayed = 'First Time';
-      }
-
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
-          'div',
-          { className: 'player-item-sub-title' },
-          'Champion Mastery'
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'player-item-content' },
-          _react2.default.createElement(
-            'div',
-            { className: 'space-between vertical-align' },
-            this.renderChampionMasteryBadge(),
-            _react2.default.createElement(
-              'span',
-              { className: 'text-align-center' },
-              _react2.default.createElement(
-                'div',
-                null,
-                'Level'
-              ),
-              _react2.default.createElement(
-                'div',
-                null,
-                this.props.player.currentChampionMastery.championLevel
-              )
-            ),
-            _react2.default.createElement(
-              'span',
-              { className: 'text-align-center' },
-              _react2.default.createElement(
-                'div',
-                null,
-                'Points'
-              ),
-              _react2.default.createElement(
-                'div',
-                null,
-                this.props.player.currentChampionMastery.championPoints
-              )
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            null,
-            this.props.staticData.championData[this.props.player.championId.toString()].name,
-            ' Played: ',
-            lastPlayed
-          )
-        )
-      );
-    }
-  }, {
-    key: 'summonerSpell1',
-    value: function summonerSpell1() {
-      var summonerSpellOne = this.props.staticData.summonerSpells[this.props.player.spell1Id.toString()];
-      return summonerSpellOne.image.full;
-    }
-  }, {
-    key: 'summonerSpell2',
-    value: function summonerSpell2() {
-      var summonerSpellTwo = this.props.staticData.summonerSpells[this.props.player.spell2Id.toString()];
-      return summonerSpellTwo.image.full;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var rankedData = this.props.player.rankedData;
-      return _react2.default.createElement(
-        'div',
-        { className: 'player-item-container' },
-        _react2.default.createElement(
-          'div',
-          { className: 'player-item-title ' + this.teamColor() },
-          _react2.default.createElement('img', {
-            src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/champion/' + this.championImage(),
-            className: 'medium-icon'
-          }),
-          _react2.default.createElement(
-            'span',
-            { className: 'summoner-spell-container' },
-            _react2.default.createElement('img', {
-              src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/spell/' + this.summonerSpell1(),
-              'data-tip': (0, _summonerSpellTooltip2.default)(this.props.staticData.summonerSpells[this.props.player.spell1Id]),
-              'data-html': true,
-              className: 'summoner-icon-1'
-            }),
-            _react2.default.createElement('img', {
-              src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/spell/' + this.summonerSpell2(),
-              'data-tip': (0, _summonerSpellTooltip2.default)(this.props.staticData.summonerSpells[this.props.player.spell2Id]),
-              'data-html': true,
-              className: 'summoner-icon-2'
-            })
-          ),
-          _react2.default.createElement(
-            'span',
-            { className: 'title-left-padding summoner-name-link' },
-            _react2.default.createElement(
-              'a',
-              { href: (0, _summonerUrl2.default)(this.props.currentGame.gameInfo.platformId, this.props.player.summonerName), target: '_blank' },
-              this.props.player.summonerName
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'player-summary-icons' },
-          this.renderSummaryIcons(),
-          _react2.default.createElement(_reactTooltip2.default, { effect: 'solid', className: 'tooltip', multiline: true })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'player-item-stats' },
-          _react2.default.createElement(
-            'div',
-            { className: 'player-item-sub-title' },
-            'Ranked Data'
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'player-item-content' },
-            this.renderRankInfo(),
-            _react2.default.createElement(
-              'div',
-              { className: 'space-between' },
-              _react2.default.createElement(
-                'span',
-                null,
-                'Win / Loss: ',
-                rankedData.wins,
-                ' / ',
-                rankedData.losses
-              ),
-              _react2.default.createElement(
-                'span',
-                null,
-                this.renderWinPercent()
-              )
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          null,
-          this.renderChampionMastery()
-        ),
-        _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(
-            'div',
-            { className: 'player-item-sub-title' },
-            'Recent Ranked Matches'
-          ),
-          _react2.default.createElement(_RankedMatchesList2.default, {
-            matches: this.props.player.recentRankedMatches,
-            player: this.props.player
-          })
-        )
-      );
-    }
-  }]);
-
-  return CurrentGamePlayerItem;
-}(_react2.default.Component);
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    currentGame: state.currentGameReducer,
-    staticData: state.staticDataReducer
-  };
-};
-
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(CurrentGamePlayerItem);
-
-/***/ }),
-/* 741 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _RankedMatchesItem = __webpack_require__(742);
-
-var _RankedMatchesItem2 = _interopRequireDefault(_RankedMatchesItem);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var RankedMatchesList = function (_React$Component) {
-  _inherits(RankedMatchesList, _React$Component);
-
-  function RankedMatchesList(props) {
-    _classCallCheck(this, RankedMatchesList);
-
-    return _possibleConstructorReturn(this, (RankedMatchesList.__proto__ || Object.getPrototypeOf(RankedMatchesList)).call(this, props));
-  }
-
-  _createClass(RankedMatchesList, [{
-    key: 'renderRankedMatchesItems',
-    value: function renderRankedMatchesItems() {
-      var _this2 = this;
-
-      if (this.props.matches.length === 0) {
-        return _react2.default.createElement(
-          'div',
-          { className: 'text-align-center' },
-          'No Ranked Matches'
-        );
-      }
-
-      return this.props.matches.map(function (match, i) {
-        return _react2.default.createElement(
-          'div',
-          { key: i },
-          _react2.default.createElement(_RankedMatchesItem2.default, {
-            match: match,
-            player: _this2.props.player
-          })
-        );
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        null,
-        this.renderRankedMatchesItems()
-      );
-    }
-  }]);
-
-  return RankedMatchesList;
-}(_react2.default.Component);
-
-exports.default = RankedMatchesList;
-
-/***/ }),
-/* 742 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRedux = __webpack_require__(42);
-
-var _moment = __webpack_require__(1);
-
-var _moment2 = _interopRequireDefault(_moment);
-
-var _classnames = __webpack_require__(9);
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
-var _reactTooltip = __webpack_require__(360);
-
-var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
-
-var _secondsToTime = __webpack_require__(244);
-
-var _secondsToTime2 = _interopRequireDefault(_secondsToTime);
-
-var _summonerSpellTooltip = __webpack_require__(363);
-
-var _summonerSpellTooltip2 = _interopRequireDefault(_summonerSpellTooltip);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var RankedMatchesItem = function (_React$Component) {
-  _inherits(RankedMatchesItem, _React$Component);
-
-  function RankedMatchesItem(props) {
-    _classCallCheck(this, RankedMatchesItem);
-
-    var _this = _possibleConstructorReturn(this, (RankedMatchesItem.__proto__ || Object.getPrototypeOf(RankedMatchesItem)).call(this, props));
-
-    try {
-      _this.error = false;
-      _this.result = _this.winOrLose();
-    } catch (e) {
-      console.log(e);
-      _this.error = true;
-    }
-    return _this;
-  }
-
-  _createClass(RankedMatchesItem, [{
-    key: 'winOrLose',
-    value: function winOrLose() {
-      if (this.props.match.gameDetails.gameDuration < 300) {
-        return 'Remake';
-      }
-
-      if (this.props.match.gameDetails.participant.stats.win) {
-        return 'Victory';
-      }
-      return 'Defeat';
-    }
-  }, {
-    key: 'championImage',
-    value: function championImage() {
-      return this.props.staticData.championImages[this.props.match.champion].image.full;
-    }
-
-    // Time since the game ended
-
-  }, {
-    key: 'renderGameEndTime',
-    value: function renderGameEndTime() {
-      return _react2.default.createElement(
-        'span',
-        null,
-        (0, _moment2.default)(this.props.match.gameDetails.gameCreation + this.props.match.gameDetails.gameDuration * 1000).fromNow()
-      );
-    }
-  }, {
-    key: 'renderGameDuration',
-    value: function renderGameDuration() {
-      var duration = (0, _secondsToTime2.default)(this.props.match.gameDetails.gameDuration);
-
-      if (duration.hours > 0) {
-        return _react2.default.createElement(
-          'span',
-          null,
-          [_react2.default.createElement(
-            'span',
-            { key: 0 },
-            duration.hours,
-            'h '
-          ), _react2.default.createElement(
-            'span',
-            { key: 1 },
-            duration.minutes,
-            'm '
-          ), _react2.default.createElement(
-            'span',
-            { key: 2 },
-            duration.seconds,
-            's'
-          )]
-        );
-      }
-      return _react2.default.createElement(
-        'span',
-        null,
-        [_react2.default.createElement(
-          'span',
-          { key: 1 },
-          duration.minutes,
-          'm '
-        ), _react2.default.createElement(
-          'span',
-          { key: 2 },
-          duration.seconds,
-          's'
-        )]
-      );
-    }
-  }, {
-    key: 'renderKda',
-    value: function renderKda() {
-      var currentParticipant = this.props.match.gameDetails.participant;
-      var participantStats = currentParticipant.stats;
-      var kda = void 0;
-      var kdaString = void 0;
-
-      if (participantStats.deaths === 0) {
-        kdaString = 'Perfect';
-      } else {
-        kda = ((participantStats.kills + participantStats.assists) / participantStats.deaths).toFixed(2);
-        kdaString = kda + ' : 1';
-      }
-
-      var kdaClassNames = (0, _classnames2.default)({
-        'gold-text': kdaString === 'Perfect' || kda >= 5,
-        'red-text': kda < 1,
-        'title-left-padding': true
-      });
-
-      return _react2.default.createElement(
-        'span',
-        null,
-        _react2.default.createElement(
-          'span',
-          { className: 'title-left-padding' },
-          participantStats.kills,
-          '/',
-          participantStats.deaths,
-          '/',
-          participantStats.assists
-        ),
-        _react2.default.createElement(
-          'span',
-          { className: kdaClassNames },
-          this.result === 'Remake' ? '' : kdaString
-        )
-      );
-    }
-  }, {
-    key: 'summonerSpell1',
-    value: function summonerSpell1() {
-      var currentParticipant = this.props.match.gameDetails.participant;
-
-      var summonerSpellOne = this.props.staticData.summonerSpells[currentParticipant.spell1Id.toString()];
-      return summonerSpellOne.image.full;
-    }
-  }, {
-    key: 'summonerSpell2',
-    value: function summonerSpell2() {
-      var currentParticipant = this.props.match.gameDetails.participant;
-
-      var summonerSpellTwo = this.props.staticData.summonerSpells[currentParticipant.spell2Id.toString()];
-      return summonerSpellTwo.image.full;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      if (this.error) {
-        return _react2.default.createElement(
-          'div',
-          null,
-          'ERROR'
-        );
-      }
-
-      var myClassNames = (0, _classnames2.default)({
-        'victory-background': this.result === 'Victory',
-        'defeat-background': this.result === 'Defeat',
-        'remake-background': this.result === 'Remake'
-      });
-
-      return _react2.default.createElement(
-        'div',
-        { className: myClassNames },
-        _react2.default.createElement(
-          'div',
-          { className: 'space-between item-header-text' },
-          _react2.default.createElement(
-            'span',
-            null,
-            this.result
-          ),
-          this.renderGameEndTime(),
-          this.renderGameDuration()
-        ),
-        _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement('img', {
-            src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/champion/' + this.championImage(),
-            className: 'medium-icon circular-icon'
-          }),
-          _react2.default.createElement(
-            'span',
-            { className: 'summoner-spell-container' },
-            _react2.default.createElement('img', {
-              src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/spell/' + this.summonerSpell1(),
-              'data-tip': (0, _summonerSpellTooltip2.default)(this.props.staticData.summonerSpells[this.props.match.gameDetails.participant.spell1Id]),
-              'data-html': true,
-              className: 'summoner-icon-1'
-            }),
-            _react2.default.createElement('img', {
-              src: 'http://ddragon.leagueoflegends.com/cdn/' + this.props.staticData.realmVersion + '/img/spell/' + this.summonerSpell2(),
-              'data-tip': (0, _summonerSpellTooltip2.default)(this.props.staticData.summonerSpells[this.props.match.gameDetails.participant.spell2Id]),
-              'data-html': true,
-              className: 'summoner-icon-2'
-            }),
-            _react2.default.createElement(_reactTooltip2.default, { effect: 'solid', className: 'tooltip', multiline: true })
-          ),
-          this.renderKda()
-        )
-      );
-    }
-  }]);
-
-  return RankedMatchesItem;
-}(_react2.default.Component);
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    currentGame: state.currentGameReducer,
-    staticData: state.staticDataReducer
-  };
-};
-
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(RankedMatchesItem);
-
-/***/ }),
-/* 743 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var LoadingScreen = function LoadingScreen() {
-  return _react2.default.createElement(
-    'div',
-    { className: 'loading-container' },
-    _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement('i', { className: 'fa fa-spinner fa-spin fa-5x fa-fw' })
-    ),
-    _react2.default.createElement(
-      'span',
-      null,
-      'Loading Game...'
-    )
-  );
-};
-
-exports.default = LoadingScreen;
-
-/***/ }),
-/* 744 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouterDom = __webpack_require__(61);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var About = function (_React$Component) {
-  _inherits(About, _React$Component);
-
-  function About() {
-    _classCallCheck(this, About);
-
-    return _possibleConstructorReturn(this, (About.__proto__ || Object.getPrototypeOf(About)).apply(this, arguments));
-  }
-
-  _createClass(About, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      document.title = 'LoLAtlas - About';
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { className: 'info-page' },
-        _react2.default.createElement(
-          'h1',
-          { className: 'page-title' },
-          'About'
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'info-block' },
-          _react2.default.createElement(
-            'h2',
-            null,
-            'What is LoLAtlas?'
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            'LoLAtlas is a League of Legends tool that allows you to look up live ranked solo/duo queue matches. It allows you to quickly evaluate your allies and opponents and can help you identify the paths to victory.'
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'info-block' },
-          _react2.default.createElement(
-            'h2',
-            null,
-            'How do I use LoLAtlas?'
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            'As soon as a match enters the loading screen, you can enter the name of one of the players in the match and LoLAtlas will load the match data.'
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'info-block' },
-          _react2.default.createElement(
-            'h2',
-            null,
-            'What information does LoLAtlas provide?'
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            'LoLAtlas provides information about each player in the game, including recent ranked matches data, winning/losing streaks, current champion mastery, and the last time the current champion was played. You can see an example search ',
-            _react2.default.createElement(
-              _reactRouterDom.Link,
-              { to: '/sample' },
-              ' here'
-            ),
-            '.'
-          )
-        )
-      );
-    }
-  }]);
-
-  return About;
-}(_react2.default.Component);
-
-exports.default = About;
-
-/***/ }),
-/* 745 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _ContactForm = __webpack_require__(746);
-
-var _ContactForm2 = _interopRequireDefault(_ContactForm);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Contact = function (_React$Component) {
-  _inherits(Contact, _React$Component);
-
-  function Contact() {
-    _classCallCheck(this, Contact);
-
-    var _this = _possibleConstructorReturn(this, (Contact.__proto__ || Object.getPrototypeOf(Contact)).call(this));
-
-    _this.state = {
-      bannerMode: 'NONE'
-    };
-    return _this;
-  }
-
-  _createClass(Contact, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      document.title = 'LoLAtlas - Contact';
-    }
-  }, {
-    key: 'renderBanner',
-    value: function renderBanner() {
-      switch (this.state.bannerMode) {
-        case 'NONE':
-          return _react2.default.createElement('div', null);
-        case 'SUCCESS':
-          return _react2.default.createElement(
-            'div',
-            { className: 'alert alert-success', role: 'alert' },
-            'Thanks for the feedback. We will get back to you soon!'
-          );
-        case 'FAILURE':
-          return _react2.default.createElement(
-            'div',
-            { className: 'alert alert-danger', role: 'alert' },
-            'Please fill out all fields'
-          );
-      }
-    }
-  }, {
-    key: 'setBanner',
-    value: function setBanner(bannerMode) {
-      this.setState({ bannerMode: bannerMode });
-      window.scrollTo(0, 0);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      return _react2.default.createElement(
-        'div',
-        { className: 'contact-page' },
-        this.renderBanner(),
-        _react2.default.createElement(
-          'h1',
-          { className: 'page-title' },
-          'Contact'
-        ),
-        _react2.default.createElement(
-          'p',
-          null,
-          'Please feel free to contact us with any questions, comments, or suggestions you may have.'
-        ),
-        _react2.default.createElement(_ContactForm2.default, { setBanner: function setBanner(bannerMode) {
-            return _this2.setBanner(bannerMode);
-          } })
-      );
-    }
-  }]);
-
-  return Contact;
-}(_react2.default.Component);
-
-exports.default = Contact;
-
-/***/ }),
-/* 746 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _axios = __webpack_require__(89);
-
-var _axios2 = _interopRequireDefault(_axios);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ContactForm = function (_React$Component) {
-  _inherits(ContactForm, _React$Component);
-
-  function ContactForm() {
-    _classCallCheck(this, ContactForm);
-
-    var _this = _possibleConstructorReturn(this, (ContactForm.__proto__ || Object.getPrototypeOf(ContactForm)).call(this));
-
-    _this.state = {
-      isSending: false,
-      didSend: false,
-      name: "",
-      email: "",
-      comments: ""
-    };
-    return _this;
-  }
-
-  _createClass(ContactForm, [{
-    key: 'onChangeHandler',
-    value: function onChangeHandler(e) {
-      var stateObj = {};
-      stateObj[e.target.id] = e.target.value;
-      this.setState(stateObj);
-    }
-  }, {
-    key: 'handleSubmit',
-    value: function handleSubmit() {
-      var _this2 = this;
-
-      if (!this.state.name || !this.state.email || !this.state.comments) {
-        this.props.setBanner('FAILURE');
-        return;
-      }
-
-      this.setState({ isSending: true });
-      _axios2.default.post('/api/sendEmail', this.state).then(function (response) {
-        _this2.setState({ isSending: false });
-        _this2.setState({ didSend: true });
-        _this2.props.setBanner('SUCCESS');
-        return response;
-      }).catch(function (err) {
-        _this2.setState({ isSending: false });
-        _this2.setState({ didSend: true });
-        return err.response;
-      });
-    }
-  }, {
-    key: 'renderButton',
-    value: function renderButton() {
-      var _this3 = this;
-
-      var value = void 0;
-      var classNames = void 0;
-
-      if (this.state.isSending) {
-        value = _react2.default.createElement(
-          'span',
-          null,
-          _react2.default.createElement('i', { className: 'fa fa-spinner fa-spin fa-3x fa-fw' }),
-          ' Submitting'
-        );
-        classNames = "btn btn-primary";
-      } else if (this.state.didSend) {
-        value = _react2.default.createElement(
-          'span',
-          null,
-          'Submitted - Thanks for your feedback!'
-        );
-        classNames = "btn btn-success";
-      } else {
-        value = _react2.default.createElement(
-          'span',
-          null,
-          'Submit'
-        );
-        classNames = "btn btn-primary";
-      }
-
-      return _react2.default.createElement(
-        'button',
-        { type: 'button', className: classNames, onClick: function onClick() {
-            return _this3.handleSubmit();
-          } },
-        value
-      );
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this4 = this;
-
-      return _react2.default.createElement(
-        'form',
-        { className: 'form-page' },
-        _react2.default.createElement(
-          'div',
-          { className: 'form-block form-group' },
-          _react2.default.createElement(
-            'label',
-            { htmlFor: 'name' },
-            'Name'
-          ),
-          _react2.default.createElement('input', {
-            type: 'text',
-            className: 'form-control',
-            id: 'name',
-            name: 'name',
-            placeholder: 'Name',
-            maxLength: '100',
-            onChange: function onChange(e) {
-              return _this4.onChangeHandler(e);
-            }
-          })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-block form-group' },
-          _react2.default.createElement(
-            'label',
-            { htmlFor: 'email' },
-            'Email'
-          ),
-          _react2.default.createElement('input', {
-            type: 'email',
-            className: 'form-control',
-            id: 'email',
-            name: 'email',
-            placeholder: 'Email',
-            maxLength: '100',
-            onChange: function onChange(e) {
-              return _this4.onChangeHandler(e);
-            }
-          })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-block form-group' },
-          _react2.default.createElement(
-            'label',
-            { htmlFor: 'comments' },
-            'Comments'
-          ),
-          _react2.default.createElement('textarea', {
-            className: 'form-control',
-            id: 'comments',
-            name: 'comments',
-            placeholder: 'Comments',
-            maxLength: '2000',
-            rows: '10',
-            onChange: function onChange(e) {
-              return _this4.onChangeHandler(e);
-            }
-          })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-block' },
-          this.renderButton()
-        )
-      );
-    }
-  }]);
-
-  return ContactForm;
-}(_react2.default.Component);
-
-exports.default = ContactForm;
-
-/***/ }),
-/* 747 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouterDom = __webpack_require__(61);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PrivacyPolicy = function (_React$Component) {
-  _inherits(PrivacyPolicy, _React$Component);
-
-  function PrivacyPolicy() {
-    _classCallCheck(this, PrivacyPolicy);
-
-    return _possibleConstructorReturn(this, (PrivacyPolicy.__proto__ || Object.getPrototypeOf(PrivacyPolicy)).apply(this, arguments));
-  }
-
-  _createClass(PrivacyPolicy, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      document.title = 'LoLAtlas - Privacy Policy';
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { className: 'info-page' },
-        _react2.default.createElement(
-          'h1',
-          { className: 'page-title' },
-          'Privacy Policy'
-        ),
-        _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(
-            'div',
-            { className: 'info-block' },
-            _react2.default.createElement(
-              'p',
-              null,
-              'Thanks for visiting our website. Your privacy is important to us, so we have outlined what data we use and how we use it below.'
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'info-block' },
-            _react2.default.createElement(
-              'h2',
-              null,
-              'Cookies'
-            ),
-            _react2.default.createElement(
-              'p',
-              null,
-              'We use cookies to remember your previous searches and what regions you searched in order to help you easily repeat searches on summoners and regions. If you prefer to disable cookies, you can do so through your browser settings.'
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'info-block' },
-            _react2.default.createElement(
-              'h2',
-              null,
-              'Analytics and Advertisements'
-            ),
-            _react2.default.createElement(
-              'p',
-              null,
-              'We use Google Analytics to understand usage patterns for our website. For more information about how Google Analytics uses data, please',
-              _react2.default.createElement(
-                'a',
-                { href: 'https://www.google.com/policies/privacy/partners', target: '_blank' },
-                ' click here'
-              ),
-              '. To opt out of Google Analytics, please',
-              _react2.default.createElement(
-                'a',
-                { href: 'https://tools.google.com/dlpage/gaoptout', target: '_blank' },
-                ' click here'
-              ),
-              '.'
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'info-block' },
-            _react2.default.createElement(
-              'h2',
-              null,
-              'Changes to Our Privacy Policy'
-            ),
-            _react2.default.createElement(
-              'p',
-              null,
-              'Any changes to our privacy policy can be found here. You will be notified by a website notification and the Last Updated date will be changed.'
-            ),
-            _react2.default.createElement(
-              'p',
-              null,
-              'Last Updated: 11/20/2017'
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'info-block' },
-            _react2.default.createElement(
-              'h2',
-              null,
-              'Contacting Us'
-            ),
-            _react2.default.createElement(
-              'p',
-              null,
-              'You can contact us with any questions about our Privacy Policy by visiting the',
-              _react2.default.createElement(
-                _reactRouterDom.Link,
-                { to: '/contact' },
-                ' Contact Us'
-              ),
-              ' page.'
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return PrivacyPolicy;
-}(_react2.default.Component);
-
-exports.default = PrivacyPolicy;
-
-/***/ }),
-/* 748 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouterDom = __webpack_require__(61);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Blog = function (_React$Component) {
-  _inherits(Blog, _React$Component);
-
-  function Blog() {
-    _classCallCheck(this, Blog);
-
-    return _possibleConstructorReturn(this, (Blog.__proto__ || Object.getPrototypeOf(Blog)).apply(this, arguments));
-  }
-
-  _createClass(Blog, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      document.title = 'LoLAtlas - Blog';
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { className: 'info-page' },
-        _react2.default.createElement(
-          'h1',
-          { className: 'page-title' },
-          'Blog'
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'info-block' },
-          _react2.default.createElement(
-            'h2',
-            null,
-            'November 26, 2017'
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            'Runes reforged data will be made available soon. The data is currently available, but only through a kind of roundabout way. Once the data is made officially available, the runes data will be added to the live game page.'
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'info-block' },
-          _react2.default.createElement(
-            'h2',
-            null,
-            'November 12, 2017'
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            'Welcome to LoLAtlas! I\'ll use this blog as a place to put information that probably isn\'t worthy of being on the ',
-            _react2.default.createElement(
-              _reactRouterDom.Link,
-              { to: '/about' },
-              ' About '
-            ),
-            ' page, as well as general announcements, progress reports, and anything else I can think of. This first blog post will just detail why I created LoLAtlas and why I believe it can be a really helpful tool for everyone.'
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            'My inspiration for creating LoLAtlas came from realizing the value that can be gained from some of the existing live game tools. Being able to see everyone\'s ranks, win rates, and most commonly played champions really helped me get a feeling of who on my team would be dependable and who on the other team might be prone to making mistakes. Despite the usefulness of these tools, I often found myself looking up summoners individually anyway because I felt that the information was lacking. This repetitive process lead me to think of ways that I could speed up this process, and eventually gave me the idea to create LoLAtlas.'
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            'The idea behind LoLAtlas is to quickly and concisely provide information about each player that may help you guess how they might perform. For example, everyone knows that League of Legends can be an emotionally-charged game, so players coming off of a recent win or loss may be in a different mindset than they normally would be in. LoLAtlas not only shows winning streaks and losing streaks, it also indicates how recently players won or lost a game. Another example is that some players may take ranked matches less seriously than others and practice unfamiliar champions in a ranked match. LoLAtlas shows each player\'s current champion\'s mastery as well as the last time they played that champion. These are just a couple of examples of existing features, and more will be added in the future.'
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            'That\'s it for this first blog post. If there\'s something else you would like me to talk about,',
-            _react2.default.createElement(
-              _reactRouterDom.Link,
-              { to: '/contact' },
-              ' contact me '
-            ),
-            ' with suggestions and I might address it in the future.'
-          )
-        )
-      );
-    }
-  }]);
-
-  return Blog;
-}(_react2.default.Component);
-
-exports.default = Blog;
-
-/***/ }),
-/* 749 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Sample = function (_React$Component) {
-  _inherits(Sample, _React$Component);
-
-  function Sample() {
-    _classCallCheck(this, Sample);
-
-    return _possibleConstructorReturn(this, (Sample.__proto__ || Object.getPrototypeOf(Sample)).apply(this, arguments));
-  }
-
-  _createClass(Sample, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      document.title = 'LoLAtlas';
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { className: 'sample-page' },
-        _react2.default.createElement('img', { src: '/images/sample_image.jpg' })
-      );
-    }
-  }]);
-
-  return Sample;
-}(_react2.default.Component);
-
-exports.default = Sample;
-
-/***/ }),
-/* 750 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PageNotFound = function (_React$Component) {
-  _inherits(PageNotFound, _React$Component);
-
-  function PageNotFound(props) {
-    _classCallCheck(this, PageNotFound);
-
-    return _possibleConstructorReturn(this, (PageNotFound.__proto__ || Object.getPrototypeOf(PageNotFound)).call(this, props));
-  }
-
-  _createClass(PageNotFound, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      document.title = 'LoLAtlas - About';
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        null,
-        'Page Not Found'
-      );
-    }
-  }]);
-
-  return PageNotFound;
-}(_react2.default.Component);
-
-exports.default = PageNotFound;
 
 /***/ })
 /******/ ]);

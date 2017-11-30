@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack --progress --colors",
     "start": "node ./bin/www & node apiServer.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -55,6 +55,8 @@
     "xregexp": "^3.2.0"
   },
   "devDependencies": {
+    "babel-jest": "^21.2.0",
+    "jest": "^21.2.1",
     "nodemon": "^1.11.0",
     "redux-logger": "^3.0.6",
     "webpack": "^3.2.0",
