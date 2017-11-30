@@ -76035,7 +76035,7 @@ var About = function (_React$Component) {
           _react2.default.createElement(
             'p',
             null,
-            'LoLAtlas is a tool that allows you to look up live ranked solo/duo queue League of Legends matches. It allows you to quickly evaluate your allies and opponents and can help you identify the paths to victory.'
+            'LoLAtlas is a League of Legends tool that allows you to look up live ranked solo/duo queue matches. It allows you to quickly evaluate your allies and opponents and can help you identify the paths to victory.'
           )
         ),
         _react2.default.createElement(
