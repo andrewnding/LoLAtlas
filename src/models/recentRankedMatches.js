@@ -7,7 +7,7 @@ var RecentRankedMatchesSchema = new Schema({
   data: {},
   createdAt: {
     type: Date,
-    expires: 60*15,
+    expires: 60*5,
     default: Date.now
   }
 })

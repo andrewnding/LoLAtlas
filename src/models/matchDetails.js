@@ -6,6 +6,7 @@ var MatchDetailsSchema = new Schema({
   data: {},
   createdAt: {
     type: Date,
+    expires: 60*5,
     default: Date.now
   }
 })
