@@ -2,6 +2,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default class PrivacyPolicy extends React.Component {
+  componentDidMount() {
+    document.title = 'LoLAtlas - Privacy Policy'
+  }
+
   render() {
     return (
       <div className="info-page">

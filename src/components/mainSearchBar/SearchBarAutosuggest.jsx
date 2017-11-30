@@ -4,8 +4,8 @@ import Autosuggest from 'react-autosuggest'
 import XRegExp from 'xregexp'
 import classNames from 'classnames'
 
-import { getSearchHistory } from '../actions/searchActions'
-var regionalEndpoints = require('../constants/regionalEndpoints')
+import { getSearchHistory } from '../../actions/searchActions'
+var regionalEndpoints = require('../../constants/regionalEndpoints')
 
 class SearchBarAutosuggest extends React.Component {
   constructor(props) {

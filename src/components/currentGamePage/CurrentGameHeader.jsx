@@ -1,5 +1,5 @@
 import React from 'react'
-import secondsToTime from '../utils/secondsToTime'
+import secondsToTime from '../../utils/secondsToTime'
 
 export default class CurrentGameHeader extends React.Component {
   constructor(props) {

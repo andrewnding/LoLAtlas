@@ -4,8 +4,8 @@ import moment from 'moment'
 import ReactTooltip from 'react-tooltip'
 
 import RankedMatchesList from './RankedMatchesList'
-import summonerUrl from '../utils/summonerUrl'
-import summonerSpellTooltip from '../utils/summonerSpellTooltip'
+import summonerUrl from '../../utils/summonerUrl'
+import summonerSpellTooltip from '../../utils/summonerSpellTooltip'
 
 class CurrentGamePlayerItem extends React.Component {
   constructor(props) {

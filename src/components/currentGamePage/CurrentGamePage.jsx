@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { getCurrentGame } from '../actions/searchActions'
-import { getRankedLeague, getAccountId, getRecentRankedMatches, getMatchDetails, getChampionMastery } from '../actions/currentGameActions'
-import { getRealmVersion, getChampionImages, getChampionData, getSummonerSpells } from '../actions/staticDataActions'
+import { getCurrentGame } from '../../actions/searchActions'
+import { getRankedLeague, getAccountId, getRecentRankedMatches, getMatchDetails, getChampionMastery } from '../../actions/currentGameActions'
+import { getRealmVersion, getChampionImages, getChampionData, getSummonerSpells } from '../../actions/staticDataActions'
 
 import CurrentGameHeader from './CurrentGameHeader'
 import CurrentGamePlayerList from './CurrentGamePlayerList'
-import SearchBarAutosuggest from './SearchBarAutosuggest'
-import LoadingScreen from './LoadingScreen'
+import SearchBarAutosuggest from '../mainSearchBar/SearchBarAutosuggest'
+import LoadingScreen from '../other/LoadingScreen'
 
 class CurrentGamePage extends React.Component {
   constructor(props) {
@@ -26,6 +26,7 @@ class CurrentGamePage extends React.Component {
 
   componentDidMount() {
     this.loadCurrentGameData()
+    document.title = 'LoLAtlas'
   }
 
   // Required to do a repeat search after a failed search

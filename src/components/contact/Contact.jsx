@@ -11,6 +11,10 @@ export default class Contact extends React.Component {
     }
   }
 
+  componentDidMount() {
+    document.title = 'LoLAtlas - Contact'
+  }
+
   renderBanner() {
     switch (this.state.bannerMode) {
       case 'NONE':

@@ -4,8 +4,8 @@ import moment from 'moment'
 import classNames from 'classnames'
 import ReactTooltip from 'react-tooltip'
 
-import secondsToTime from '../utils/secondsToTime'
-import summonerSpellTooltip from '../utils/summonerSpellTooltip'
+import secondsToTime from '../../utils/secondsToTime'
+import summonerSpellTooltip from '../../utils/summonerSpellTooltip'
 
 class RankedMatchesItem extends React.Component {
   constructor(props) {

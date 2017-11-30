@@ -2,6 +2,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default class About extends React.Component {
+  componentDidMount() {
+    document.title = 'LoLAtlas - About'
+  }
+
   render() {
     return (
       <div className="info-page">
