@@ -44,6 +44,8 @@ h2 {
 
 .circular-icon {
   border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
 }
 
 .item-header-text {
@@ -143,6 +145,12 @@ h2 {
         i {
           font-size: 1em;
         }
+      }
+
+      .form-control {
+        border-radius: 0;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
       }
     }
   }

@@ -43,6 +43,9 @@
     box-sizing: border-box;
 
     border: 1px solid $gray-b;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
   }
   
   .region-select {
@@ -64,12 +67,16 @@
 
   .form-control {
     border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
   }
   
   .search-button {
     width: 100%;
     height: $search-item-height;
     border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
   }
 
   .react-autosuggest__suggestions-container {
