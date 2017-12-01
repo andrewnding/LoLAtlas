@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import 'babel-polyfill'
 
 import store from './store/store'
 import MenuBar from './components/other/MenuBar'
