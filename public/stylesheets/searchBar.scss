@@ -1,17 +1,9 @@
 @import 'variables';
 
-.react-autosuggest__container {
-  display: inline-block;
-  position: relative;
-  left: -70px;
-}
-
 .search-bar-container {
   text-align: center;
   margin-top: 20vh;
   height: 250px;
-  margin-left: 320px;
-  margin-right: 320px;
   padding-top: 20px;
   margin-bottom: -webkit-calc(80vh - 304px - #{$footer-height});
   margin-bottom:    -moz-calc(80vh - 304px - #{$footer-height});
@@ -33,12 +25,16 @@
 
 .search-bar-items {
   display: inline-block;
-  position: relative;
-  width: $search-input-width + $region-select-width + $search-button-width;
   margin-top: 10px;
+  width: 50%;
+  min-width: 300px;
+
+  .col-md-8, .col-md-2 {
+    padding: 0;
+  }
 
   .search-input {
-    width: $search-input-width;
+    width: 100%;
     height: $search-item-height;
     font-size: 16px;
     padding: 0px 15px;
@@ -51,11 +47,7 @@
   
   .region-select {
     display: inline-block;
-    width: $region-select-width;
     height: $search-item-height;
-    position: absolute;
-    left: $search-input-width;
-    top: 0;
   }
 
   select:not([multiple]).region-select {
@@ -75,11 +67,8 @@
   }
   
   .search-button {
-    position: absolute;
-    width: $search-button-width;
+    width: 100%;
     height: $search-item-height;
-    left: $search-input-width + $region-select-width;
-    top: 0;
     border-radius: 0;
   }
 

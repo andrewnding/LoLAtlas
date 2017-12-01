@@ -113,7 +113,8 @@ class SearchBarAutosuggest extends React.Component {
   render() {
     const searchBarItemsClassNames = classNames({
       'not-focused': !this.state.isFocused,
-      'search-bar-items': true
+      'search-bar-items': true,
+      'row': true
     })
 
     if (this.state.doneFetchingData) {
@@ -137,26 +138,32 @@ class SearchBarAutosuggest extends React.Component {
             {this.props.errorMessage}
           </div>
           <form className={searchBarItemsClassNames} onSubmit={this.handleSubmit.bind(this)}>
-            <Autosuggest
-              suggestions={this.state.suggestions}
-              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
-              onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
-              getSuggestionValue={this.getSuggestionValue.bind(this)}
-              renderSuggestion={this.renderSuggestion.bind(this)}
-              inputProps={inputProps}
-            />
-            <select 
-              className="form-control region-select"
-              value={this.state.region} 
-              onChange={this.handleOnChangeRegion.bind(this)}
-            >
-              { this.renderSelectOptions() }
-            </select>
-            <input
-              type="submit"
-              value="Search"
-              className="btn btn-primary search-button"
-            />
+            <div className="col-md-8">
+              <Autosuggest
+                suggestions={this.state.suggestions}
+                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
+                onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
+                getSuggestionValue={this.getSuggestionValue.bind(this)}
+                renderSuggestion={this.renderSuggestion.bind(this)}
+                inputProps={inputProps}
+              />
+            </div>
+            <div className="col-md-2">
+              <select 
+                className="form-control region-select"
+                value={this.state.region} 
+                onChange={this.handleOnChangeRegion.bind(this)}
+              >
+                { this.renderSelectOptions() }
+              </select>
+            </div>
+            <div className="col-md-2">
+              <input
+                type="submit"
+                value="Search"
+                className="btn btn-primary search-button"
+              />
+            </div>
           </form>
         </div>
       )
