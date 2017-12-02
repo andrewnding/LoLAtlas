@@ -28468,7 +28468,8 @@ var SearchBarAutosuggest = function (_React$Component) {
       suggestions: [],
       searchHistory: [],
       region: 'NA',
-      isFocused: false
+      isFocused: false,
+      errorMessage: _this.props.errorMessage
     };
     return _this;
   }
@@ -28568,10 +28569,9 @@ var SearchBarAutosuggest = function (_React$Component) {
     value: function handleSubmit(e) {
       e.preventDefault();
       if (_xregexp2.default.test(this.state.name, new _xregexp2.default('^(?!.*\\bRiot\\b)[0-9\\p{L} _\\.]{3,16}$', 'i'))) {
-        console.log('searching for player ' + this.state.name);
         this.props.history.push('/' + this.state.region + '/search?name=' + this.state.name);
       } else {
-        console.log('Please enter a valid summoner name');
+        this.setState({ errorMessage: 'Please enter a valid summoner name' });
       }
     }
   }, {
@@ -28632,7 +28632,7 @@ var SearchBarAutosuggest = function (_React$Component) {
           _react2.default.createElement(
             'div',
             { className: 'search-error-message' },
-            this.props.errorMessage
+            this.state.errorMessage
           ),
           _react2.default.createElement(
             'form',
@@ -81133,7 +81133,6 @@ var receivedChampionMastery = function receivedChampionMastery(payload, summoner
 };
 
 var getRankedLeague = exports.getRankedLeague = function getRankedLeague(serviceRegion, summonerId) {
-  console.log('GETTING RANKED LEAGUE');
   return function (dispatch) {
     return _axios2.default.get('/api/rankedLeague?serviceRegion=' + serviceRegion + '&summonerId=' + summonerId).then(function (response) {
       dispatch(receivedRankedLeague(response.data, summonerId));
@@ -81145,7 +81144,6 @@ var getRankedLeague = exports.getRankedLeague = function getRankedLeague(service
 };
 
 var getAccountId = exports.getAccountId = function getAccountId(serviceRegion, summonerId) {
-  console.log('GETTING ACCOUNT ID');
   return function (dispatch) {
     return _axios2.default.get('/api/summonerByAccountId?serviceRegion=' + serviceRegion + '&summonerId=' + summonerId).then(function (response) {
       dispatch(receivedAccountId(response.data.accountId, summonerId));
@@ -81157,7 +81155,6 @@ var getAccountId = exports.getAccountId = function getAccountId(serviceRegion, s
 };
 
 var getRecentRankedMatches = exports.getRecentRankedMatches = function getRecentRankedMatches(serviceRegion, accountId) {
-  console.log('GETTING RANKED MATCHES');
   return function (dispatch) {
     return _axios2.default.get('/api/recentRankedMatches?serviceRegion=' + serviceRegion + '&accountId=' + accountId).then(function (response) {
       dispatch(receivedRecentRankedMatches(response.data, accountId));
@@ -81172,7 +81169,6 @@ var getRecentRankedMatches = exports.getRecentRankedMatches = function getRecent
 };
 
 var getMatchDetails = exports.getMatchDetails = function getMatchDetails(serviceRegion, summonerId, gameId) {
-  console.log('GETTING RANKED MATCH DETAILS');
   return function (dispatch) {
     return _axios2.default.get('/api/matchDetails?serviceRegion=' + serviceRegion + '&gameId=' + gameId + '&summonerId=' + summonerId).then(function (response) {
       dispatch(receivedMatchDetails(response.data, summonerId, gameId));
@@ -81184,7 +81180,6 @@ var getMatchDetails = exports.getMatchDetails = function getMatchDetails(service
 };
 
 var getChampionMastery = exports.getChampionMastery = function getChampionMastery(serviceRegion, summonerId, championId) {
-  console.log('GETTING CHAMPION MASTERY');
   return function (dispatch) {
     return _axios2.default.get('/api/championMastery?serviceRegion=' + serviceRegion + '&summonerId=' + summonerId + '&championId=' + championId).then(function (response) {
       dispatch(receivedChampionMastery(response.data, summonerId));

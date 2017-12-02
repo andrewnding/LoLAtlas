@@ -106,6 +106,16 @@ var rankedMatchesNotFoundResponse = {
   status_code: 404
 }
 
+function throttleHelper(paramFunction) {
+  if (app.get('env') === 'development') {
+    bucket.throttle(function(err) {
+      paramFunction
+    })
+  } else {
+    paramFunction
+  }
+}
+
 function getSummonerByName(req, res) {
   return axios.get(encodeUrl(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/summoner/v3/summoners/by-name/${req.query.summonerName}`), {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
@@ -137,9 +147,7 @@ app.get('/summonerByName', (req, res) => {
     }
 
     if (summoner.length === 0) {
-      bucket.throttle(function(err) {
-        getSummonerByName(req, res)
-      })
+      throttleHelper(getSummonerByName(req, res))
     } else {
       req.session.summonerName = req.query.summonerName
       addSummonerToSearchHistory(req)
@@ -191,9 +199,7 @@ function getCurrentGame(req, res) {
 }
 
 app.get('/currentGame', (req, res) => {
-  bucket.throttle(function(err) {
-    getCurrentGame(req, res)
-  })
+  throttleHelper(getCurrentGame(req, res))
 })
 
 function getRankedLeague(req, res) {
@@ -226,9 +232,7 @@ app.get('/rankedLeague', (req, res) => {
     }
 
     if (rankedLeague.length === 0) {
-      bucket.throttle(function(err) {
-        getRankedLeague(req, res)
-      })
+      throttleHelper(getRankedLeague(req, res))
     } else {
       res.json(rankedLeague[0].data)
     }
@@ -259,9 +263,7 @@ app.get('/summonerByAccountId', (req, res) => {
     }
 
     if (summoner.length === 0) {
-      bucket.throttle(function(err) {
-        getSummonerByAccountId(req, res)
-      })
+      throttleHelper(getSummonerByAccountId(req, res))
     } else {
       res.json(summoner[0].data)
     }
@@ -298,9 +300,7 @@ app.get('/recentRankedMatches', (req, res) => {
     }
 
     if (matches.length === 0) {
-      bucket.throttle(function(err) {
-        getRecentRankedMatches(req, res)
-      })
+      throttleHelper(getRecentRankedMatches(req, res))
     } else {
       res.json(matches[0].data)
     }
@@ -368,9 +368,7 @@ app.get('/matchDetails', (req, res) => {
     }
 
     if (match.length === 0) {
-      bucket.throttle(function(err) {
-        getMatchDetails(req, res)
-      })
+      throttleHelper(getMatchDetails(req, res))
     } else {
       res.json(match[0].data)
     }
@@ -401,9 +399,7 @@ app.get('/championMastery', (req, res) => {
     }
 
     if (championMastery.length === 0) {
-      bucket.throttle(function(err) {
-        getChampionMastery(req, res)
-      })
+      throttleHelper(getChampionMastery(req, res))
     } else {
       res.json(championMastery[0].data)
     }

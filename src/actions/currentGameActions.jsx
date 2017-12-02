@@ -45,7 +45,6 @@ const receivedChampionMastery = (payload, summonerId) => {
 
 
 export const getRankedLeague = (serviceRegion, summonerId) => {
-  console.log('GETTING RANKED LEAGUE')
   return (dispatch) => {
     return axios.get(`/api/rankedLeague?serviceRegion=${serviceRegion}&summonerId=${summonerId}`)
       .then(response => {
@@ -58,7 +57,6 @@ export const getRankedLeague = (serviceRegion, summonerId) => {
 }
 
 export const getAccountId = (serviceRegion, summonerId) => {
-  console.log('GETTING ACCOUNT ID')
   return (dispatch) => {
     return axios.get(`/api/summonerByAccountId?serviceRegion=${serviceRegion}&summonerId=${summonerId}`)
       .then(response => {
@@ -71,7 +69,6 @@ export const getAccountId = (serviceRegion, summonerId) => {
 }
 
 export const getRecentRankedMatches = (serviceRegion, accountId) => {
-  console.log('GETTING RANKED MATCHES')
   return (dispatch) => {
     return axios.get(`/api/recentRankedMatches?serviceRegion=${serviceRegion}&accountId=${accountId}`)
       .then(response => {
@@ -87,7 +84,6 @@ export const getRecentRankedMatches = (serviceRegion, accountId) => {
 }
 
 export const getMatchDetails = (serviceRegion, summonerId, gameId) => {
-  console.log('GETTING RANKED MATCH DETAILS')
   return (dispatch) => {
     return axios.get(`/api/matchDetails?serviceRegion=${serviceRegion}&gameId=${gameId}&summonerId=${summonerId}`)
       .then(response => {
@@ -100,7 +96,6 @@ export const getMatchDetails = (serviceRegion, summonerId, gameId) => {
 }
 
 export const getChampionMastery = (serviceRegion, summonerId, championId) => {
-  console.log('GETTING CHAMPION MASTERY')
   return (dispatch) => {
     return axios.get(`/api/championMastery?serviceRegion=${serviceRegion}&summonerId=${summonerId}&championId=${championId}`)
       .then(response => {

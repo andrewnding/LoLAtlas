@@ -16,7 +16,8 @@ class SearchBarAutosuggest extends React.Component {
       suggestions: [],
       searchHistory: [],
       region: 'NA',
-      isFocused: false
+      isFocused: false,
+      errorMessage: this.props.errorMessage
     }
   }
 
@@ -89,10 +90,9 @@ class SearchBarAutosuggest extends React.Component {
   handleSubmit(e) {
     e.preventDefault()
     if (XRegExp.test(this.state.name, new XRegExp('^(?!.*\\bRiot\\b)[0-9\\p{L} _\\.]{3,16}$', 'i'))) {
-      console.log(`searching for player ${this.state.name}`)
       this.props.history.push(`/${this.state.region}/search?name=${this.state.name}`)
     } else {
-      console.log('Please enter a valid summoner name')
+      this.setState({ errorMessage: 'Please enter a valid summoner name' })
     }
   }
 
@@ -135,7 +135,7 @@ class SearchBarAutosuggest extends React.Component {
             <h2>The quickest live game lookup tool</h2>  
           </div>
           <div className='search-error-message'>
-            {this.props.errorMessage}
+            {this.state.errorMessage}
           </div>
           <form className={searchBarItemsClassNames} onSubmit={this.handleSubmit.bind(this)}>
             <div className="col-md-8">
