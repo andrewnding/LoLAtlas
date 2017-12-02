@@ -80960,7 +80960,14 @@ var CurrentGamePage = function (_React$Component) {
                 return;
               }
               _this2.props.dispatch((0, _currentGameActions.getRecentRankedMatches)(_this2.props.match.params.region, response.data.accountId)).then(function (response) {
-                if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
+                if (response.data.error) {
+                  if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
+                    _this2.setState({ searchError: response.data.error });
+                    return;
+                  } else {
+                    _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + 5 });
+                  }
+                } else {
                   if (response.data.length < 5) {
                     _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + (5 - response.data.length) });
                   }
@@ -80975,8 +80982,6 @@ var CurrentGamePage = function (_React$Component) {
                       console.log(error);
                     });
                   });
-                } else {
-                  _this2.setState({ numberOfMatchesLoaded: _this2.state.numberOfMatchesLoaded + 5 });
                 }
                 _this2.setState({ numberOfSummonersLoaded: _this2.state.numberOfSummonersLoaded + 1 });
               }).catch(function (error) {

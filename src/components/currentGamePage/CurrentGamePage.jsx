@@ -116,7 +116,14 @@ class CurrentGamePage extends React.Component {
                 }
                 this.props.dispatch(getRecentRankedMatches(this.props.match.params.region, response.data.accountId))
                   .then(response => {
-                    if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
+                    if (response.data.error) {
+                      if (response.data.error !== 'NO_RECENT_RANKED_MATCHES') {
+                        this.setState({ searchError: response.data.error })
+                        return
+                      } else {
+                        this.setState({ numberOfMatchesLoaded: this.state.numberOfMatchesLoaded + 5 })
+                      }
+                    } else {
                       if (response.data.length < 5) {
                         this.setState({ numberOfMatchesLoaded: this.state.numberOfMatchesLoaded + (5 - response.data.length) })
                       }
@@ -132,8 +139,6 @@ class CurrentGamePage extends React.Component {
                             console.log(error)
                           })
                       })
-                    } else {
-                      this.setState({ numberOfMatchesLoaded: this.state.numberOfMatchesLoaded + 5 })
                     }
                     this.setState({ numberOfSummonersLoaded: this.state.numberOfSummonersLoaded + 1 })
                   }).catch(error => {
