@@ -35,6 +35,15 @@ export default class About extends React.Component {
             You can see an example search <Link to="/sample"> here</Link>.
           </p>
         </div>
+
+        <div className="info-block">
+          <h2>Will there be more updates to LoLAtlas?</h2>
+          <p>
+            LoLAtlas is still in open beta and it is currently a one-man project, so more features will
+            be added as time permits. Feedback through the <Link to="/contact"> Contact </Link> page is
+            greatly appreciated and will be taken into consideration!
+          </p>
+        </div>
       </div>
     )
   }

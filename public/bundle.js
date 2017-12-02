@@ -84422,6 +84422,26 @@ var About = function (_React$Component) {
             ),
             '.'
           )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'info-block' },
+          _react2.default.createElement(
+            'h2',
+            null,
+            'Will there be more updates to LoLAtlas?'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'LoLAtlas is still in open beta and it is currently a one-man project, so more features will be added as time permits. Feedback through the ',
+            _react2.default.createElement(
+              _reactRouterDom.Link,
+              { to: '/contact' },
+              ' Contact '
+            ),
+            ' page is greatly appreciated and will be taken into consideration!'
+          )
         )
       );
     }
