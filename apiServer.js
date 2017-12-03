@@ -33,6 +33,7 @@ var Realms = require('./src/models/realms');
 var ChampionImages = require('./src/models/championImages');
 var ChampionData = require('./src/models/championData');
 var SummonerSpells = require('./src/models/summonerSpells');
+var ExampleSummoner = require('./src/models/exampleSummoner');
 // Done with database models
 
 // User session setup
@@ -54,42 +55,42 @@ var bucket = new LeakyBucket({
 });
 // Done with rate limiting setup
 
-// Axios retry
-axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
-  if (err.response.status !== 429) {
-    return Promise.reject(err);
-  }
-  var config = err.config;
-  var retryCount = 3
-  var retryDelay = 100
-  // If config does not exist or the retry option is not set, reject
-  if(!config) return Promise.reject(err);
+// // Axios retry
+// axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
+//   if (err.response.status !== 429) {
+//     return Promise.reject(err);
+//   }
+//   var config = err.config;
+//   var retryCount = 3
+//   var retryDelay = 100
+//   // If config does not exist or the retry option is not set, reject
+//   if(!config) return Promise.reject(err);
   
-  // Set the variable for keeping track of the retry count
-  config.__retryCount = config.__retryCount || 0;
-  // Check if we've maxed out the total number of retries
-  if(config.__retryCount >= retryCount) {
-      // Reject with the error
-      return Promise.reject(err);
-  }
+//   // Set the variable for keeping track of the retry count
+//   config.__retryCount = config.__retryCount || 0;
+//   // Check if we've maxed out the total number of retries
+//   if(config.__retryCount >= retryCount) {
+//       // Reject with the error
+//       return Promise.reject(err);
+//   }
   
-  // Increase the retry count
-  config.__retryCount += 1;
-  console.log('RETRY NUMBER ', config.__retryCount)
+//   // Increase the retry count
+//   config.__retryCount += 1;
+//   console.log('RETRY NUMBER ', config.__retryCount)
   
-  // Create new promise to handle exponential backoff
-  var backoff = new Promise(function(resolve) {
-      setTimeout(function() {
-          resolve();
-      }, 200);
-  });
+//   // Create new promise to handle exponential backoff
+//   var backoff = new Promise(function(resolve) {
+//       setTimeout(function() {
+//           resolve();
+//       }, 200);
+//   });
   
-  // Return the promise in which recalls axios to retry the request
-  return backoff.then(function() {
-      return axios(config);
-  });
-});
-// Done with axios retry
+//   // Return the promise in which recalls axios to retry the request
+//   return backoff.then(function() {
+//       return axios(config);
+//   });
+// });
+// // Done with axios retry
 
 var summonerNotFoundResponse = {
   message: 'Data not found - summoner not found',
@@ -405,6 +406,101 @@ app.get('/championMastery', (req, res) => {
     }
   })
 })
+
+// FINDING EXAMPLE SUMMONER
+app.get('/findExampleSummoner', (req, res) => {
+  ExampleSummoner.findOne({}, function(err, exampleSummoner) {
+    if (err) {
+      console.log(err)
+      return err
+    }
+
+    if (!exampleSummoner) {
+      // console.log('getting summoner from api')
+      throttleHelper(findExampleSummoner(req, res))
+    } else {
+      // console.log('getting summoner from database')
+      handleDatabaseSummoner(exampleSummoner)
+        .then(response => {
+          if (response) {
+            // console.log('database summoner is in a game!')
+            res.json({ name: exampleSummoner.data.name })
+          } else {
+            // console.log('database summoner not in game so getting summoner from api')
+            ExampleSummoner.remove({}, function(err, exampleSummoner) {
+              if (err) {
+                console.log(err)
+                return err
+              }
+            })
+            throttleHelper(findExampleSummoner(req, res))
+          }
+        })
+    }
+  })
+})
+
+async function handleDatabaseSummoner(exampleSummoner) {
+  if (await isPlayerInGame(exampleSummoner.data.id)) {
+    return true
+  } else {
+    return false
+  }
+}
+
+function findExampleSummoner(req, res) {
+  return axios.get(`https://na1.api.riotgames.com/lol/league/v3/masterleagues/by-queue/RANKED_SOLO_5x5`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      const playerList = response.data.entries.map(entry => { return { id: entry.playerOrTeamId, name: entry.playerOrTeamName } })
+      findValidPlayer(playerList)
+        .then(player => {
+          ExampleSummoner.create({ data: player }, function(err, exampleSummoner) {
+            if (err) {
+              console.log(err)
+              return err
+            }
+            res.json({ name: player.name })
+          })
+        }).catch(error => {
+          console.log(error)
+        })
+    }).catch(error => {
+      console.log(error)
+    })
+}
+
+async function findValidPlayer(playerList) {
+  let validPlayer
+  let found = false
+  for (let player of playerList) {
+    // console.log('trying', player)
+    if (await isPlayerInGame(player.id)) {
+      // console.log(player, 'worked')
+      validPlayer = player
+      found = true
+      break
+    }
+  }
+
+  if (found) {
+    return validPlayer
+  }
+  console.log('ERROR: No sample summoner found in NA master league')
+}
+
+function isPlayerInGame(playerId) {
+  return axios.get(`https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/${playerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+    .then(response => {
+      console.log(response.data.gameQueueConfigId)
+      if (response.data.gameQueueConfigId === 420) {
+        return true
+      }
+    }).catch(error => {
+      console.log('not in game')
+      return false
+    })
+}
+// DONE FINDING EXAMPLE SUMMONER
 
 app.get('/searchHistory', (req, res) => {
   let searchObject = {}

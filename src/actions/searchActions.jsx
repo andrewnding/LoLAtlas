@@ -14,6 +14,26 @@ const receivedCurrentGame = (payload) => {
   }
 }
 
+const errorFetchingExampleSummoner = (error) => {
+  return {
+    type: actions.ERROR_FETCHING_EXAMPLE_SUMMONER,
+    error
+  }
+}
+
+const fetchingExampleSummoner = () => {
+  return {
+    type: actions.FETCHING_EXAMPLE_SUMMONER
+  }
+}
+
+const receivedExampleSummoner = (payload) => {
+  return {
+    type: actions.RECEIVED_EXAMPLE_SUMMONER,
+    payload
+  }
+}
+
 const errorFetchingCurrentGame = (error) => {
   return {
     type: actions.ERROR_FETCHING_CURRENT_GAME,
@@ -76,6 +96,19 @@ export const getCurrentGame = (serviceRegion, summonerName) => {
           dispatch(errorFetchingCurrentGame(err.response))
           return err.response
         }
+      })
+  }
+}
+
+export const findExampleSummoner = () => {
+  return (dispatch) => {
+    dispatch(fetchingExampleSummoner())
+    return axios.get(`/api/findExampleSummoner`)
+      .then(response => {
+        dispatch(receivedExampleSummoner(response.data))
+      }).catch(err => {
+        dispatch(errorFetchingExampleSummoner(err.response))
+        return err.response
       })
   }
 }

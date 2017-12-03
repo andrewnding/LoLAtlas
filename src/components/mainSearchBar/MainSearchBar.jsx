@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import SearchBarAutosuggest from './SearchBarAutosuggest'
+import { findExampleSummoner } from '../../actions/searchActions';
 
 class MainSearchBar extends React.Component {
   constructor(props) {
@@ -20,6 +21,13 @@ class MainSearchBar extends React.Component {
     this.setState({ errorMessage })
   }
 
+  getExampleSearch() {
+    this.props.dispatch(findExampleSummoner())
+      .then(response => {
+        this.props.history.push(`/NA/search?name=${this.props.search.exampleSummoner}`)
+      })
+  }
+
   render() {
     return (
       <div className="search-bar-container">
@@ -34,9 +42,18 @@ class MainSearchBar extends React.Component {
           history={this.props.history}
           setErrorMessage={this.setErrorMessage.bind(this)}
         />
+        <div>
+          <a onClick={this.getExampleSearch.bind(this)}>See an example</a>
+        </div>
       </div>
     )
   }
 }
 
-export default MainSearchBar
+const mapStateToProps = (state) => {
+  return {
+    search: state.searchReducer
+  }
+}
+
+export default connect(mapStateToProps)(MainSearchBar)

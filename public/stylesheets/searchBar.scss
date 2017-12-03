@@ -10,6 +10,10 @@
   margin-bottom:         calc(80vh - 304px - #{$footer-height});
   position: relative;
   background-color: $gray-e;
+
+  a:hover {
+    cursor: pointer;
+  }
 }
 
 .search-error-message {
@@ -26,6 +30,7 @@
 .search-bar-items {
   display: inline-block;
   margin-top: 10px;
+  margin-bottom: 10px;
   width: 50%;
   min-width: 300px;
 
