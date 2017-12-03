@@ -6,7 +6,7 @@ import { getRealmVersion, getChampionImages, getChampionData, getSummonerSpells 
 
 import CurrentGameHeader from './CurrentGameHeader'
 import CurrentGamePlayerList from './CurrentGamePlayerList'
-import SearchBarAutosuggest from '../mainSearchBar/SearchBarAutosuggest'
+import MainSearchBar from '../mainSearchBar/MainSearchBar'
 import LoadingScreen from '../other/LoadingScreen'
 
 class CurrentGamePage extends React.Component {
@@ -194,7 +194,7 @@ class CurrentGamePage extends React.Component {
 
   renderErrorPage(message) {
     return (
-        <SearchBarAutosuggest
+        <MainSearchBar
           history={this.props.history}
           errorMessage={message}
         />

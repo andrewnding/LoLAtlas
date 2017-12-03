@@ -28468,8 +28468,7 @@ var SearchBarAutosuggest = function (_React$Component) {
       suggestions: [],
       searchHistory: [],
       region: 'NA',
-      isFocused: false,
-      errorMessage: _this.props.errorMessage
+      isFocused: false
     };
     return _this;
   }
@@ -28571,7 +28570,7 @@ var SearchBarAutosuggest = function (_React$Component) {
       if (_xregexp2.default.test(this.state.name, new _xregexp2.default('^(?!.*\\bRiot\\b)[0-9\\p{L} _\\.]{3,16}$', 'i'))) {
         this.props.history.push('/' + this.state.region + '/search?name=' + this.state.name);
       } else {
-        this.setState({ errorMessage: 'Please enter a valid summoner name' });
+        this.props.setErrorMessage('Please enter a valid summoner name');
       }
     }
   }, {
@@ -28613,64 +28612,41 @@ var SearchBarAutosuggest = function (_React$Component) {
         };
 
         return _react2.default.createElement(
-          'div',
-          { className: 'search-bar-container' },
+          'form',
+          { className: searchBarItemsClassNames, onSubmit: this.handleSubmit.bind(this) },
           _react2.default.createElement(
             'div',
-            { className: 'title-text' },
+            { className: 'col-md-8' },
+            _react2.default.createElement(_reactAutosuggest2.default, {
+              suggestions: this.state.suggestions,
+              onSuggestionsFetchRequested: this.onSuggestionsFetchRequested.bind(this),
+              onSuggestionsClearRequested: this.onSuggestionsClearRequested.bind(this),
+              getSuggestionValue: this.getSuggestionValue.bind(this),
+              renderSuggestion: this.renderSuggestion.bind(this),
+              inputProps: inputProps
+            })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'col-md-2' },
             _react2.default.createElement(
-              'h1',
-              null,
-              'LoLAtlas'
-            ),
-            _react2.default.createElement(
-              'h2',
-              null,
-              'The quickest live game lookup tool'
+              'select',
+              {
+                className: 'form-control region-select',
+                value: this.state.region,
+                onChange: this.handleOnChangeRegion.bind(this)
+              },
+              this.renderSelectOptions()
             )
           ),
           _react2.default.createElement(
             'div',
-            { className: 'search-error-message' },
-            this.state.errorMessage
-          ),
-          _react2.default.createElement(
-            'form',
-            { className: searchBarItemsClassNames, onSubmit: this.handleSubmit.bind(this) },
-            _react2.default.createElement(
-              'div',
-              { className: 'col-md-8' },
-              _react2.default.createElement(_reactAutosuggest2.default, {
-                suggestions: this.state.suggestions,
-                onSuggestionsFetchRequested: this.onSuggestionsFetchRequested.bind(this),
-                onSuggestionsClearRequested: this.onSuggestionsClearRequested.bind(this),
-                getSuggestionValue: this.getSuggestionValue.bind(this),
-                renderSuggestion: this.renderSuggestion.bind(this),
-                inputProps: inputProps
-              })
-            ),
-            _react2.default.createElement(
-              'div',
-              { className: 'col-md-2' },
-              _react2.default.createElement(
-                'select',
-                {
-                  className: 'form-control region-select',
-                  value: this.state.region,
-                  onChange: this.handleOnChangeRegion.bind(this)
-                },
-                this.renderSelectOptions()
-              )
-            ),
-            _react2.default.createElement(
-              'div',
-              { className: 'col-md-2' },
-              _react2.default.createElement('input', {
-                type: 'submit',
-                value: 'Search',
-                className: 'btn btn-primary search-button'
-              })
-            )
+            { className: 'col-md-2' },
+            _react2.default.createElement('input', {
+              type: 'submit',
+              value: 'Search',
+              className: 'btn btn-primary search-button'
+            })
           )
         );
       } else {
@@ -73331,7 +73307,12 @@ var MainSearchBar = function (_React$Component) {
   function MainSearchBar(props) {
     _classCallCheck(this, MainSearchBar);
 
-    return _possibleConstructorReturn(this, (MainSearchBar.__proto__ || Object.getPrototypeOf(MainSearchBar)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (MainSearchBar.__proto__ || Object.getPrototypeOf(MainSearchBar)).call(this, props));
+
+    _this.state = {
+      errorMessage: _this.props.errorMessage
+    };
+    return _this;
   }
 
   _createClass(MainSearchBar, [{
@@ -73340,13 +73321,38 @@ var MainSearchBar = function (_React$Component) {
       document.title = 'LoLAtlas';
     }
   }, {
+    key: 'setErrorMessage',
+    value: function setErrorMessage(errorMessage) {
+      this.setState({ errorMessage: errorMessage });
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
-        null,
+        { className: 'search-bar-container' },
+        _react2.default.createElement(
+          'div',
+          { className: 'title-text' },
+          _react2.default.createElement(
+            'h1',
+            null,
+            'LoLAtlas'
+          ),
+          _react2.default.createElement(
+            'h2',
+            null,
+            'The quickest live game lookup tool'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'search-error-message' },
+          this.state.errorMessage
+        ),
         _react2.default.createElement(_SearchBarAutosuggest2.default, {
-          history: this.props.history
+          history: this.props.history,
+          setErrorMessage: this.setErrorMessage.bind(this)
         })
       );
     }
@@ -80830,9 +80836,9 @@ var _CurrentGamePlayerList = __webpack_require__(1025);
 
 var _CurrentGamePlayerList2 = _interopRequireDefault(_CurrentGamePlayerList);
 
-var _SearchBarAutosuggest = __webpack_require__(361);
+var _MainSearchBar = __webpack_require__(987);
 
-var _SearchBarAutosuggest2 = _interopRequireDefault(_SearchBarAutosuggest);
+var _MainSearchBar2 = _interopRequireDefault(_MainSearchBar);
 
 var _LoadingScreen = __webpack_require__(1046);
 
@@ -81026,7 +81032,7 @@ var CurrentGamePage = function (_React$Component) {
   }, {
     key: 'renderErrorPage',
     value: function renderErrorPage(message) {
-      return _react2.default.createElement(_SearchBarAutosuggest2.default, {
+      return _react2.default.createElement(_MainSearchBar2.default, {
         history: this.props.history,
         errorMessage: message
       });

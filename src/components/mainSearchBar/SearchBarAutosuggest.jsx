@@ -16,8 +16,7 @@ class SearchBarAutosuggest extends React.Component {
       suggestions: [],
       searchHistory: [],
       region: 'NA',
-      isFocused: false,
-      errorMessage: this.props.errorMessage
+      isFocused: false
     }
   }
 
@@ -92,7 +91,7 @@ class SearchBarAutosuggest extends React.Component {
     if (XRegExp.test(this.state.name, new XRegExp('^(?!.*\\bRiot\\b)[0-9\\p{L} _\\.]{3,16}$', 'i'))) {
       this.props.history.push(`/${this.state.region}/search?name=${this.state.name}`)
     } else {
-      this.setState({ errorMessage: 'Please enter a valid summoner name' })
+      this.props.setErrorMessage('Please enter a valid summoner name')
     }
   }
 
@@ -129,43 +128,34 @@ class SearchBarAutosuggest extends React.Component {
       }
 
       return (
-        <div className="search-bar-container">
-          <div className="title-text">
-            <h1>LoLAtlas</h1>
-            <h2>The quickest live game lookup tool</h2>  
+        <form className={searchBarItemsClassNames} onSubmit={this.handleSubmit.bind(this)}>
+          <div className="col-md-8">
+            <Autosuggest
+              suggestions={this.state.suggestions}
+              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
+              onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
+              getSuggestionValue={this.getSuggestionValue.bind(this)}
+              renderSuggestion={this.renderSuggestion.bind(this)}
+              inputProps={inputProps}
+            />
           </div>
-          <div className='search-error-message'>
-            {this.state.errorMessage}
+          <div className="col-md-2">
+            <select 
+              className="form-control region-select"
+              value={this.state.region} 
+              onChange={this.handleOnChangeRegion.bind(this)}
+            >
+              { this.renderSelectOptions() }
+            </select>
           </div>
-          <form className={searchBarItemsClassNames} onSubmit={this.handleSubmit.bind(this)}>
-            <div className="col-md-8">
-              <Autosuggest
-                suggestions={this.state.suggestions}
-                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
-                onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
-                getSuggestionValue={this.getSuggestionValue.bind(this)}
-                renderSuggestion={this.renderSuggestion.bind(this)}
-                inputProps={inputProps}
-              />
-            </div>
-            <div className="col-md-2">
-              <select 
-                className="form-control region-select"
-                value={this.state.region} 
-                onChange={this.handleOnChangeRegion.bind(this)}
-              >
-                { this.renderSelectOptions() }
-              </select>
-            </div>
-            <div className="col-md-2">
-              <input
-                type="submit"
-                value="Search"
-                className="btn btn-primary search-button"
-              />
-            </div>
-          </form>
-        </div>
+          <div className="col-md-2">
+            <input
+              type="submit"
+              value="Search"
+              className="btn btn-primary search-button"
+            />
+          </div>
+        </form>
       )
     } else {
       return null
