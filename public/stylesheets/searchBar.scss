@@ -10,10 +10,6 @@
   margin-bottom:         calc(80vh - 304px - #{$footer-height});
   position: relative;
   background-color: $gray-e;
-
-  a:hover {
-    cursor: pointer;
-  }
 }
 
 .search-error-message {

@@ -496,7 +496,7 @@ function isPlayerInGame(playerId) {
         return true
       }
     }).catch(error => {
-      console.log('not in game')
+      // console.log('not in game')
       return false
     })
 }
