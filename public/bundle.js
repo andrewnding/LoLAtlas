@@ -84437,7 +84437,11 @@ var About = function (_React$Component) {
       var _this2 = this;
 
       this.props.dispatch((0, _searchActions.findExampleSummoner)()).then(function (response) {
-        _this2.props.history.push('/NA/search?name=' + _this2.props.search.exampleSummoner);
+        if (_this2.props.search.exampleSummoner === undefined) {
+          _this2.props.history.push('/sample');
+        } else {
+          _this2.props.history.push('/NA/search?name=' + _this2.props.search.exampleSummoner);
+        }
       });
     }
   }, {

@@ -454,13 +454,17 @@ function findExampleSummoner(req, res) {
       const playerList = response.data.entries.map(entry => { return { id: entry.playerOrTeamId, name: entry.playerOrTeamName } })
       findValidPlayer(playerList)
         .then(player => {
-          ExampleSummoner.create({ data: player }, function(err, exampleSummoner) {
-            if (err) {
-              console.log(err)
-              return err
-            }
-            res.json({ name: player.name })
-          })
+          if (player) {
+            ExampleSummoner.create({ data: player }, function(err, exampleSummoner) {
+              if (err) {
+                console.log(err)
+                return err
+              }
+              res.json({ name: player.name })
+            })
+          } else {
+            res.json({ name: undefined })
+          }
         }).catch(error => {
           console.log(error)
         })
@@ -484,8 +488,10 @@ async function findValidPlayer(playerList) {
 
   if (found) {
     return validPlayer
+  } else {
+    console.log('ERROR: No sample summoner found in NA master league')
+    return undefined
   }
-  console.log('ERROR: No sample summoner found in NA master league')
 }
 
 function isPlayerInGame(playerId) {

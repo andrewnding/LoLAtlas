@@ -12,7 +12,11 @@ class About extends React.Component {
   getExampleSearch() {
     this.props.dispatch(findExampleSummoner())
       .then(response => {
-        this.props.history.push(`/NA/search?name=${this.props.search.exampleSummoner}`)
+        if (this.props.search.exampleSummoner === undefined) {
+          this.props.history.push('/sample')
+        } else {
+          this.props.history.push(`/NA/search?name=${this.props.search.exampleSummoner}`)
+        }
       })
   }
 
