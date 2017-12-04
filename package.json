@@ -53,6 +53,7 @@
     "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
+    "url-search-params-polyfill": "^2.0.1",
     "xregexp": "^3.2.0"
   },
   "devDependencies": {

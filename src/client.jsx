@@ -3,6 +3,7 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import 'babel-polyfill'
+import 'url-search-params-polyfill'
 
 import store from './store/store'
 import MenuBar from './components/other/MenuBar'

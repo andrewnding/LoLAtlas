@@ -46022,6 +46022,8 @@ var _reactRouterDom = __webpack_require__(111);
 
 __webpack_require__(236);
 
+__webpack_require__(1059);
+
 var _store = __webpack_require__(839);
 
 var _store2 = _interopRequireDefault(_store);
@@ -85288,7 +85290,7 @@ exports = module.exports = __webpack_require__(1056)(undefined);
 
 
 // module
-exports.push([module.i, ".player-item-container {\n  border: 1px solid black;\n  margin: 10px 0; }\n  .player-item-container .summoner-spell-name {\n    color: #ffc400; }\n  .player-item-container .summoner-name-link a {\n    color: black; }\n  .player-item-container .summoner-name-link a:hover {\n    color: black; }\n  .player-item-container .tooltip {\n    max-width: 300px; }\n  .player-item-container .summoner-spell-container {\n    display: inline-block;\n    width: 20px;\n    position: relative; }\n    .player-item-container .summoner-spell-container img:hover {\n      cursor: help; }\n    .player-item-container .summoner-spell-container .summoner-icon-1 {\n      width: 20px;\n      position: absolute;\n      top: -24px; }\n    .player-item-container .summoner-spell-container .summoner-icon-2 {\n      width: 20px;\n      position: absolute;\n      top: -4px; }\n  .player-item-container .player-summary-icons {\n    height: 22px;\n    font-size: 16px;\n    background-color: white;\n    border-top: 1px solid black; }\n    .player-item-container .player-summary-icons i {\n      padding: 0px 5px; }\n    .player-item-container .player-summary-icons i:hover {\n      cursor: help; }\n    .player-item-container .player-summary-icons .fa-fire {\n      color: #ff8600; }\n    .player-item-container .player-summary-icons .fa-fire-extinguisher {\n      color: #d62c2c; }\n    .player-item-container .player-summary-icons .fa-hourglass-start {\n      color: #926e53; }\n    .player-item-container .player-summary-icons .fa-level-up {\n      color: #25b325; }\n    .player-item-container .player-summary-icons .fa-level-down {\n      color: #d62c2c; }\n  .player-item-container .player-item-sub-title {\n    text-align: center;\n    border-top: 1px solid black;\n    background-color: #dddddd; }\n  .player-item-container .player-item-content {\n    padding: 4px;\n    background-color: white; }\n  .player-item-container .blue-team-background {\n    background-color: #a9f2ff; }\n  .player-item-container .purple-team-background {\n    background-color: #c1aeda; }\n  .player-item-container .victory-background {\n    border-top: 1px solid #888888;\n    background-color: #a9e6ff; }\n    .player-item-container .victory-background .item-header-text {\n      background-color: #6dd0f9; }\n  .player-item-container .defeat-background {\n    border-top: 1px solid #888888;\n    background-color: #fdb6b6; }\n    .player-item-container .defeat-background .item-header-text {\n      background-color: #fd8f8f; }\n  .player-item-container .remake-background {\n    border-top: 1px solid #888888;\n    background-color: #bbbbbb; }\n    .player-item-container .remake-background .item-header-text {\n      background-color: #999999; }\n  .player-item-container .series-icon {\n    margin: 0 2px; }\n  .player-item-container .gold-text {\n    color: #ffc63a;\n    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black; }\n  .player-item-container .red-text {\n    color: #f75353;\n    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black; }\n\n.search-bar-container {\n  text-align: center;\n  margin-top: 20vh;\n  height: 250px;\n  padding-top: 20px;\n  margin-bottom: -webkit-calc(80vh - 304px - 20px);\n  margin-bottom: -moz-calc(80vh - 304px - 20px);\n  margin-bottom: calc(80vh - 304px - 20px);\n  position: relative;\n  background-color: #eeeeee; }\n\n.search-error-message {\n  height: 20px;\n  font-size: 16px;\n  color: #d62c2c;\n  font-weight: 700px; }\n\n.not-focused {\n  box-shadow: 0 3px 6px #bbb; }\n\n.search-bar-items {\n  display: inline-block;\n  margin-top: 10px;\n  margin-bottom: 10px;\n  width: 50%;\n  min-width: 300px; }\n  .search-bar-items .col-md-8, .search-bar-items .col-md-2 {\n    padding: 0; }\n  .search-bar-items .search-input {\n    width: 100%;\n    height: 40px;\n    font-size: 16px;\n    padding: 0px 15px;\n    -webkit-box-sizing: border-box;\n    -moz-box-sizing: border-box;\n    box-sizing: border-box;\n    border: 1px solid #bbbbbb;\n    border-radius: 0;\n    -webkit-border-radius: 0;\n    -moz-border-radius: 0; }\n  .search-bar-items .region-select {\n    display: inline-block;\n    height: 40px; }\n  .search-bar-items select:not([multiple]).region-select {\n    border: 1px solid #bbbbbb;\n    border-left: none;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    background-position: right 50%;\n    background-repeat: no-repeat;\n    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=);\n    padding: .5em;\n    padding-right: 1.5em; }\n  .search-bar-items .form-control {\n    border-radius: 0;\n    -webkit-border-radius: 0;\n    -moz-border-radius: 0; }\n  .search-bar-items .search-button {\n    width: 100%;\n    height: 40px;\n    border-radius: 0;\n    -webkit-border-radius: 0;\n    -moz-border-radius: 0; }\n  .search-bar-items .react-autosuggest__suggestions-container {\n    background-color: white; }\n    .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list {\n      padding: 0;\n      margin: 0;\n      text-align: left; }\n      .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list li {\n        list-style: none;\n        padding: 5px 10px;\n        font-size: 14px;\n        border-bottom: 1px solid #888888;\n        border-left: 1px solid #888888;\n        border-right: 1px solid #888888; }\n      .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list li.react-autosuggest__suggestion--highlighted {\n        background-color: #dddddd;\n        cursor: pointer; }\n\n.navbar-default {\n  background-color: #eeeeee;\n  border: none; }\n  .navbar-default div.navbar-header a {\n    color: black; }\n  .navbar-default div.navbar-header a:hover {\n    color: black;\n    text-decoration: underline; }\n  .navbar-default ul.nav li a {\n    color: black; }\n  .navbar-default ul.nav li a:hover {\n    text-decoration: underline; }\n  .navbar-default ul.nav li.active a {\n    background-color: #cccccc !important; }\n\nbody {\n  font-family: 'Lato', sans-serif;\n  background-color: #eeeeee; }\n\nh1 {\n  font-weight: 700; }\n\nh2 {\n  font-size: 18px; }\n\n.title-left-padding {\n  padding-left: 10px; }\n\n.team-row {\n  margin: 15px 0; }\n\n.vertical-align {\n  display: flex;\n  align-items: center; }\n\n.text-align-center {\n  text-align: center; }\n\n.space-between {\n  display: flex;\n  justify-content: space-between; }\n\n.medium-icon {\n  width: 40px; }\n\n.circular-icon {\n  border-radius: 50%;\n  -webkit-border-radius: 50%;\n  -moz-border-radius: 50%; }\n\n.item-header-text {\n  font-size: 13px;\n  padding: 0 3px; }\n\n.color-green {\n  color: #25b325; }\n\n.color-red {\n  color: #d62c2c; }\n\n.color-gray {\n  color: #bbbbbb; }\n\n.float-right {\n  float: right; }\n\n.navbar {\n  margin-bottom: 0;\n  background-color: #eeeeee; }\n\n.footer {\n  height: 20px; }\n\n.player-list-container {\n  background-color: #eeeeee; }\n\n.loading-container {\n  text-align: center;\n  margin-top: 40vh;\n  height: -webkit-calc(60vh - 60px - 20px);\n  height: -moz-calc(60vh - 60px - 20px);\n  height: calc(60vh - 60px - 20px); }\n\n.current-game-header {\n  height: 50px;\n  font-size: 24px;\n  font-weight: 700;\n  color: black;\n  background-color: white;\n  border-top: 1px solid #888888;\n  border-bottom: 1px solid #888888;\n  padding: 0 15px; }\n\n.versus-text {\n  font-size: 20px;\n  font-weight: 700; }\n\n.info-page {\n  margin: 0 auto;\n  width: 90%;\n  max-width: 700px; }\n  .info-page .info-block {\n    margin-bottom: 30px; }\n    .info-page .info-block h2 {\n      font-size: 1.6em; }\n    .info-page .info-block p {\n      font-size: 1.1em; }\n    .info-page .info-block a:hover {\n      cursor: pointer; }\n    .info-page .info-block .green-text {\n      color: green; }\n\n.contact-page {\n  margin: 0 auto;\n  width: 90%;\n  max-width: 700px; }\n  .contact-page .form-page .form-block {\n    margin-bottom: 20px; }\n    .contact-page .form-page .form-block label {\n      font-size: 1.2em; }\n    .contact-page .form-page .form-block .btn {\n      margin-top: 10px;\n      width: 100%;\n      font-size: 1em; }\n      .contact-page .form-page .form-block .btn i {\n        font-size: 1em; }\n    .contact-page .form-page .form-block .form-control {\n      border-radius: 0;\n      -webkit-border-radius: 0;\n      -moz-border-radius: 0; }\n\n.sample-page img {\n  width: 100%; }\n\nh1.page-title {\n  font-size: 2em;\n  font-weight: normal;\n  border-bottom: 1px solid black;\n  padding-bottom: 10px; }\n\n.col-xs-5ths,\n.col-sm-5ths,\n.col-md-5ths,\n.col-lg-5ths {\n  position: relative;\n  min-height: 1px;\n  padding-right: 15px;\n  padding-left: 15px; }\n\n.col-xs-5ths {\n  width: 20%;\n  float: left; }\n\n@media (min-width: 768px) {\n  .col-sm-5ths {\n    width: 20%;\n    float: left; } }\n\n@media (min-width: 992px) {\n  .col-md-5ths {\n    width: 20%;\n    float: left; } }\n\n@media (min-width: 1200px) {\n  .col-lg-5ths {\n    width: 20%;\n    float: left; } }\n", ""]);
+exports.push([module.i, ".player-item-container {\n  border: 1px solid black;\n  margin: 10px 0; }\n  .player-item-container .summoner-spell-name {\n    color: #ffc400; }\n  .player-item-container .summoner-name-link a {\n    color: black; }\n  .player-item-container .summoner-name-link a:hover {\n    color: black; }\n  .player-item-container .tooltip {\n    max-width: 300px; }\n  .player-item-container .summoner-spell-container {\n    display: inline-block;\n    width: 20px;\n    position: relative; }\n    .player-item-container .summoner-spell-container img:hover {\n      cursor: help; }\n    .player-item-container .summoner-spell-container .summoner-icon-1 {\n      width: 20px;\n      position: absolute;\n      top: -24px; }\n    .player-item-container .summoner-spell-container .summoner-icon-2 {\n      width: 20px;\n      position: absolute;\n      top: -4px; }\n  .player-item-container .player-summary-icons {\n    height: 22px;\n    font-size: 16px;\n    background-color: white;\n    border-top: 1px solid black; }\n    .player-item-container .player-summary-icons i {\n      padding: 0px 5px; }\n    .player-item-container .player-summary-icons i:hover {\n      cursor: help; }\n    .player-item-container .player-summary-icons .fa-fire {\n      color: #ff8600; }\n    .player-item-container .player-summary-icons .fa-fire-extinguisher {\n      color: #d62c2c; }\n    .player-item-container .player-summary-icons .fa-hourglass-start {\n      color: #926e53; }\n    .player-item-container .player-summary-icons .fa-level-up {\n      color: #25b325; }\n    .player-item-container .player-summary-icons .fa-level-down {\n      color: #d62c2c; }\n  .player-item-container .player-item-sub-title {\n    text-align: center;\n    border-top: 1px solid black;\n    background-color: #dddddd; }\n  .player-item-container .player-item-content {\n    padding: 4px;\n    background-color: white; }\n  .player-item-container .blue-team-background {\n    background-color: #a9f2ff; }\n  .player-item-container .purple-team-background {\n    background-color: #c1aeda; }\n  .player-item-container .victory-background {\n    border-top: 1px solid #888888;\n    background-color: #a9e6ff; }\n    .player-item-container .victory-background .item-header-text {\n      background-color: #6dd0f9; }\n  .player-item-container .defeat-background {\n    border-top: 1px solid #888888;\n    background-color: #fdb6b6; }\n    .player-item-container .defeat-background .item-header-text {\n      background-color: #fd8f8f; }\n  .player-item-container .remake-background {\n    border-top: 1px solid #888888;\n    background-color: #bbbbbb; }\n    .player-item-container .remake-background .item-header-text {\n      background-color: #999999; }\n  .player-item-container .series-icon {\n    margin: 0 2px; }\n  .player-item-container .gold-text {\n    color: #ffc63a;\n    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black; }\n  .player-item-container .red-text {\n    color: #f75353;\n    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black; }\n\n.search-bar-container {\n  text-align: center;\n  margin-top: 20vh;\n  height: 250px;\n  padding-top: 20px;\n  margin-bottom: -webkit-calc(80vh - 304px - 20px);\n  margin-bottom: -moz-calc(80vh - 304px - 20px);\n  margin-bottom: calc(80vh - 304px - 20px);\n  position: relative;\n  background-color: #eeeeee; }\n\n.search-error-message {\n  height: 20px;\n  font-size: 16px;\n  color: #d62c2c;\n  font-weight: 700px; }\n\n.not-focused {\n  box-shadow: 0 3px 6px #bbb; }\n\n.search-bar-items {\n  display: inline-block;\n  margin-top: 10px;\n  margin-bottom: 10px;\n  width: 50%;\n  min-width: 300px; }\n  .search-bar-items .col-md-8, .search-bar-items .col-md-2 {\n    padding: 0; }\n  .search-bar-items .search-input {\n    width: 100%;\n    height: 40px;\n    font-size: 16px;\n    padding: 0px 15px;\n    -webkit-box-sizing: border-box;\n    -moz-box-sizing: border-box;\n    box-sizing: border-box;\n    border: 1px solid #bbbbbb;\n    border-radius: 0;\n    -webkit-border-radius: 0;\n    -moz-border-radius: 0; }\n  .search-bar-items .region-select {\n    display: inline-block;\n    height: 40px; }\n  .search-bar-items select:not([multiple]).region-select {\n    border: 1px solid #bbbbbb;\n    border-left: none;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    background-position: right 50%;\n    background-repeat: no-repeat;\n    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=);\n    padding: .5em;\n    padding-right: 1.5em; }\n  .search-bar-items .form-control {\n    border-radius: 0;\n    -webkit-border-radius: 0;\n    -moz-border-radius: 0; }\n  .search-bar-items .search-button {\n    width: 100%;\n    height: 40px;\n    border-radius: 0;\n    -webkit-border-radius: 0;\n    -moz-border-radius: 0; }\n  .search-bar-items .react-autosuggest__suggestions-container {\n    background-color: white; }\n    .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list {\n      padding: 0;\n      margin: 0;\n      text-align: left; }\n      .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list li {\n        list-style: none;\n        padding: 5px 10px;\n        font-size: 14px;\n        border-bottom: 1px solid #888888;\n        border-left: 1px solid #888888;\n        border-right: 1px solid #888888; }\n      .search-bar-items .react-autosuggest__suggestions-container .react-autosuggest__suggestions-list li.react-autosuggest__suggestion--highlighted {\n        background-color: #dddddd;\n        cursor: pointer; }\n\n.navbar-default {\n  background-color: #eeeeee;\n  border: none; }\n  .navbar-default div.navbar-header a {\n    color: black; }\n  .navbar-default div.navbar-header a:hover {\n    color: black;\n    text-decoration: underline; }\n  .navbar-default ul.nav li a {\n    color: black; }\n  .navbar-default ul.nav li a:hover {\n    text-decoration: underline; }\n  .navbar-default ul.nav li.active a {\n    background-color: #cccccc !important; }\n\nbody {\n  font-family: 'Lato', sans-serif;\n  background-color: #eeeeee; }\n\nh1 {\n  font-weight: 700; }\n\nh2 {\n  font-size: 18px; }\n\n.title-left-padding {\n  padding-left: 10px; }\n\n.team-row {\n  margin: 15px 0; }\n\n.vertical-align {\n  display: flex;\n  align-items: center; }\n\n.text-align-center {\n  text-align: center; }\n\n.space-between {\n  display: flex;\n  justify-content: space-between; }\n\n.medium-icon {\n  width: 40px; }\n\n.circular-icon {\n  border-radius: 50%;\n  -webkit-border-radius: 50%;\n  -moz-border-radius: 50%; }\n\n.item-header-text {\n  font-size: 13px;\n  padding: 0 3px; }\n\n.color-green {\n  color: #25b325; }\n\n.color-red {\n  color: #d62c2c; }\n\n.color-gray {\n  color: #bbbbbb; }\n\n.float-right {\n  float: right; }\n\n.navbar {\n  margin-bottom: 0;\n  background-color: #eeeeee; }\n\n.footer {\n  height: 20px; }\n\n.player-list-container {\n  background-color: #eeeeee; }\n\n.loading-container {\n  text-align: center;\n  margin-top: 40vh;\n  height: -webkit-calc(60vh - 60px - 20px);\n  height: -moz-calc(60vh - 60px - 20px);\n  height: calc(60vh - 60px - 20px); }\n\n.current-game-header {\n  padding: 5px 15px;\n  font-size: 24px;\n  font-weight: 700;\n  color: black;\n  background-color: white;\n  border-top: 1px solid #888888;\n  border-bottom: 1px solid #888888; }\n\n.versus-text {\n  font-size: 20px;\n  font-weight: 700; }\n\n.info-page {\n  margin: 0 auto;\n  width: 90%;\n  max-width: 700px; }\n  .info-page .info-block {\n    margin-bottom: 30px; }\n    .info-page .info-block h2 {\n      font-size: 1.6em; }\n    .info-page .info-block p {\n      font-size: 1.1em; }\n    .info-page .info-block a:hover {\n      cursor: pointer; }\n    .info-page .info-block .green-text {\n      color: green; }\n\n.contact-page {\n  margin: 0 auto;\n  width: 90%;\n  max-width: 700px; }\n  .contact-page .form-page .form-block {\n    margin-bottom: 20px; }\n    .contact-page .form-page .form-block label {\n      font-size: 1.2em; }\n    .contact-page .form-page .form-block .btn {\n      margin-top: 10px;\n      width: 100%;\n      font-size: 1em; }\n      .contact-page .form-page .form-block .btn i {\n        font-size: 1em; }\n    .contact-page .form-page .form-block .form-control {\n      border-radius: 0;\n      -webkit-border-radius: 0;\n      -moz-border-radius: 0; }\n\n.sample-page img {\n  width: 100%; }\n\nh1.page-title {\n  font-size: 2em;\n  font-weight: normal;\n  border-bottom: 1px solid black;\n  padding-bottom: 10px; }\n\n.col-xs-5ths,\n.col-sm-5ths,\n.col-md-5ths,\n.col-lg-5ths {\n  position: relative;\n  min-height: 1px;\n  padding-right: 15px;\n  padding-left: 15px; }\n\n.col-xs-5ths {\n  width: 20%;\n  float: left; }\n\n@media (min-width: 768px) {\n  .col-sm-5ths {\n    width: 20%;\n    float: left; } }\n\n@media (min-width: 992px) {\n  .col-md-5ths {\n    width: 20%;\n    float: left; } }\n\n@media (min-width: 1200px) {\n  .col-lg-5ths {\n    width: 20%;\n    float: left; } }\n", ""]);
 
 // exports
 
@@ -85828,6 +85830,314 @@ module.exports = function (css) {
 	return fixedCss;
 };
 
+
+/***/ }),
+/* 1059 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ *
+ *
+ * @author Jerry Bendy <jerry@icewingcc.com>
+ * @licence MIT
+ *
+ */
+
+(function(self) {
+    'use strict';
+
+    var nativeURLSearchParams = self.URLSearchParams ? self.URLSearchParams : null,
+        isSupportObjectConstructor = nativeURLSearchParams && (new nativeURLSearchParams({a: 1})).toString() === 'a=1',
+        __URLSearchParams__ = "__URLSearchParams__",
+        prototype = URLSearchParamsPolyfill.prototype,
+        iterable = !!(self.Symbol && self.Symbol.iterator);
+
+    if (nativeURLSearchParams && isSupportObjectConstructor) {
+        return;
+    }
+
+
+    /**
+     * Make a URLSearchParams instance
+     *
+     * @param {object|string|URLSearchParams} search
+     * @constructor
+     */
+    function URLSearchParamsPolyfill(search) {
+        search = search || "";
+
+        // support construct object with another URLSearchParams instance
+        if (search instanceof URLSearchParams || search instanceof URLSearchParamsPolyfill) {
+            search = search.toString();
+        }
+
+        this [__URLSearchParams__] = parseToDict(search);
+    }
+
+
+    /**
+     * Appends a specified key/value pair as a new search parameter.
+     *
+     * @param {string} name
+     * @param {string} value
+     */
+    prototype.append = function(name, value) {
+        appendTo(this [__URLSearchParams__], name, value);
+    };
+
+    /**
+     * Deletes the given search parameter, and its associated value,
+     * from the list of all search parameters.
+     *
+     * @param {string} name
+     */
+    prototype.delete = function(name) {
+        delete this [__URLSearchParams__] [name];
+    };
+
+    /**
+     * Returns the first value associated to the given search parameter.
+     *
+     * @param {string} name
+     * @returns {string|null}
+     */
+    prototype.get = function(name) {
+        var dict = this [__URLSearchParams__];
+        return name in dict ? dict[name][0] : null;
+    };
+
+    /**
+     * Returns all the values association with a given search parameter.
+     *
+     * @param {string} name
+     * @returns {Array}
+     */
+    prototype.getAll = function(name) {
+        var dict = this [__URLSearchParams__];
+        return name in dict ? dict [name].slice(0) : [];
+    };
+
+    /**
+     * Returns a Boolean indicating if such a search parameter exists.
+     *
+     * @param {string} name
+     * @returns {boolean}
+     */
+    prototype.has = function(name) {
+        return name in this [__URLSearchParams__];
+    };
+
+    /**
+     * Sets the value associated to a given search parameter to
+     * the given value. If there were several values, delete the
+     * others.
+     *
+     * @param {string} name
+     * @param {string} value
+     */
+    prototype.set = function set(name, value) {
+        this [__URLSearchParams__][name] = ['' + value];
+    };
+
+    /**
+     * Returns a string containg a query string suitable for use in a URL.
+     *
+     * @returns {string}
+     */
+    prototype.toString = function() {
+        var dict = this[__URLSearchParams__], query = [], i, key, name, value;
+        for (key in dict) {
+            name = encode(key);
+            for (i = 0, value = dict[key]; i < value.length; i++) {
+                query.push(name + '=' + encode(value[i]));
+            }
+        }
+        return query.join('&');
+    };
+
+
+    /*
+     * Apply polifill to global object and append other prototype into it
+     */
+    self.URLSearchParams = (nativeURLSearchParams && !isSupportObjectConstructor) ?
+        new Proxy(nativeURLSearchParams, {
+            construct: function(target, args) {
+                return new target((new URLSearchParamsPolyfill(args[0]).toString()));
+            }
+        }) :
+        URLSearchParamsPolyfill;
+
+
+    var USPProto = self.URLSearchParams.prototype;
+
+    USPProto.polyfill = true;
+
+    /**
+     *
+     * @param {function} callback
+     * @param {object} thisArg
+     */
+    USPProto.forEach = USPProto.forEach || function(callback, thisArg) {
+        var dict = parseToDict(this.toString());
+        Object.getOwnPropertyNames(dict).forEach(function(name) {
+            dict[name].forEach(function(value) {
+                callback.call(thisArg, value, name, this);
+            }, this);
+        }, this);
+    };
+
+    /**
+     * Sort all name-value pairs
+     */
+    USPProto.sort = USPProto.sort || function() {
+        var dict = parseToDict(this.toString()), keys = [], k, i, j;
+        for (k in dict) {
+            keys.push(k);
+        }
+        keys.sort();
+
+        for (i = 0; i < keys.length; i++) {
+            this.delete(keys[i]);
+        }
+        for (i = 0; i < keys.length; i++) {
+            var key = keys[i], values = dict[key];
+            for (j = 0; j < values.length; j++) {
+                this.append(key, values[j]);
+            }
+        }
+    };
+
+    /**
+     * Returns an iterator allowing to go through all keys of
+     * the key/value pairs contained in this object.
+     *
+     * @returns {function}
+     */
+    USPProto.keys = USPProto.keys || function() {
+        var items = [];
+        this.forEach(function(item, name) {
+            items.push([name]);
+        });
+        return makeIterator(items);
+    };
+
+    /**
+     * Returns an iterator allowing to go through all values of
+     * the key/value pairs contained in this object.
+     *
+     * @returns {function}
+     */
+    USPProto.values = USPProto.values || function() {
+        var items = [];
+        this.forEach(function(item) {
+            items.push([item]);
+        });
+        return makeIterator(items);
+    };
+
+    /**
+     * Returns an iterator allowing to go through all key/value
+     * pairs contained in this object.
+     *
+     * @returns {function}
+     */
+    USPProto.entries = USPProto.entries || function() {
+        var items = [];
+        this.forEach(function(item, name) {
+            items.push([name, item]);
+        });
+        return makeIterator(items);
+    };
+
+
+    if (iterable) {
+        USPProto[self.Symbol.iterator] = USPProto[self.Symbol.iterator] || USPProto.entries;
+    }
+
+
+    function encode(str) {
+        var replace = {
+            '!': '%21',
+            "'": '%27',
+            '(': '%28',
+            ')': '%29',
+            '~': '%7E',
+            '%20': '+',
+            '%00': '\x00'
+        };
+        return encodeURIComponent(str).replace(/[!'\(\)~]|%20|%00/g, function(match) {
+            return replace[match];
+        });
+    }
+
+    function decode(str) {
+        return decodeURIComponent(str.replace(/\+/g, ' '));
+    }
+
+    function makeIterator(arr) {
+        var iterator = {
+            next: function() {
+                var value = arr.shift();
+                return {done: value === undefined, value: value};
+            }
+        };
+
+        if (iterable) {
+            iterator[self.Symbol.iterator] = function() {
+                return iterator;
+            };
+        }
+
+        return iterator;
+    }
+
+    function parseToDict(search) {
+        var dict = {};
+
+        if (typeof search === "object") {
+            for (var i in search) {
+                if (search.hasOwnProperty(i)) {
+                    var str = typeof search [i] === 'string' ? search [i] : JSON.stringify(search [i]);
+                    appendTo(dict, i, str);
+                }
+            }
+
+        } else {
+            // remove first '?'
+            if (search.indexOf("?") === 0) {
+                search = search.slice(1);
+            }
+
+            var pairs = search.split("&");
+            for (var j = 0; j < pairs.length; j++) {
+                var value = pairs [j],
+                    index = value.indexOf('=');
+
+                if (-1 < index) {
+                    appendTo(dict, decode(value.slice(0, index)), decode(value.slice(index + 1)));
+
+                } else {
+                    if (value) {
+                        appendTo(dict, decode(value), '');
+                    }
+                }
+            }
+        }
+
+        return dict;
+    }
+
+    function appendTo(dict, name, value) {
+        if (name in dict) {
+            dict[name].push('' + value);
+        } else {
+            dict[name] = ['' + value];
+        }
+    }
+
+})(typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(103)))
 
 /***/ })
 /******/ ]);
