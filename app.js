@@ -3,9 +3,11 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var httpProxy = require('http-proxy');
+var sslRedirect = require('heroku-ssl-redirect');
 
 var app = express();
 // app.use(logger('dev'));
+app.use(sslRedirect());
 
 //PROXY TO API
 const apiProxy = httpProxy.createProxyServer({

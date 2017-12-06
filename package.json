@@ -33,6 +33,7 @@
     "express": "^4.15.3",
     "express-session": "^1.15.4",
     "extract-text-webpack-plugin": "^2.1.2",
+    "heroku-ssl-redirect": "0.0.4",
     "http-proxy": "^1.16.2",
     "leaky-bucket": "^2.1.1",
     "lodash": "^4.17.4",
