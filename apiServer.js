@@ -467,9 +467,11 @@ function findExampleSummoner(req, res) {
           }
         }).catch(error => {
           console.log(error)
+          res.json({ name: undefined })
         })
     }).catch(error => {
       console.log(error)
+      res.json({ name: undefined })
     })
 }
 
@@ -502,6 +504,9 @@ function isPlayerInGame(playerId) {
         return true
       }
     }).catch(error => {
+      if (error.response.status === 429) {
+        res.json({ name: undefined })
+      }
       // console.log('not in game')
       return false
     })
