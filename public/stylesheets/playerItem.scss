@@ -130,12 +130,14 @@
   }
 
   .gold-text {
-    color: $gold-kda;
-    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black;
+    border: 2px solid $gold-kda;
+    padding: 2px 4px;
+    border-radius: 10px;
   }
 
   .red-text {
-    color: $red-kda;
-    text-shadow: -0.6px 0 black, 0 0.6px black, 0.6px 0 black, 0 -0.6px black;
+    border: 2px solid $red-kda;
+    padding: 2px 4px;
+    border-radius: 10px;
   }
 }

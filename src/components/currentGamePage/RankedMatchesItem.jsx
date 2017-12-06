@@ -82,14 +82,14 @@ class RankedMatchesItem extends React.Component {
     }
 
     const kdaClassNames = classNames({
-      'gold-text': kdaString === 'Perfect' || kda >= 5,
-      'red-text': kda < 1,
-      'title-left-padding': true
+      'gold-text': (this.result !== 'Remake') && (kdaString === 'Perfect' || kda >= 5),
+      'red-text': this.result !== 'Remake' && kda < 1,
+      'title-left-margin': true
     })
 
     return (
       <span>
-        <span className='title-left-padding'>{participantStats.kills}/{participantStats.deaths}/{participantStats.assists}</span>
+        <span className='title-left-margin'>{participantStats.kills}/{participantStats.deaths}/{participantStats.assists}</span>
         <span className={kdaClassNames}>{this.result === 'Remake' ? '' : kdaString }</span>
       </span>
     )

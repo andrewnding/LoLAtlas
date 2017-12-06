@@ -334,7 +334,7 @@ class CurrentGamePlayerItem extends React.Component {
               className="summoner-icon-2"
             />
           </span>
-          <span className='title-left-padding summoner-name-link'>
+          <span className='title-left-margin summoner-name-link'>
             <a href={summonerUrl(this.props.currentGame.gameInfo.platformId, this.props.player.summonerName)} target="_blank">{this.props.player.summonerName}</a>
           </span>
         </div>
