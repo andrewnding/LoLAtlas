@@ -417,10 +417,10 @@ app.get('/findExampleSummoner', (req, res) => {
 
     if (!exampleSummoner) {
       // console.log('getting summoner from api')
-      throttleHelper(findExampleSummoner(req, res))
+      findExampleSummoner(req, res)
     } else {
       // console.log('getting summoner from database')
-      handleDatabaseSummoner(exampleSummoner)
+      handleDatabaseSummoner(exampleSummoner, res)
         .then(response => {
           if (response) {
             // console.log('database summoner is in a game!')
@@ -433,15 +433,15 @@ app.get('/findExampleSummoner', (req, res) => {
                 return err
               }
             })
-            throttleHelper(findExampleSummoner(req, res))
+            findExampleSummoner(req, res)
           }
         })
     }
   })
 })
 
-async function handleDatabaseSummoner(exampleSummoner) {
-  if (await isPlayerInGame(exampleSummoner.data.id)) {
+async function handleDatabaseSummoner(exampleSummoner, res) {
+  if (await isPlayerInGame(exampleSummoner.data.id, res)) {
     return true
   } else {
     return false
@@ -452,7 +452,7 @@ function findExampleSummoner(req, res) {
   return axios.get(`https://na1.api.riotgames.com/lol/league/v3/masterleagues/by-queue/RANKED_SOLO_5x5`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       const playerList = response.data.entries.map(entry => { return { id: entry.playerOrTeamId, name: entry.playerOrTeamName } })
-      findValidPlayer(playerList)
+      findValidPlayer(playerList, res)
         .then(player => {
           if (player) {
             ExampleSummoner.create({ data: player }, function(err, exampleSummoner) {
@@ -475,17 +475,29 @@ function findExampleSummoner(req, res) {
     })
 }
 
-async function findValidPlayer(playerList) {
+async function findValidPlayer(playerList, res) {
+  const WINDOW_SIZE = 20
   let validPlayer
   let found = false
-  for (let player of playerList) {
-    // console.log('trying', player)
-    if (await isPlayerInGame(player.id)) {
-      // console.log(player, 'worked')
-      validPlayer = player
+  let currList = []
+  let startIndex = 0
+  while (startIndex < playerList.length) {
+    let playerListSubset = playerList.slice(startIndex, startIndex + WINDOW_SIZE)
+    for (let player of playerListSubset) {
+      currList.push(isPlayerInGame(player.id, res))
+    }
+
+    let resultArray = await Promise.all(currList)
+
+    let foundIndex = resultArray.indexOf(true)
+    if (foundIndex > -1) {
+      validPlayer = playerList[startIndex + foundIndex]
       found = true
       break
     }
+
+    startIndex += WINDOW_SIZE
+    currList = []
   }
 
   if (found) {
@@ -496,7 +508,7 @@ async function findValidPlayer(playerList) {
   }
 }
 
-function isPlayerInGame(playerId) {
+function isPlayerInGame(playerId, res) {
   return axios.get(`https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/${playerId}`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       console.log(response.data.gameQueueConfigId)
@@ -507,7 +519,6 @@ function isPlayerInGame(playerId) {
       if (error.response.status === 429) {
         res.json({ name: undefined })
       }
-      // console.log('not in game')
       return false
     })
 }
