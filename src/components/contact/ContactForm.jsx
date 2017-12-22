@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import XRegExp from 'xregexp'
 
 export default class ContactForm extends React.Component {
   constructor() {
@@ -8,6 +9,7 @@ export default class ContactForm extends React.Component {
     this.state = {
       isSending: false,
       didSend: false,
+      validEmail: false,
       name: "",
       email: "",
       comments: ""
@@ -20,9 +22,24 @@ export default class ContactForm extends React.Component {
     this.setState(stateObj)
   }
 
+  validateEmail() {
+    const emailRegex = new XRegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+    
+    if (XRegExp.test(this.state.email, emailRegex)) {
+      this.setState({ validEmail: true })
+    } else {
+      this.setState({ validEmail: false })
+    }
+  }
+
   handleSubmit() {
     if (!this.state.name || !this.state.email || !this.state.comments) {
       this.props.setBanner('FAILURE')
+      return
+    }
+
+    if (!this.state.validEmail) {
+      this.props.setBanner('INVALID EMAIL')
       return
     }
 
@@ -87,6 +104,7 @@ export default class ContactForm extends React.Component {
             placeholder="Email"
             maxLength="100"
             onChange={(e) => this.onChangeHandler(e)}
+            onBlur={() => this.validateEmail()}
           />
         </div>
 

@@ -23,6 +23,8 @@ export default class Contact extends React.Component {
         return <div className="alert alert-success" role="alert">Thanks for the feedback. We will get back to you soon!</div>
       case 'FAILURE':
         return <div className="alert alert-danger" role="alert">Please fill out all fields</div>
+      case 'INVALID EMAIL':
+        return <div className="alert alert-danger" role="alert">Please use a valid email</div>
     }
   }
 

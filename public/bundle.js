@@ -84942,6 +84942,12 @@ var Contact = function (_React$Component) {
             { className: 'alert alert-danger', role: 'alert' },
             'Please fill out all fields'
           );
+        case 'INVALID EMAIL':
+          return _react2.default.createElement(
+            'div',
+            { className: 'alert alert-danger', role: 'alert' },
+            'Please use a valid email'
+          );
       }
     }
   }, {
@@ -85002,6 +85008,10 @@ var _axios = __webpack_require__(153);
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _xregexp = __webpack_require__(1001);
+
+var _xregexp2 = _interopRequireDefault(_xregexp);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -85021,6 +85031,7 @@ var ContactForm = function (_React$Component) {
     _this.state = {
       isSending: false,
       didSend: false,
+      validEmail: false,
       name: "",
       email: "",
       comments: ""
@@ -85036,12 +85047,28 @@ var ContactForm = function (_React$Component) {
       this.setState(stateObj);
     }
   }, {
+    key: 'validateEmail',
+    value: function validateEmail() {
+      var emailRegex = new _xregexp2.default(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+      if (_xregexp2.default.test(this.state.email, emailRegex)) {
+        this.setState({ validEmail: true });
+      } else {
+        this.setState({ validEmail: false });
+      }
+    }
+  }, {
     key: 'handleSubmit',
     value: function handleSubmit() {
       var _this2 = this;
 
       if (!this.state.name || !this.state.email || !this.state.comments) {
         this.props.setBanner('FAILURE');
+        return;
+      }
+
+      if (!this.state.validEmail) {
+        this.props.setBanner('INVALID EMAIL');
         return;
       }
 
@@ -85142,6 +85169,9 @@ var ContactForm = function (_React$Component) {
             maxLength: '100',
             onChange: function onChange(e) {
               return _this4.onChangeHandler(e);
+            },
+            onBlur: function onBlur() {
+              return _this4.validateEmail();
             }
           })
         ),
