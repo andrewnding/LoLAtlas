@@ -85091,6 +85091,7 @@ var ContactForm = function (_React$Component) {
 
       var value = void 0;
       var classNames = void 0;
+      var disabled = void 0;
 
       if (this.state.isSending) {
         value = _react2.default.createElement(
@@ -85100,6 +85101,7 @@ var ContactForm = function (_React$Component) {
           ' Submitting'
         );
         classNames = "btn btn-primary";
+        disabled = true;
       } else if (this.state.didSend) {
         value = _react2.default.createElement(
           'span',
@@ -85107,6 +85109,7 @@ var ContactForm = function (_React$Component) {
           'Submitted - Thanks for your feedback!'
         );
         classNames = "btn btn-success";
+        disabled = true;
       } else {
         value = _react2.default.createElement(
           'span',
@@ -85114,13 +85117,19 @@ var ContactForm = function (_React$Component) {
           'Submit'
         );
         classNames = "btn btn-primary";
+        disabled = false;
       }
 
       return _react2.default.createElement(
         'button',
-        { type: 'button', className: classNames, onClick: function onClick() {
+        {
+          type: 'button',
+          className: classNames,
+          onClick: function onClick() {
             return _this3.handleSubmit();
-          } },
+          },
+          disabled: disabled
+        },
         value
       );
     }

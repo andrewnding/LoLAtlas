@@ -61,20 +61,31 @@ export default class ContactForm extends React.Component {
   renderButton() {
     let value
     let classNames
+    let disabled
 
     if (this.state.isSending) {
       value = <span><i className="fa fa-spinner fa-spin fa-3x fa-fw"></i> Submitting</span>
       classNames = "btn btn-primary"
+      disabled = true
     } else if (this.state.didSend) {
       value = <span>Submitted - Thanks for your feedback!</span>
       classNames = "btn btn-success"
+      disabled = true
     } else {
       value = <span>Submit</span>
       classNames = "btn btn-primary"
+      disabled = false
     }
 
     return (
-      <button type="button" className={classNames} onClick={() => this.handleSubmit()}>{value}</button>
+      <button
+        type="button"
+        className={classNames}
+        onClick={() => this.handleSubmit()}
+        disabled={disabled}
+      >
+        {value}
+      </button>
     )
   }
 
