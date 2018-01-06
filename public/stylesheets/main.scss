@@ -84,10 +84,19 @@ h2 {
 
 .loading-container {
   text-align: center;
-  margin-top: 40vh;
-  height: -webkit-calc(60vh - 60px - #{$footer-height});
-  height:    -moz-calc(60vh - 60px - #{$footer-height});
-  height:         calc(60vh - 60px - #{$footer-height});
+  margin-top: 35vh;
+  height: -webkit-calc(65vh - 60px - #{$footer-height});
+  height:    -moz-calc(65vh - 60px - #{$footer-height});
+  height:         calc(65vh - 60px - #{$footer-height});
+
+  i {
+    margin-bottom: 20px;
+  }
+
+  .loading-game-text {
+    font-size: 1.2em;
+    font-weight: 700;
+  }
 }
 
 .current-game-header {

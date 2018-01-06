@@ -11,7 +11,7 @@ export default class Blog extends React.Component {
       <div className="info-page">
         <h1 className="page-title">Blog</h1>
         <div className="info-block">
-          <h2>November 26, 2017</h2>
+          <h2>December 26, 2017</h2>
           <p>
             Runes reforged data will be made available soon. The data is currently available, but only
             through a kind of roundabout way. Once the data is made officially available, the runes
@@ -19,7 +19,7 @@ export default class Blog extends React.Component {
           </p>
         </div>
         <div className="info-block">
-          <h2>November 12, 2017</h2>
+          <h2>December 12, 2017</h2>
           <p>
             Welcome to LoLAtlas! I'll use this blog as a place to put information that probably isn't worthy
             of being on the <Link to="/about"> About </Link> page, as well as general announcements,
