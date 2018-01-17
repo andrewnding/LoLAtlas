@@ -273,7 +273,7 @@ app.get('/summonerByAccountId', (req, res) => {
 })
 
 function getRecentRankedMatches(req, res) {
-  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matchlists/by-account/${req.query.accountId}?queue=420&season=11`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
+  return axios.get(`https://${regionalEndpoints.regions[req.query.serviceRegion]}/lol/match/v3/matchlists/by-account/${req.query.accountId}?queue=420&season=9`, {headers: {"X-Riot-Token": process.env.RIOT_API_KEY}})
     .then(response => {
       RecentRankedMatches.create({ accountId: Number(req.query.accountId), data: response.data.matches.slice(0, 5) }, function(err, matches) {
         if (err) {

@@ -81968,6 +81968,14 @@ var CurrentGamePlayerItem = function (_React$Component) {
         _this.tier = rankedData.tier;
       }
     }
+
+    if (rankedData) {
+      _this.wins = rankedData.wins || 0;
+      _this.losses = rankedData.losses || 0;
+    } else {
+      _this.wins = 0;
+      _this.losses = 0;
+    }
     return _this;
   }
 
@@ -82305,7 +82313,13 @@ var CurrentGamePlayerItem = function (_React$Component) {
     key: 'renderWinPercent',
     value: function renderWinPercent() {
       var rankedData = this.props.player.rankedData;
-      var winPercent = (rankedData.wins / (rankedData.wins + rankedData.losses) * 100).toFixed(0);
+
+      var winPercent = void 0;
+      if (this.wins === 0 && this.losses === 0) {
+        winPercent = 0;
+      } else {
+        winPercent = (this.wins / (this.wins + this.losses) * 100).toFixed(0);
+      }
       if (winPercent > 53) {
         return _react2.default.createElement(
           'span',
@@ -82486,9 +82500,9 @@ var CurrentGamePlayerItem = function (_React$Component) {
                 'span',
                 null,
                 'Win / Loss: ',
-                rankedData.wins,
+                this.wins,
                 ' / ',
-                rankedData.losses
+                this.losses
               ),
               _react2.default.createElement(
                 'span',

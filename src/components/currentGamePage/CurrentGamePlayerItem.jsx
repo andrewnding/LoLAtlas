@@ -21,6 +21,14 @@ class CurrentGamePlayerItem extends React.Component {
         this.tier = rankedData.tier
       }
     }
+    
+    if (rankedData) {
+      this.wins = rankedData.wins || 0
+      this.losses = rankedData.losses || 0
+    } else {
+      this.wins = 0
+      this.losses = 0
+    }
   }
 
   renderSummaryIcons() {
@@ -238,7 +246,13 @@ class CurrentGamePlayerItem extends React.Component {
 
   renderWinPercent() {
     let rankedData = this.props.player.rankedData
-    let winPercent = ((rankedData.wins / (rankedData.wins + rankedData.losses)) * 100).toFixed(0)
+    
+    let winPercent
+    if (this.wins === 0 && this.losses === 0) {
+      winPercent = 0
+    } else {
+      winPercent = ((this.wins / (this.wins + this.losses)) * 100).toFixed(0)
+    }
     if (winPercent > 53) {
       return <span className='color-green'>{winPercent}%</span>
     } else if (winPercent < 47) {
@@ -350,7 +364,7 @@ class CurrentGamePlayerItem extends React.Component {
             {this.renderRankInfo()}
             <div className="space-between">
               <span>
-                Win / Loss: {rankedData.wins} / {rankedData.losses}
+                Win / Loss: {this.wins} / {this.losses}
               </span>
               <span>
                 {this.renderWinPercent()}
