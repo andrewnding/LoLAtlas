@@ -85443,6 +85443,20 @@ var Blog = function (_React$Component) {
           _react2.default.createElement(
             'h2',
             null,
+            'February 25, 2018'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'There was a bug for the last few days that resulted in users not being able to see recent matches under the match list page. This was because there was a change in the Riot API. This has since been fixed and users should now be able to see recent matches again.'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'info-block' },
+          _react2.default.createElement(
+            'h2',
+            null,
             'December 26, 2017'
           ),
           _react2.default.createElement(

@@ -11,6 +11,14 @@ export default class Blog extends React.Component {
       <div className="info-page">
         <h1 className="page-title">Blog</h1>
         <div className="info-block">
+          <h2>February 25, 2018</h2>
+          <p>
+            There was a bug for the last few days that resulted in users not being able to see recent
+            matches under the match list page. This was because there was a change in the Riot API. This
+            has since been fixed and users should now be able to see recent matches again.
+          </p>
+        </div>
+        <div className="info-block">
           <h2>December 26, 2017</h2>
           <p>
             Runes reforged data will be made available soon. The data is currently available, but only
